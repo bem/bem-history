@@ -587,7 +587,7 @@
                 // Fix Safari Bug https://bugs.webkit.org/show_bug.cgi?id=56249
                 History.pushState(null, null, $.url.getPage() + hashBang  + adjustedHash, false);
             } else {
-                $.url.setHash(hashBang + adjustedHash);
+                $.url.setHash(hashBang + hash);
             }
         }
 
