@@ -298,7 +298,7 @@
          */
         clearHashSymbol : function(url) {
 
-            return (url || location.href).replace(/[^\/]*#!\//, '');
+            return (url || location.href).replace(/[^\/]*\/?#!\//, '');
 
         },
 
@@ -484,7 +484,7 @@
 
             var emptyParams = {};
             params.forEach(function(val) {
-                emptyParams[val] = '';
+                emptyParams[val] = undefined;
             });
 
             return this.setParams(url, emptyParams);
