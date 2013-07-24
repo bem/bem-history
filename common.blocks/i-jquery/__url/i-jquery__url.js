@@ -205,7 +205,7 @@
             var result = str, tmp;
 
             while (1) {
-                tmp = $.decodeURIComponent(result);
+                tmp = $.decodeURI(result);
 
                 if (tmp === result)
                     break;
