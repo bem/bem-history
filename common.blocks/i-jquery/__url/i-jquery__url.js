@@ -310,7 +310,7 @@
         parseParams : function(url) {
 
             url || (url = location.href);
-            url = this.clearHashSymbol(this.unescape(url)).replace(/\#.*/, '');
+            url = this.clearHashSymbol(url);
             var params = {};
 
             if (url.indexOf('?&') > -1)
