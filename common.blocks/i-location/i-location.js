@@ -129,7 +129,7 @@
          * @returns {object} state
          */
         getState : function() {
-            return this._state;
+            return $.extend(true, {}, this._state);
         }
 
     }, {
