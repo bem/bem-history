@@ -1,11 +1,16 @@
 {
-    "author": "",
     "name": "bem-history",
-    "version": "1.0.2",
+    "version": "1.1.0",
+    "description": "BEM wrap for History API",
     "repository": {
         "type": "git",
         "url": "git://github.com/bem/bem-history.git"
     },
+    "keywords": [
+        "bem",
+        "history"
+    ],
+    "license": "MIT",
     "dependencies": {},
     "devDependencies": {}
 }
