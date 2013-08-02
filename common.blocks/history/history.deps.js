@@ -1,0 +1,3 @@
+({
+    shouldDep : ['events', 'inherit', 'jquery']
+})

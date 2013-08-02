@@ -1,28 +1,25 @@
-/**
- * Polyfill for History API.
- * @see https://developer.mozilla.org/en-US/docs/DOM/window.history
- *
- * @property {Object} state Current state.
- */
-BEM.decl('history', history.pushState ? {
+modules.define('history', ['inherit', 'events', 'jquery'], function(provide, inherit, events, $) {
 
-    onSetMod: {
-
-        'js': function () {
-
-            this.__base.apply(this, arguments);
-            // replace null with undefined to catch initial popstate
-            if (history.state === null) {
-                history.replaceState(undefined, document.title);
-            }
-            jQuery(window).on('popstate', this._onPopState.bind(this));
+// Fallback for old browsers
+if (history.pushState) {
+    provide({
+        pushState: function (state, title, url) {
+            if (url) window.location.href = url;
+        },
+        replaceState: function (state, title, url) {
+            if (url) window.location.href = url;
         }
+    });
+    return;
+}
 
-    },
+provide(new (inherit(events.Emitter, {
 
-    destruct: function () {
-        jQuery(window).off('popstate', this._onPopState);
-        this.__base.apply(this, arguments);
+    __constructor : function() {
+        if (history.state === null) {
+            history.replaceState(undefined, document.title);
+        }
+        $(window).on('popstate', $.proxy(this._onPopState, this));
     },
 
     /**
@@ -33,7 +30,7 @@ BEM.decl('history', history.pushState ? {
      * @param {String} [url] Location url.
      * @returns {Object}
      */
-    pushState: function (state, title, url) {
+    pushState: function(state, title, url) {
         return this._changeState('push', arguments);
     },
 
@@ -45,7 +42,7 @@ BEM.decl('history', history.pushState ? {
      * @param {String} [url] Location url.
      * @returns {Object}
      */
-    replaceState: function (state, title, url) {
+    replaceState: function(state, title, url) {
         return this._changeState('replace', arguments);
     },
 
@@ -57,23 +54,20 @@ BEM.decl('history', history.pushState ? {
      * @returns {Object}
      * @private
      */
-    _changeState: function (method, args) {
+    _changeState: function(method, args) {
         var state = this.state = args[0];
 
         try {
             history[method + 'State'].apply(history, args);
         } catch (e) {
-            this.trigger('error', { state: state, error: e });
-            return this;
+            return this.trigger('error', { state: state, error: e });
         }
 
-        this.trigger('statechange', { state: state });
-        return this;
+        return this.trigger('statechange', { state: state });
     },
 
     /**
      * Reaction for popstate jQuery event.
-     *
      */
     _onPopState: function (e) {
         var state = e.originalEvent.state;
@@ -84,16 +78,6 @@ BEM.decl('history', history.pushState ? {
         this.state = state;
         this.trigger('statechange', { state: state });
     }
-
-} :
-{
-
-    pushState: function (state, title, url) {
-        if (url) window.location.href = url;
-    },
-
-    replaceState: function (state, title, url) {
-        if (url) window.location.href = url;
-    }
+}))());
 
 });

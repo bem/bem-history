@@ -1,6 +1,6 @@
 {
     "name": "bem-history",
-    "version": "1.1.0",
+    "version": "2.0.0",
     "description": "BEM wrap for History API",
     "repository": {
         "type": "git",
@@ -13,6 +13,8 @@
     "license": "MIT",
     "dependencies": {},
     "devDependencies": {
+        "bem": "0.5.33",
+        "bem-environ": "1.2.0",
         "jscs": "1.0.0",
         "jshint": "2.1.4",
         "jshint-groups": "0.5.1"

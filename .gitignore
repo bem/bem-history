@@ -1,1 +1,6 @@
+.bem/cache/
+.bem/snapshots/
 node_modules/
+libs/
+
+*.sets/*
