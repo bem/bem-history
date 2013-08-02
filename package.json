@@ -12,5 +12,12 @@
     ],
     "license": "MIT",
     "dependencies": {},
-    "devDependencies": {}
+    "devDependencies": {
+        "jscs": "1.0.0",
+        "jshint": "2.1.4",
+        "jshint-groups": "0.5.1"
+    },
+    "scripts": {
+        "test": "./node_modules/.bin/jshint-groups && ./node_modules/.bin/jscs ."
+    }
 }
