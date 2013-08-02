@@ -13,6 +13,8 @@
     "license": "MIT",
     "dependencies": {},
     "devDependencies": {
+        "enb": "0.8.24",
+        "enb-bemhtml": "0.0.7",
         "jscs": "1.0.0",
         "jshint": "2.1.4",
         "jshint-groups": "0.5.1"
