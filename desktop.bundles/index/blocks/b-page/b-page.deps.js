@@ -5,8 +5,7 @@
             elem: 'dom',
             mods: { init: 'auto' }
         },
-        { block: 'bemhtml' },
-        { block: 'history' }
+        { block: 'bemhtml' }
     ],
     noDeps: [
         {

@@ -1,1 +1,4 @@
 node_modules/
+desktop.bundles/
+.idea
+.DS_Store

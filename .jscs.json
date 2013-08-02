@@ -4,7 +4,10 @@
         ".bem/**",
         "node_modules/**",
         "libs/**",
-        "pages-*/**"
+        "pages-*/**",
+        "*.bundles/**",
+        "bem-bl/**",
+        "bemhtml/**"
     ],
     "requireCurlyBraces": [
         "else",

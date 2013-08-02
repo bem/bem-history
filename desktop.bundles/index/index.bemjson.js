@@ -5,5 +5,8 @@
         { elem: 'js', url: '//yandex.st/jquery/1.7.2/jquery.min.js' },
         { elem: 'js', url: '_index.js' }
     ],
-    content: 'test'
+    content: {
+        block: 'test',
+        js: true
+    }
 })

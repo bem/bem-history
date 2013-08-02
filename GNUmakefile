@@ -25,6 +25,11 @@ $(NODE_MODULES)::
 	$(debug ---> Updating npm dependencies)
 	@$(NPM) install
 
+install:
+	npm install
+	git submodule init
+	git submodule update
+
 .PHONY: clean
 clean::
 	$(ENB) make clean
