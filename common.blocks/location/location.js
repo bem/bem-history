@@ -1,22 +1,35 @@
+/* globals console, Uri */
+
+// @TODO
+// 1.+ try {} catch {} при засовывании url в history, если падает -> redirect
+
 BEM.decl('location', {
 
     onSetMod: {
 
         js: function() {
-
-            this._history = BEM.create('history');
+            this._history = BEM.blocks['history'].getInstance();
 
             this._syncState();
+            this._history.on('statechange', this.changeThis(this._onStateChange));
 
             // слушаем кастомное событие History.js
-            BEM.DOM.win.bind('statechange', this.changeThis(this._onStateChange)); // @TODO падает при передачи this третьим аргументом
-
+            // BEM.DOM.win.bind('statechange', this.changeThis(this._onStateChange));
+            // @TODO падает при передачи this третьим аргументом            
         }
 
     },
-
-    _onStateChange: function(e) {
-
+    
+    /**
+     * Реакция на изменение состояния history
+     *
+     * @param {Object} event
+     * @param {Object} event params
+     */
+    _onStateChange: function(event, params) {
+        // console.log('\n\n!!!!!!!!! location _onStateChange fired, event:', event);
+        // console.log('params:', params);
+        
         this._syncState();
 
         if (this._state.trigger !== false) {
@@ -25,34 +38,40 @@ BEM.decl('location', {
             // позволяем делать перблочную привязку
             // @ TODO: пока общий state object. потом можно сделать отдельный для каждого object
             // BEM.blocks['location'].on('b-preview', function() {});
-            this._state.block
-            && this.trigger(this._state.block, this._state);
+            // TODO @mishanga переделать на каналы
+            // this._state.block &&
+            //     this.trigger(this._state.block, this._state);
+            this._state.block &&
+                this.channel(this._state.block)
+                    .trigger('change');
         }
 
         // Всегда удаляем trigger, иначе back-button может не сработать
         delete this._state.trigger;
-
     },
 
     /**
-     * Синхронизируем внутренний state с объектом History.js
-     * @returns {location}
+     * Синхронизируем внутренний state с блоком history
+     *
+     * @returns {Object} location
      * @private
      */
     _syncState: function() {
-
-        var state = History.getState();
+        // var state = BEM.blocks['history'].getInstance().state,
+        var state = this._history.state,
+            uri = new Uri(state.url);
 
         this._state = $.extend(state.data, {
-            referer: this._state && this._state.url,    // реферер - предыдущий url
-            url: state.url,                             // полный URL страницы - http://yandex.com.tr/yandsearch?text=ololo
-            domain: this._url.getDomain(state.url),     // домен страницы - yandex.ru
-            path: this._url.getPath(state.hash),        // путь к текущей странице - /yandsearch
-            params: this._url.parseParams(state.hash)   // хеш cgi параметров - { text: ['ololo'], lr: ['213'] }
+            referer: this._state && this._state.url,// реферер - предыдущий url
+            url: uri.normalized(),                  // полный URL страницы –
+            // http://yandex.com.tr/yandsearch?text=ololo&lr=213
+            hostname: uri.host(),                   // домен страницы - yandex.ru
+            path: uri.path(),                       // путь к текущей странице - /yandsearch
+            params: uri.queryParams                 // хеш cgi параметров – 
+            // { text: ['ololo'], lr: ['213'] }
         });
 
         return this;
-
     },
 
     /**
@@ -63,65 +82,63 @@ BEM.decl('location', {
      * @param {boolean} data.history создавать новый state или заменять текущий
      */
     change: function(data) {
-
+        var uri = new Uri(data.url);
+            // stateUri = new Uri(this._state.url); // TODO @mishanga подумать про кеширование
+        
         if (data.url) {
             delete data.params;
         }
 
-        data.url = this._url.normalize(data.url);
-        data.domain = data.domain || this._url.getDomain(data.url) || this._url.getDomain(this._state.url);
-
-        if (data.title) {
-            // @TODO, sbmaxx: не очень понимаю зачем ставить title
-            document.title = data.title;
-        }
+        data.url = uri.normalized();
 
         // Если есть параметры, то строим новый URL
-        data.params && (data.url = this._url.build(
-            this._state.path,
-            // ставим совсем новые параметры
-            data.forceParams
-                ? data.params
-               : $.extend({}, this._state.params, data.params)
-        ));
-
-        // на другой домен уходим без аякса
-        if (data.domain && data.domain !== this._state.domain) {
-            window.location = data.url;
-            return;
+        // console.log('data params', data.params);
+        if (data.params) {
+            var newUrl = new Uri(),
+                params = data.forceParams ? data.params : $.extend({}, this._state.params, data.params);
+                
+            // console.log('\n\nparams', params);
+            // console.log('state params', this._state.params);
+            
+            // newUrl.host(data.domain);
+            Object.keys(params).forEach(function(key) {
+                newUrl.addQueryParam(key, params[key]);
+            });
+            data.url = newUrl.normalized();
         }
 
-        if (typeof data.trigger === 'undefined')
-            $.each(data, function(item) {
-
-                if (item === 'url' && !data[item] || item === 'history')
-                    return;
-
-                if (item !== 'title')
-                    data.trigger = true;
-
-            });
-
         // По умолчанию триггерим событие change
-        data.trigger = typeof data.trigger === 'undefined'
-            ? true
-           : data.trigger;
+        data.trigger === false || (data.trigger = true);
 
-        // Передаем в History.js только data и url. Об title заботимся сами
-        History[(data.history !== false ? 'push': 'replace') + 'State'](
-            data,
-            data.title, // @TODO, sbmaxx: это смысла не несет
-            data.url
-        );
-
+        try {
+            this._history.changeState(
+                (data.history === false ? 'replace' : 'push'),
+                {
+                    data: data,
+                    //title: data.title,
+                    url: data.url
+                }
+            );
+        } catch (e) {
+            window.location.assign(data.url);
+        }
     },
-
+    
+    // TODO Как используется getState, может имеет смысл заменить на getUri и getReferer
     /**
      * Возвращает текущий state
-     * @returns {object} state
+     * @returns {Object} state
      */
     getState: function() {
         return $.extend(true, {}, this._state);
+    },
+    
+    /**
+     * Возвращает инстанс Uri из текущего url
+     * @returns {Object} uriInstance    
+     */
+    getUri: function() {
+        return new Uri(this._state.url);
     }
 
 }, {

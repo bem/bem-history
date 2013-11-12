@@ -1,5 +1,5 @@
 ({
     shouldDeps: {
-        block: 'history'
+        block: 'location'
     }
 })

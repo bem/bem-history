@@ -4,23 +4,36 @@
  *
  * @property {Object} state Current state.
  */
+
+/* globals console */
+
+// @TODO
+// 1.+ произвольный url (http://, /dfsdf/sdfsdf), разный origin
+// 2.+ "Только еще хочется, чтобы history, когда триггерит событие statechange, 
+// просовывал туда флаг native = true | false
+// Если вдруг это понадобится в location." @mishanga
+// 3. "Про автоматический редирект надо сделать возможность 
+// его отключить, т.к. это не всегда безопасно делать. Возможно, 
+// сервис захочет отправить какой-нибудь счётчик перед редиректом." @mishanga
+
 BEM.decl('history', {
 
     onSetMod: {
         js: function() {
-
-            if (!this.hasMod('has-api')) {
-                throw new Error('Use BEM.blocks[\'history\'].getInstance() instead');
+            if (!this.hasMod('provider')) {
+                throw new Error('Use BEM.blocks[\'history\'].getInstance() instead of BEM.create(\'history\')');
             }
 
-            this
+            this._resetUrl()
                 .bindEvents()
                 .syncState();
-
         }
     },
-
-    destruct: function () {
+    
+    /**
+     * Unbind events before destruct.
+     */
+    destruct: function() {
         this.unbindEvents();
         this.__base.apply(this, arguments);
     },
@@ -33,7 +46,7 @@ BEM.decl('history', {
      * @param {String} [url] Location url.
      * @returns {Object}
      */
-    pushState: function (data, title, url) {
+    pushState: function(data, title, url) {
         return this.changeState('push', this.normalizeState(data, title, url));
     },
 
@@ -48,53 +61,104 @@ BEM.decl('history', {
     replaceState: function (data, title, url) {
         return this.changeState('replace', this.normalizeState(data, title, url));
     },
-
+    
+    /**
+     * Base method for an events binding.
+     * Method have to be extended in modificators.
+     *
+     * @returns {Object}
+     */
     bindEvents: function() {
-
-        this.on('statechange', function() {
-            console.log('statechange');
-            console.log('   data: ', this.state.data);
-            console.log('   title: ', this.state.title);
-            console.log('   url: ' , this.state.url);
-        });
+        // this.on('statechange', function() {
+        //     console.log('\n\nstatechange');
+        //     console.log('   data:   ', this.state.data);
+        //     console.log('   title:  ', this.state.title);
+        //     console.log('   url:    ', this.state.url);
+        // });
+        
         return this;
-
     },
-
+    
+    /**
+     * Base method for url check and reset.
+     * Method have to be extended in modificators.
+     *
+     * @returns {Object}
+     */
+    _resetUrl: function() {
+        return this;
+    },
+    
+    /**
+     * Removes hashbang from url.
+     * /?p=1#!/?p=2 => /?p=2.
+     *
+     * @param {String} url
+     * @returns {String}
+     */
+    _removeHashbang: function(url) {
+        var uri = new Uri(url),
+            hashBangUri = new Uri(uri.anchor().replace(/^!/, ''));
+        
+        uri.anchor('');
+        uri.query(hashBangUri.query());
+        
+        return uri.normalized();
+    },
+    
+    /**
+     * Base method for an events unbinding.
+     * Method may be extended in modificators.
+     *
+     * @returns {Object}
+     */
     unbindEvents: function() {
         return this;
     },
-
+    
+    /**
+     * Base method for the initial state syncing with global history state.
+     * Method may be extended in modificators.
+     *
+     * @returns {Object}
+     */
     syncState: function() {
+        this.state = this.normalizeState(undefined, document.title, window.location.href);
         return this;
     },
-
+    
+    /**
+     * Normalizes state to the appropriate form.
+     *
+     * @param {Object} state data
+     * @param {String} document title
+     * @param {String} state url
+     * @returns {Object} normalized state
+     */
     normalizeState: function(data, title, url) {
-
         // null -> дефолтное состояние state, которые мы не хотим слушать
         // поэтому должны передавать либо undefined, либо пустой объект
         // но не null
-        data === null && (data = undefined);
-
         return {
-            data: data,
-            title: title,
-            url: this.normalizeUrl(url)
+            data:   data === null ? undefined : data,
+            title:  title,
+            url:    url
         };
-
     },
-
-    normalizeUrl: function(url) {
-        return URI(url).normalize();
-    },
-
+    
+    /**
+     * Changes current state.
+     * By default it performs simple page redirect.
+     * Method may be extended in modificators.
+     *
+     * @param {String} method Push or Replace method.
+     * @param {Object} state
+     * @returns {Object}
+     */
     changeState: function(method, state) {
-
-        this.state = state;
-        this.trigger('statechange', state);
-
-        return this;
-
+        try {
+            window.location.assign(state.url);
+        } catch(e) {}
     }
 
 }, {
@@ -105,111 +169,9 @@ BEM.decl('history', {
         return this.instance || (this.instance = BEM.create({
             block: 'history',
             mods: {
-                'provider': history.pushState
-                    ? 'history-api'
-                    : 'onhashchange' in window
-                        ? 'hashchange'
-                        : 'none'
+                'provider': window.history.pushState ? 'history-api' : 'hashchange'
             }
-        }))
-    }
-
-});
-
-BEM.decl({ block: 'history', modName: 'provider', modVal: 'history-api' }, {
-
-    bindEvents: function() {
-
-        this.__base();
-        jQuery(window).on('popstate', this._onPopState.bind(this));
-
-        return this;
-
-    },
-
-    unbindEvents: function() {
-
-        this.__base();
-        jQuery(window).off('popstate', this._onPopState);
-
-        return this;
-
-    },
-
-    syncState: function() {
-
-        this.__base();
-
-        // replace null with undefined to catch initial popstate
-        if (history.state === null) {
-            history.replaceState(undefined, document.title);
-        }
-
-        return this;
-
-    },
-
-    /**
-     * Changes current state.
-     *
-     * @param {String} method Push or replace method.
-     * @param {Object} state
-     * @returns {Object}
-     * @private
-     */
-    changeState: function (method, state) {
-
-        // нужно чтобы словить исключение перехода на другой домен
-        try {
-            history[method + 'State'](state.data, state.title, state.url);
-            this.__base.apply(this, arguments);
-        } catch (e) {
-            this.trigger('error', {
-                state: state,
-                error: e
-            });
-        }
-
-        return this;
-
-    },
-
-    /**
-     * Reaction for popstate jQuery event.
-     *
-     */
-    _onPopState: function (e) {
-        var state = e.originalEvent.state;
-
-        // ignore initial popstate
-        if (state === null) {
-            return;
-        }
-
-        this.state = this.normalizeState(state, document.title, location.href);
-
-        this.trigger('statechange', this.state);
-
-    }
-
-});
-
-BEM.decl({ block: 'history', modName: 'provider', modVal: 'hashchange' }, {
-
-    changeState: function(method, state) {
-        location.hash = state.url;
-        this.__base.apply(this, arguments);
-    }
-
-});
-
-BEM.decl({ block: 'history', modName: 'provider', modVal: 'none' }, {
-
-    changeState: function(method, state) {
-        try {
-            location.assign(state.url);
-            this.__base.apply(this, arguments);
-        } catch(e) {}
+        }));
     }
 
 });
