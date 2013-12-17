@@ -10,16 +10,21 @@
         "bem",
         "history"
     ],
+    "engines": {
+      "node": ">= 0.10.0"
+    },
     "license": "MIT",
     "dependencies": {},
     "devDependencies": {
-        "bem": "0.5.33",
-        "bem-environ": "1.2.0",
-        "jscs": "1.0.0",
-        "jshint": "2.1.4",
-        "jshint-groups": "0.5.1"
+        "bem": "~0.7.2",
+        "bem-environ": "~1.4.0",
+        "jscs": "1.0.11",
+        "jshint": "2.3.0",
+        "jshint-groups": "0.5.3",
+        "bower-npm-install": "~0.5.2"
     },
+    "private": true,
     "scripts": {
-        "test": "./node_modules/.bin/jshint-groups && ./node_modules/.bin/jscs ."
+        "test": "jshint-groups && jscs ."
     }
 }

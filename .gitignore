@@ -3,4 +3,6 @@
 node_modules/
 libs/
 
-*.sets/*
+/*.examples
+/*.specs
+/*.tests

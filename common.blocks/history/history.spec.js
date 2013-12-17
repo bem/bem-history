@@ -1,5 +1,5 @@
 modules.define(
-    'test',
+    'spec',
     ['jquery', 'history', 'sinon'],
     function(provide, $, history, sinon) {
 

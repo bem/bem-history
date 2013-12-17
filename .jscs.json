@@ -1,10 +1,14 @@
 {
     "excludeFiles": [
         ".git/**",
-        ".bem/**",
-        "node_modules/**",
+        ".bem/cache/**",
+        "*.examples/**",
+        "*.pages/**",
+        "*.specs/**",
+        "*.tests/**",
+        "**/*.i18n/**",
         "libs/**",
-        "pages-*/**"
+        "node_modules/**"
     ],
     "requireCurlyBraces": [
         "else",
@@ -73,5 +77,5 @@
     },
     "requireSpacesInsideObjectBrackets": "all",
     "disallowSpacesInsideArrayBrackets": true,
-    "disallowSpaceAfterObjectKeys": true
+    "requireSpaceAfterObjectKeys": true
 }
