@@ -17,9 +17,13 @@
         "enb-bemhtml": "0.0.7",
         "jscs": "1.0.0",
         "jshint": "2.1.4",
-        "jshint-groups": "0.5.1"
+        "jshint-groups": "0.5.1",
+        "mocha": "1.8",
+        "chai": "1.8.1",
+        "phantomjs": "1.9",
+        "mocha-phantomjs": "3.0"
     },
     "scripts": {
-        "test": "./node_modules/.bin/jshint-groups && ./node_modules/.bin/jscs ."
+        "test": "./node_modules/.bin/jshint-groups && ./node_modules/.bin/jscs . && ./node_modules/enb/bin/enb make && mocha-phantomjs ./desktop.bundles/index/index.html"
     }
 }

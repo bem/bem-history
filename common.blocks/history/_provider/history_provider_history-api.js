@@ -1,4 +1,4 @@
-/* globals console, Uri */
+/* globals Uri */
 
 BEM.decl({ block: 'history', modName: 'provider', modVal: 'history-api' }, {
 

@@ -47,7 +47,13 @@
      * @return {object}     parts
      */
     Uri.prototype.parseUri = function(str) {
-        var parser = /^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/,
+        var regexpParts = [
+                '^(?:(?![^:@]+:[^:@\\/]*@)([^:\\/?#.]+):)?(?:\\/\\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)',
+                '?([^:\\/?#]*)(?::(\\d*))?)',
+                '(((\\/(?:[^?#](?![^?#\\/]*\\.[^?#\\/.]+(?:[?#]|$)))*\\/?)',
+                '?([^?#\\/]*))(?:\\?([^#]*))?(?:#(.*))?)'
+            ],
+            parser = new RegExp(regexpParts.join('')),
             parserKeys = ['source', 'protocol', 'authority',
                           'userInfo', 'user', 'password', 'host', 'port',
                           'relative', 'path', 'directory', 'file', 'query', 'anchor'],
@@ -208,11 +214,12 @@
                 s += ':';
             }
             s += '//';
-        } else {
-            if (this.host()) {
-                s += '//';
-            }
         }
+        // else {
+        //     if (this.host()) {
+        //         s += '//';
+        //     }
+        // }
 
         return s;
     };
@@ -243,7 +250,11 @@
         var s = this.origin();
 
         if (this.path()) {
-            s += this.path();
+            if (this.path().indexOf('/') !== 0 && s[s.length - 1] !== '/') {
+                s += '/' + this.path();
+            } else {
+                s += this.path();
+            }
         } else {
             if (this.host() && (this.query().toString() || this.anchor())) {
                 s += '/';
@@ -271,7 +282,7 @@
      * and replaces empty parts from current page state
      * @return {string}
      */
-    Uri.prototype.normalized = function() {
+    Uri.prototype.build = function() {
         var s = '';
         
         // Нет протокола/хоста – ставим текущие

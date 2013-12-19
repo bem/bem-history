@@ -5,7 +5,7 @@
  * @property {Object} state Current state.
  */
 
-/* globals console */
+/* globals Uri */
 
 // @TODO
 // 1.+ произвольный url (http://, /dfsdf/sdfsdf), разный origin
@@ -103,7 +103,7 @@ BEM.decl('history', {
         uri.anchor('');
         uri.query(hashBangUri.query());
         
-        return uri.normalized();
+        return uri.build();
     },
     
     /**
@@ -130,9 +130,9 @@ BEM.decl('history', {
     /**
      * Normalizes state to the appropriate form.
      *
-     * @param {Object} state data
-     * @param {String} document title
-     * @param {String} state url
+     * @param {Object} data
+     * @param {String} title
+     * @param {String} url
      * @returns {Object} normalized state
      */
     normalizeState: function(data, title, url) {
@@ -158,7 +158,7 @@ BEM.decl('history', {
     changeState: function(method, state) {
         try {
             window.location.assign(state.url);
-        } catch(e) {}
+        } catch (e) {}
     }
 
 }, {

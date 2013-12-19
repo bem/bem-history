@@ -1,11 +1,11 @@
-/* globals console, Uri */
+/* globals Uri */
 
 BEM.decl({ block: 'history', modName: 'provider', modVal: 'hashchange' }, {
     
-    _onHashChange: function(event) {
-        console.log('########## _onHashChange fired');
+    _onHashChange: function() {
+        // console.log('########## _onHashChange fired');
         // console.log('    event:', event);
-        console.log('    ' + event.originalEvent.oldURL + '    ->    ' + event.originalEvent.newURL + '\n');
+        // console.log('    ' + event.originalEvent.oldURL + '    ->    ' + event.originalEvent.newURL + '\n');
         
         this.state = this.normalizeState(undefined, document.title, this._removeHashbang(window.location.href));
 
@@ -33,7 +33,7 @@ BEM.decl({ block: 'history', modName: 'provider', modVal: 'hashchange' }, {
     
     /**
      * Adds hashbang to url.
-     * ../search?p=1=> ../#!/search?p=1.
+     * ../search?p=1 => ../#!/search?p=1.
      *
      * @param {String} url
      * @returns {String}
@@ -45,14 +45,14 @@ BEM.decl({ block: 'history', modName: 'provider', modVal: 'hashchange' }, {
         uri.anchor('!/' + path[path.length - 1] + uri.query());
         uri.query('');
         
-        return uri.normalized();
+        return uri.build();
     },
     
     _resetUrl: function() {
         var uri = new Uri(window.location.href);
         
         if (!uri.anchor()) {
-            window.location.assign(this._addHashbang(window.location.href));
+            window.location.replace(this._addHashbang(window.location.href));
         }
         return this;
     },
@@ -65,7 +65,7 @@ BEM.decl({ block: 'history', modName: 'provider', modVal: 'hashchange' }, {
             throw new Error('SECURITY_ERR: DOM Exception 18');
         } else {
             this.state = state;
-            window.location.hash = this._addHashbang(state.url).replace(/^[^#]+#/,'');
+            window.location.hash = this._addHashbang(state.url).replace(/^[^#]+#/, '');
         }
     }
 

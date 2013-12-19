@@ -2,11 +2,19 @@
     block: 'b-page',
     title: 'BEM wrap for History API',
     head: [
-        { elem: 'js', url: '//yandex.st/jquery/1.7.2/jquery.min.js' },
-        { elem: 'js', url: '_index.js' }
+        { elem: 'css', url: '../../node_modules/mocha/mocha.css' }
     ],
-    content: {
-        block: 'test',
-        js: true
-    }
+    content: [
+        { tag: 'div', attrs: { id: 'mocha' } },
+        {
+            block: 'test',
+            js: true
+        },
+        { elem: 'js', url: 'http://yandex.st/jquery/1.7.2/jquery.min.js' },
+        
+        { elem: 'js', url: '../../node_modules/chai/chai.js' },
+        { elem: 'js', url: '../../node_modules/mocha/mocha.js' },
+        
+        { elem: 'js', url: '_index.js' }
+    ]
 })

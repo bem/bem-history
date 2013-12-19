@@ -1,4 +1,4 @@
-/* globals console, Uri */
+/* globals Uri */
 
 // @TODO
 // 1.+ try {} catch {} при засовывании url в history, если падает -> redirect
@@ -26,7 +26,7 @@ BEM.decl('location', {
      * @param {Object} event
      * @param {Object} event params
      */
-    _onStateChange: function(event, params) {
+    _onStateChange: function() {
         // console.log('\n\n!!!!!!!!! location _onStateChange fired, event:', event);
         // console.log('params:', params);
         
@@ -63,7 +63,7 @@ BEM.decl('location', {
 
         this._state = $.extend(state.data, {
             referer: this._state && this._state.url,// реферер - предыдущий url
-            url: uri.normalized(),                  // полный URL страницы –
+            url: uri.build(),                       // полный URL страницы –
             // http://yandex.com.tr/yandsearch?text=ololo&lr=213
             hostname: uri.host(),                   // домен страницы - yandex.ru
             path: uri.path(),                       // путь к текущей странице - /yandsearch
@@ -89,7 +89,7 @@ BEM.decl('location', {
             delete data.params;
         }
 
-        data.url = uri.normalized();
+        data.url = uri.build();
 
         // Если есть параметры, то строим новый URL
         // console.log('data params', data.params);
@@ -104,7 +104,7 @@ BEM.decl('location', {
             Object.keys(params).forEach(function(key) {
                 newUrl.addQueryParam(key, params[key]);
             });
-            data.url = newUrl.normalized();
+            data.url = newUrl.build();
         }
 
         // По умолчанию триггерим событие change
