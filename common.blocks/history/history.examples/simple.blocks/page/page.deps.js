@@ -1,3 +1,3 @@
 ({
-    shouldDeps: 'history'
+    shouldDeps: 'location'
 })
