@@ -5,8 +5,6 @@
  * @property {Object} state Current state.
  */
 
-/* globals Uri */
-
 // @TODO
 // 1.+ произвольный url (http://, /dfsdf/sdfsdf), разный origin
 // 2.+ "Только еще хочется, чтобы history, когда триггерит событие statechange, 
@@ -97,8 +95,8 @@ BEM.decl('history', {
      * @returns {String}
      */
     _removeHashbang: function(url) {
-        var uri = new Uri(url),
-            hashBangUri = new Uri(uri.anchor().replace(/^!/, ''));
+        var uri = BEM.blocks['uri'].parse(url),
+            hashBangUri = BEM.blocks['uri'].parse(uri.anchor().replace(/^!/, ''));
         
         uri.anchor('');
         uri.query(hashBangUri.query());

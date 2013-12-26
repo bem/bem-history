@@ -1,5 +1,3 @@
-/* globals Uri */
-
 BEM.decl({ block: 'history', modName: 'provider', modVal: 'history-api' }, {
 
     /**
@@ -37,7 +35,7 @@ BEM.decl({ block: 'history', modName: 'provider', modVal: 'history-api' }, {
     },
     
     _resetUrl: function() {
-        var uri = new Uri(window.location.href);
+        var uri = BEM.blocks['uri'].parse(window.location.href);
         
         if (uri.anchor()) {
             window.history.replaceState(null, document.title, this._removeHashbang(window.location.href));

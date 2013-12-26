@@ -1,5 +1,3 @@
-/* globals Uri */
-
 // @TODO
 // 1.+ try {} catch {} при засовывании url в history, если падает -> redirect
 
@@ -59,7 +57,7 @@ BEM.decl('location', {
     _syncState: function() {
         // var state = BEM.blocks['history'].getInstance().state,
         var state = this._history.state,
-            uri = new Uri(state.url);
+            uri = BEM.blocks['uri'].parse(state.url);
 
         this._state = $.extend(state.data, {
             referer: this._state && this._state.url,// реферер - предыдущий url
@@ -82,8 +80,8 @@ BEM.decl('location', {
      * @param {boolean} data.history создавать новый state или заменять текущий
      */
     change: function(data) {
-        var uri = new Uri(data.url);
-            // stateUri = new Uri(this._state.url); // TODO @mishanga подумать про кеширование
+        var uri = BEM.blocks['uri'].parse(data.url);
+            // stateUri = BEM.blocks['uri'].parse(this._state.url); // TODO @mishanga подумать про кеширование
         
         if (data.url) {
             delete data.params;
@@ -94,7 +92,7 @@ BEM.decl('location', {
         // Если есть параметры, то строим новый URL
         // console.log('data params', data.params);
         if (data.params) {
-            var newUrl = new Uri(),
+            var newUrl = BEM.blocks['uri'].parse(),
                 params = data.forceParams ? data.params : $.extend({}, this._state.params, data.params);
                 
             // console.log('\n\nparams', params);
@@ -130,6 +128,7 @@ BEM.decl('location', {
      * @returns {Object} state
      */
     getState: function() {
+        // console.log('getState deprecated! Use getReferer and getUri instead');
         return $.extend(true, {}, this._state);
     },
     
@@ -138,7 +137,15 @@ BEM.decl('location', {
      * @returns {Object} uriInstance    
      */
     getUri: function() {
-        return new Uri(this._state.url);
+        return BEM.blocks['uri'].parse(this._state.url);
+    },
+    
+    /**
+     * Возвращает предыдущий url
+     * @returns {String} refererUrl    
+     */
+    getReferer: function() {
+        return this._state.referer;
     }
 
 }, {

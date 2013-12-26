@@ -1,5 +1,8 @@
 ({
-    shouldDeps: {
-        mods: { provider: ['history-api', 'hashchange'] }
-    }
+    shouldDeps: [
+        { block: 'uri' },
+        {
+            mods: { provider: ['history-api', 'hashchange'] }
+        }
+    ]
 });

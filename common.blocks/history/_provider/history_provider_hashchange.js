@@ -1,5 +1,3 @@
-/* globals Uri */
-
 BEM.decl({ block: 'history', modName: 'provider', modVal: 'hashchange' }, {
     
     _onHashChange: function() {
@@ -39,7 +37,7 @@ BEM.decl({ block: 'history', modName: 'provider', modVal: 'hashchange' }, {
      * @returns {String}
      */
     _addHashbang: function(url) {
-        var uri = new Uri(url),
+        var uri = BEM.blocks['uri'].parse(url),
             path = uri.path().split('/');
         
         uri.anchor('!/' + path[path.length - 1] + uri.query());
@@ -49,7 +47,7 @@ BEM.decl({ block: 'history', modName: 'provider', modVal: 'hashchange' }, {
     },
     
     _resetUrl: function() {
-        var uri = new Uri(window.location.href);
+        var uri = BEM.blocks['uri'].parse(window.location.href);
         
         if (!uri.anchor()) {
             window.location.replace(this._addHashbang(window.location.href));
@@ -58,7 +56,7 @@ BEM.decl({ block: 'history', modName: 'provider', modVal: 'hashchange' }, {
     },
     
     changeState: function(method, state) {
-        var uri = new Uri(state.url);
+        var uri = BEM.blocks['uri'].parse(state.url);
         
         // TODO full origin check
         if (uri.host() && uri.host() !== window.location.hostname) {

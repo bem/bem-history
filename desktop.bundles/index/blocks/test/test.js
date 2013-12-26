@@ -29,7 +29,7 @@ BEM.DOM.decl('test', {
                 var u;
 
                 beforeEach(function() {
-                    u = new Uri('http://test.com');
+                    u = BEM.blocks['uri'].parse('http://test.com');
                 })
 
                 it('can replace protocol', function() {
@@ -43,7 +43,7 @@ BEM.DOM.decl('test', {
                 })
 
                 it('can add a hostname to a relative path', function() {
-                    u = new Uri('/index.html');
+                    u = BEM.blocks['uri'].parse('/index.html');
                     u.host('wherever.com');
                     expect(u.toString()).to.equal('wherever.com/index.html');
                 })
@@ -54,161 +54,176 @@ BEM.DOM.decl('test', {
                 })
 
                 it('should not add a port when there is no hostname', function() {
-                    u = new Uri('/index.html');
+                    u = BEM.blocks['uri'].parse('/index.html');
                     u.port(8080);
                     expect(u.toString()).to.equal('/index.html');
                 })
 
-                it('should  change the port', function() {
+                it('should change the port', function() {
                     u.port(8080);
                     expect(u.toString()).to.equal('http://test.com:8080');
                 })
 
-                it('should  add a path to a domain', function() {
-                    u = new Uri('test.com');
+                it('should add a path to a domain', function() {
+                    u = BEM.blocks['uri'].parse('test.com');
                     u.path('/some/article.html');
                     expect(u.toString()).to.equal('test.com/some/article.html')
                 })
 
-                it('should  change a path', function() {
+                it('should change a path', function() {
                     u.path('/some/article.html');
                     expect(u.toString()).to.equal('http://test.com/some/article.html');
                 })
 
-                it('should  delete a path', function() {
-                    u = new Uri('http://test.com/index.html');
+                it('should delete a path', function() {
+                    u = BEM.blocks['uri'].parse('http://test.com/index.html');
                     u.path(null);
                     expect(u.toString()).to.equal('http://test.com');
                 })
 
-                it('should  empty a path', function() {
-                    u = new Uri('http://test.com/index.html');
+                it('should empty a path', function() {
+                    u = BEM.blocks['uri'].parse('http://test.com/index.html');
                     u.path('');
                     expect(u.toString()).to.equal('http://test.com');
                 })
+                
+                it('should be able to parse query', function() {
+                    u = BEM.blocks['uri'].parse('http://test.com/index.html?param1=1&param2=21&param2=22');
+                    expect(u.queryParams).to.deep.equal({ param1: ['1'], param2: ['21', '22'] });
+                })
+                
+                it('should differ ?param from ?param=', function() {
+                    u = BEM.blocks['uri'].parse('http://test.com/index.html?param1&param2=&param1');
+                    expect(u.queryParams).to.deep.equal({ param1: [], param2: [''] });
+                })
 
-                it('should  add a query to nothing', function() {
-                    u = new Uri('');
+                it('should add a query to nothing', function() {
+                    u = BEM.blocks['uri'].parse('');
                     u.query('this=that&something=else');
                     expect(u.toString()).to.equal('?this=that&something=else');
                 })
 
-                it('should  add a query to a relative path', function() {
-                    u = new Uri('/some/file.html');
+                it('should add a query to a relative path', function() {
+                    u = BEM.blocks['uri'].parse('/some/file.html');
                     u.query('this=that&something=else');
                     expect(u.toString()).to.equal('/some/file.html?this=that&something=else');
                 })
 
-                it('should  add a query to a domain', function() {
-                    u = new Uri('test.com')
+                it('should add a query to a domain', function() {
+                    u = BEM.blocks['uri'].parse('test.com')
                     u.query('this=that&something=else')
                     expect(u.toString()).to.equal('test.com/?this=that&something=else')
                 })
 
-                it('should  swap a query', function() {
-                    u = new Uri('www.test.com?this=that&a=1&b=2c=3')
+                it('should swap a query', function() {
+                    u = BEM.blocks['uri'].parse('www.test.com?this=that&a=1&b=2c=3')
                     u.query('this=that&something=else')
                     expect(u.toString()).to.equal('www.test.com/?this=that&something=else')
                 })
 
-                it('should  delete a query', function() {
-                    u = new Uri('www.test.com?this=that&a=1&b=2c=3')
+                it('should delete a query', function() {
+                    u = BEM.blocks['uri'].parse('www.test.com?this=that&a=1&b=2c=3')
                     u.query(null)
                     expect(u.toString()).to.equal('www.test.com')
                 })
 
-                it('should  empty a query', function() {
-                    u = new Uri('www.test.com?this=that&a=1&b=2c=3')
+                it('should empty a query', function() {
+                    u = BEM.blocks['uri'].parse('www.test.com?this=that&a=1&b=2c=3')
                     u.query('')
                     expect(u.toString()).to.equal('www.test.com')
                 })
 
-                it('should  add an anchor to a domain', function() {
-                    u = new Uri('test.com')
+                it('should add an anchor to a domain', function() {
+                    u = BEM.blocks['uri'].parse('test.com')
                     u.anchor('content')
                     expect(u.toString()).to.equal('test.com/#content')
                 })
 
-                it('should  add an anchor with a hash prefix to a domain', function() {
-                    u = new Uri('test.com')
+                it('should add an anchor with a hash prefix to a domain', function() {
+                    u = BEM.blocks['uri'].parse('test.com')
                     u.anchor('#content')
                     expect(u.toString()).to.equal('test.com/#content')
                 })
 
-                it('should  add an anchor to a path', function() {
-                    u = new Uri('a/b/c/123.html')
+                it('should add an anchor to a path', function() {
+                    u = BEM.blocks['uri'].parse('a/b/c/123.html')
                     u.anchor('content')
                     expect(u.toString()).to.equal('a/b/c/123.html#content')
                 })
 
-                it('should  change an anchor', function() {
-                    u = new Uri('/a/b/c/index.html#content')
+                it('should change an anchor', function() {
+                    u = BEM.blocks['uri'].parse('/a/b/c/index.html#content')
                     u.anchor('about')
                     expect(u.toString()).to.equal('/a/b/c/index.html#about')
                 })
 
-                it('should  empty an anchor', function() {
-                    u = new Uri('/a/b/c/index.html#content')
+                it('should empty an anchor', function() {
+                    u = BEM.blocks['uri'].parse('/a/b/c/index.html#content')
                     u.anchor('')
                     expect(u.toString()).to.equal('/a/b/c/index.html')
                 })
 
-                it('should  delete an anchor', function() {
-                    u = new Uri('/a/b/c/index.html#content')
+                it('should delete an anchor', function() {
+                    u = BEM.blocks['uri'].parse('/a/b/c/index.html#content')
                     u.anchor(null)
                     expect(u.toString()).to.equal('/a/b/c/index.html')
                 })
 
-                // it('should  get single encoded values', function() {
-                //     u = new Uri('http://example.com/search?q=%40')
-                //     expect(u.getQueryParamValues('q')[0]).to.equal('@')
-                // })
+                it('should get single encoded values', function() {
+                    u = BEM.blocks['uri'].parse('http://example.com/search?q=%40')
+                    expect(u.getQueryParamValues('q')[0]).to.equal('@')
+                })
 
-                // it('should  get double encoded values', function() {
-                //     u = new Uri('http://example.com/search?q=%2540')
-                //     expect(u.getQueryParamValues('q')[0]).to.equal('%40')
-                // })
+                it('should get double encoded values', function() {
+                    u = BEM.blocks['uri'].parse('http://example.com/search?q=%2540')
+                    expect(u.getQueryParamValues('q')[0]).to.equal('%40')
+                })
 
-                it('should  work with %40 values', function() {
-                    u = new Uri('http://example.com/search?q=%40&stupid=yes')
+                it('should work with %40 values', function() {
+                    u = BEM.blocks['uri'].parse('http://example.com/search?q=%40&stupid=yes')
                     u.deleteQueryParam('stupid')
                     expect(u.toString()).to.equal('http://example.com/search?q=%40')
                 })
 
-                it('should  work with %25 values', function() {
-                    u = new Uri('http://example.com/search?q=100%25&stupid=yes')
+                it('should work with %25 values', function() {
+                    u = BEM.blocks['uri'].parse('http://example.com/search?q=100%25&stupid=yes')
                     u.deleteQueryParam('stupid')
                     expect(u.toString()).to.equal('http://example.com/search?q=100%25')
                 })
 
                 it('should insert missing slash when origin and path have no slash', function () {
-                    u = new Uri('http://test.com')
+                    u = BEM.blocks['uri'].parse('http://test.com')
                     u.path('relativePath')
                     expect(u.toString()).to.equal('http://test.com/relativePath')
                 })
 
                 it('should remove extra slash when origin and path both provide a slash', function () {
-                    u = new Uri('http://test.com/')
+                    u = BEM.blocks['uri'].parse('http://test.com/')
                     u.path('/relativePath')
                     expect(u.toString()).to.equal('http://test.com/relativePath')
                 })
 
                 // it('should remove extra slashes when origin and path both provide too many slashes', function () {
-                //     u = new Uri('http://test.com//')
+                //     u = BEM.blocks['uri'].parse('http://test.com//')
                 //     u.path('//relativePath')
                 //     expect(u.toString()).to.equal('http://test.com/relativePath')
                 // })
 
                 // it('preserves the format of file uris', function() {
                 //     var str = 'file://c:/parent/child.ext'
-                //     var uri = new Uri(str)
+                //     var uri = BEM.blocks['uri'].parse(str)
                 //     expect(uri.toString()).to.equal(str)
                 // })
 
                 it('correctly composes url encoded urls', function() {
                     var originalQuery = '?k=%40v'
-                    var parsed = new Uri('http://example.com' + originalQuery)
+                    var parsed = BEM.blocks['uri'].parse('http://example.com' + originalQuery)
                     expect(parsed.query()).to.equal(originalQuery)
+                })
+                
+                it('should be able to return url root', function() {
+                    u = BEM.blocks['uri'].parse('http://test.com/ololo/trololo.html?param1=1#!123');
+                    expect(u.getRoot()).to.equal('http://test.com/ololo');
                 })
             })
             
@@ -220,41 +235,35 @@ BEM.DOM.decl('test', {
                 var h = BEM.blocks['history'].getInstance(),
                     l = BEM.blocks['location'].getInstance();
                     
-            
+                
+                describe('history block', function() {
+                    
+                    it('should be able to add hashbang to url', function() {
+                        var url = h._addHashbang('/desktop.bundles/index/index.html?test=a&ololo=123'),
+                            checkUrl = BEM.blocks['uri'].parse('/desktop.bundles/index/index.html#!/index.html?test=a&ololo=123');
+                        expect(url).to.equal(checkUrl.build());
+                    })
+                    
+                })
+                
                 describe('location block', function() {
                     
-                    it('should  change location by path and emit event hashchange', function(done){
-                        // BEM.DOM.win.on('hashchange', function () {
-                        //     assert(true);
-                        //     done();
-                        // });
-                
+                    it('should change location by path and emit event hashchange', function() {
                         l.change({ url: '/desktop.bundles/index/index.html?test=a&ololo=123' });
-                        assert(true);
-                        // expect(window.location.href).to.equal('file:///desktop.bundles/index/index.html#!/index.html?test=a&ololo=123');
-                        done();
+                        var u = BEM.blocks['uri'].parse(window.location.href);
+                        expect(u.query() + '#' + u.anchor()).to.equal('#!/index.html?test=a&ololo=123');
                     })
                     
-                    it('should  change location by params with forceParams flag and emit event hashchange', function(done){
-                        // BEM.DOM.win.on('hashchange', function () {
-                        //     assert(true);
-                        //     done();
-                        // });
-                
+                    it('should change location by params with forceParams flag and emit event hashchange', function() {
                         l.change({ params: { test: [1,2] }, forceParams: true });
-                        assert(true);
-                        done();
+                        var u = BEM.blocks['uri'].parse(window.location.href);
+                        expect(u.query() + '#' + u.anchor()).to.equal('#!/index.html?test=1&test=2');
                     })
                     
-                    it('should  change location by params without forceParams flag and emit event hashchange', function(done){
-                        // BEM.DOM.win.on('hashchange', function () {
-                        //     assert(true);
-                        //     done();
-                        // });
-                
+                    it('should change location by params without forceParams flag and emit event hashchange', function() {
                         l.change({ params: { param2: [22] } });
-                        assert(true);
-                        done();
+                        var u = BEM.blocks['uri'].parse(window.location.href);
+                        expect(u.query() + '#' + u.anchor()).to.equal('#!/index.html?test=1&test=2&param2=22');
                     })
                 
                 })
@@ -267,43 +276,35 @@ BEM.DOM.decl('test', {
                 
                 var h = BEM.blocks['history'].getInstance(),
                     l = BEM.blocks['location'].getInstance();
-            
+                
+                describe('history block', function() {
+                    
+                    it('should be able to remove hashbang from url', function() {
+                        var url = h._removeHashbang('/desktop.bundles/index/index.html#!/index.html?test=a&ololo=123'),
+                            checkUrl = BEM.blocks['uri'].parse('/desktop.bundles/index/index.html?test=a&ololo=123');
+                        expect(url).to.equal(checkUrl.build());
+                    })
+                    
+                })
+                
                 describe('location block', function() {
                     
-                    it('should  change location by path and emit history event statechange', function(done){
-                        // h.on('statechange', function () {
-                        //     assert(true);
-                        //     done();
-                        // });
-                
+                    it('should change location by path and emit history event statechange', function() {
                         l.change({ url: '/desktop.bundles/index/index.html?test=a&ololo=123' });
-                        // assert(true);
-                        expect(window.location.href).to.equal('file:///desktop.bundles/index/index.html?test=a&ololo=123');
-                        done();
+                        var u = BEM.blocks['uri'].parse(window.location.href);
+                        expect(u.path() + u.query()).to.equal('/desktop.bundles/index/index.html?test=a&ololo=123');
                     })
                     
-                    it('should  change location by params with forceParams flag and emit history event statechange', function(done){
-                        // h.on('statechange', function () {
-                        //     assert(true);
-                        //     done();
-                        // });
-            
+                    it('should change location by params with forceParams flag and emit history event statechange', function() {
                         l.change({ params: { test: [1,2] }, forceParams: true });
-                        // assert(true);
-                        expect(window.location.href).to.equal('file:///desktop.bundles/index/index.html?test=1&test=2');
-                        done();
+                        var u = BEM.blocks['uri'].parse(window.location.href);
+                        expect(u.path() + u.query()).to.equal('/desktop.bundles/index/index.html?test=1&test=2');
                     })
                 
-                    it('should  change location by params without forceParams flag and emit history event statechange', function(done){
-                        // h.on('statechange', function () {
-                        //     assert(true);
-                        //     done();
-                        // });
-            
+                    it('should change location by params without forceParams flag and emit history event statechange', function() {
                         l.change({ params: { param2: [22] } });
-                        // assert(true);
-                        expect(window.location.href).to.equal('file:///desktop.bundles/index/index.html?test=1&test=2&param2=22');
-                        done();
+                        var u = BEM.blocks['uri'].parse(window.location.href);
+                        expect(u.path() + u.query()).to.equal('/desktop.bundles/index/index.html?test=1&test=2&param2=22');
                     })
                     
                 })

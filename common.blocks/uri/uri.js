@@ -19,34 +19,60 @@
 // 3.+ license
 // 4. normalization. Создание копии объекта по uriParts через extend
 
-(function(global) {
+BEM.decl('uri', {
 
+    onSetMod: {
+        js: function() {
+            /**
+             * Defines getter/setter methods
+             */
+            var _this = this;
+            
+            ['protocol', 'host', 'port', 'path', 'anchor'].forEach(function(key) {
+                _this[key] = function(val) {
+                    if (typeof val !== 'undefined') {
+                        this.uriParts[key] = val;
+                    }
+        
+                    return this.uriParts[key];
+                };
+            });
+        }
+    },
+    
     /**
-     * unescape a query param value
-     * @param  {string} s encoded value
-     * @return {string}   decoded value
+     * Encode string
+     * @param  {string} str raw string
+     * @return {string}     encoded string
      */
-/*
-    function decode(s) {
-        return decodeURIComponent(s).replace('+', ' ');
-    }
-*/
+    encode: function(str) {
+        return encodeURIComponent(str);
+    },
+    
     /**
-     * Creates a new Uri object
-     * @constructor
-     * @param {string} str
+     * Decode string
+     * @param  {string} str encoded string
+     * @return {string}     original string
      */
-    function Uri(str) {
-        this.uriParts = this.parseUri(str);
-        this.queryParams = this.parseQuery(this.uriParts.query);
-    }
+    decode: function(str) {
+        return decodeURIComponent(str);
+    },
+    
+    /**
+     * Normalizes url string to percentage encoding
+     * @param  {string} str original url
+     * @return {string}     normalized string
+     */
+    normalize: function(str) {
+        return (str || '').replace(/\+/g, '%20');
+    },
     
     /**
      * Breaks a uri string down into its individual parts
      * @param  {string} str uri
      * @return {object}     parts
      */
-    Uri.prototype.parseUri = function(str) {
+    parseUri: function(str) {
         var regexpParts = [
                 '^(?:(?![^:@]+:[^:@\\/]*@)([^:\\/?#.]+):)?(?:\\/\\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)',
                 '?([^:\\/?#]*)(?::(\\d*))?)',
@@ -65,14 +91,17 @@
         });
         
         return parts;
-    };
+    },
     
     /**
      * Breaks a query string down into an array of key/value pairs
+     * ?param=11 -> { param: ['11'] }
+     * ?param=   -> { param: [''] }
+     * ?param    -> { param: [] }
      * @param  {string} str query
      * @return {array}      array of arrays (key/value pairs)
      */
-    Uri.prototype.parseQuery = function parseQuery(str) {
+    parseQuery: function(str) {
         var i, ps, kvp, k, v,
             params = {};
 
@@ -84,36 +113,23 @@
 
         for (i = 0; i < ps.length; i++) {
             kvp = ps[i].split('=');
-            k = kvp[0];
-            v = kvp[1] || null;
+            k = this.decode(kvp[0]);
+            v = (kvp[1] || kvp[1] === '') ? this.decode(kvp[1]) : null;
             if (params[k]) {
-                params[k].push(v);
+                (v || v === '') && params[k].push(v);
             } else {
-                params[k] = [v];
+                params[k] = (v === null) ? [] : [v];
             }
         }
         return params;
-    };
-    
-    /**
-     * Define getter/setter methods
-     */
-    ['protocol', 'host', 'port', 'path', 'anchor'].forEach(function(key) {
-        Uri.prototype[key] = function(val) {
-            if (typeof val !== 'undefined') {
-                this.uriParts[key] = val;
-            }
-            
-            return this.uriParts[key];
-        };
-    });
+    },
 
     /**
      * Serializes the internal state of the query pairs
      * @param  {string} [val]   set a new query string
      * @return {string}         query string
      */
-    Uri.prototype.query = function(val) {
+    query: function(val) {
         var s = '';
 
         if (typeof val !== 'undefined') {
@@ -121,7 +137,8 @@
         }
         
         var params = this.queryParams,
-            queryKeys = Object.keys(params);
+            queryKeys = Object.keys(params),
+            _this = this;
 
         queryKeys.forEach(function(key, index) {
             if (index > 0) {
@@ -134,22 +151,22 @@
                     if (i > 0) {
                         s += '&';
                     }
-                    s += key + '=' + v;
+                    s += _this.encode(key) + '=' + _this.encode(v);
                 });
             }
         });
 
         return s.length > 0 ? '?' + s : s;
-    };
+    },
 
     /**
      * returns an array of query param values for the key
      * @param  {string} key query key
      * @return {array}      array of values
      */
-    Uri.prototype.getQueryParamValues = function(key) {
+    getQueryParamValues: function(key) {
         return this.queryParams[key];
-    };
+    },
 
     /**
      * removes query parameters
@@ -157,7 +174,7 @@
      * @param  {val}    [val]   remove a specific value, otherwise removes all
      * @return {Uri}            returns self for fluent chaining
      */
-    Uri.prototype.deleteQueryParam = function(key, val) {
+    deleteQueryParam: function(key, val) {
         var newParams = [];
 
         if (typeof val !== 'undefined') {
@@ -174,7 +191,7 @@
         }
         
         return this;
-    };
+    },
 
     /**
      * adds a query parameter
@@ -183,11 +200,11 @@
      * @param  {integer} [index]    specific index to add the value at
      * @return {Uri}                returns self for fluent chaining
      */
-    Uri.prototype.addQueryParam = function(key, val) {
+    addQueryParam: function(key, val) {
         this.queryParams[key] = (this.queryParams[key] || []).concat(val);
         
         return this;
-    };
+    },
 
     /**
      * replaces query param values
@@ -196,16 +213,16 @@
      * @param  {string} [oldVal]    replace only one specific value (otherwise replaces all)
      * @return {Uri}                returns self for fluent chaining
      */
-    Uri.prototype.replaceQueryParam = function(key, newVal, oldVal) {
+    replaceQueryParam: function(key, newVal, oldVal) {
         return this.deleteQueryParam(key, oldVal)
                    .addQueryParam(key, newVal);
-    };
+    },
 
     /**
      * Scheme name, colon and doubleslash, as required
      * @return {string} http:// or possibly just //
      */
-    Uri.prototype.scheme = function() {
+    scheme: function() {
         var s = '';
 
         if (this.protocol()) {
@@ -222,14 +239,14 @@
         // }
 
         return s;
-    };
+    },
 
     /**
      * Same as Mozilla nsIURI.prePath
      * @return {string} scheme://user:password@host:port
      * @see  https://developer.mozilla.org/en/nsIURI
      */
-    Uri.prototype.origin = function() {
+    origin: function() {
         var s = this.scheme();
 
         if (this.host()) {
@@ -240,13 +257,27 @@
         }
 
         return s;
-    };
+    },
+    
+    /**
+     * Returns url root
+     * @return {string} scheme://host:port + path without last
+     */
+    getRoot: function() {
+        var s = this.origin();
+
+        if (this.path()) {
+            s += this.path().replace(/\/[^\/]*$/, '');
+        }
+
+        return s;
+    },
 
     /**
      * Serializes the internal state of the Uri object
      * @return {string}
      */
-    Uri.prototype.toString = function() {
+    toString: function() {
         var s = this.origin();
 
         if (this.path()) {
@@ -275,14 +306,14 @@
         }
 
         return s;
-    };
+    },
     
     /**
      * Serializes the internal state of the Uri object
      * and replaces empty parts from current page state
      * @return {string}
      */
-    Uri.prototype.build = function() {
+    build: function() {
         var s = '';
         
         // Нет протокола/хоста – ставим текущие
@@ -321,7 +352,19 @@
         }
         
         return s;
-    };
+    }
 
-    global.Uri = Uri;
-}(this));
+}, {
+
+    parse: function(str) {
+        var uri = BEM.create({ block: 'uri' });
+        
+        uri.uriParts = uri.parseUri(uri.normalize(str));
+        uri.queryParams = uri.parseQuery(uri.uriParts.query);
+        
+        return uri;
+    }
+
+}
+
+);
