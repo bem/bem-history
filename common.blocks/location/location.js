@@ -128,6 +128,7 @@ provide(new inherit(events.Emitter, {
      * @returns {Object} state
      */
     getState: function() {
+        console.log('getState deprecated! Use getReferer and getUri instead');
         return objects.extend(true, {}, this._state);
     },
     
@@ -137,6 +138,14 @@ provide(new inherit(events.Emitter, {
      */
     getUri: function() {
         return new Uri(this._state.url);
+    },
+    
+    /**
+     * Возвращает предыдущий url
+     * @returns {String} refererUrl    
+     */
+    getReferer: function() {
+        return this._state.referer;
     }
     
 })());
