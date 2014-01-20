@@ -42,6 +42,11 @@
     History.options.doubleCheckInterval = History.options.doubleCheckInterval || 500;
 
     /**
+     * History.options.beforeLoadPollInterval
+     */
+    History.options.beforeLoadPollInterval = History.options.beforeLoadPollInterval || 250;
+
+    /**
      * History.options.busyDelay
      * How long should we wait between busy events
      */
@@ -114,6 +119,14 @@
     };
 
     /**
+     * Android check.
+     * @return {boolean}
+     */
+    History.isAndroid = function() {
+        return (/Android \d+.\d+/i).test(navigator.userAgent);
+    };
+
+    /**
      * History.emulated
      * Which features require emulating?
      */
@@ -155,7 +168,13 @@
         /**
          * MSIE 6 and 7 sometimes do not apply a hash even it was told to (requiring a second call to the apply function)
          */
-        ieDoubleCheck: Boolean(History.isMSIE() && History.browserVersion() < 8)
+        ieDoubleCheck: Boolean(History.isMSIE() && History.browserVersion() < 8),
+
+        /**
+         * Android during page load don't trigger `onpopstate` event.
+         * https://code.google.com/p/android/issues/detail?id=12226
+         */
+        beforeLoadPoll: Boolean(History.isAndroid())
     };
 
     /**
@@ -1016,6 +1035,16 @@
                     $window.trigger('hashchange');
                 });
             }
+        }
+
+        // Fix broken before load `onpopstate` event
+        if (History.bugs.beforeLoadPoll) {
+            $(function() {
+                History.intervalList.push(setInterval(History.safariStatePoll, History.options.beforeLoadPollInterval));
+            });
+            $window.bind('load', function() {
+                clearInterval(History.intervalList.pop());
+            });
         }
 
     };
