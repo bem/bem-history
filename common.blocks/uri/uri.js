@@ -13,12 +13,6 @@
  * Released under the MIT license.
  */
 
-// @TODO
-// 1.+ param values as arrays (get, set, replace methods)
-// 2.+ query params as object { key1: [value], key2: [value1, value2] }
-// 3.+ license
-// 4. normalization. Создание копии объекта по uriParts через extend
-
 BEM.decl('uri', {
 
     onSetMod: {
@@ -42,8 +36,8 @@ BEM.decl('uri', {
     
     /**
      * Encode string
-     * @param  {string} str raw string
-     * @return {string}     encoded string
+     * @param  {String} str raw string
+     * @returns {String}    encoded string
      */
     encode: function(str) {
         return encodeURIComponent(str);
@@ -51,8 +45,8 @@ BEM.decl('uri', {
     
     /**
      * Decode string
-     * @param  {string} str encoded string
-     * @return {string}     original string
+     * @param  {String} str encoded string
+     * @returns {String}    original string
      */
     decode: function(str) {
         return decodeURIComponent(str);
@@ -60,8 +54,8 @@ BEM.decl('uri', {
     
     /**
      * Normalizes url string to percentage encoding
-     * @param  {string} str original url
-     * @return {string}     normalized string
+     * @param  {String} str original url
+     * @returns {String}    normalized string
      */
     normalize: function(str) {
         return (str || '').replace(/\+/g, '%20');
@@ -69,8 +63,8 @@ BEM.decl('uri', {
     
     /**
      * Breaks a uri string down into its individual parts
-     * @param  {string} str uri
-     * @return {object}     parts
+     * @param  {String} str uri
+     * @returns {Object}    parts
      */
     parseUri: function(str) {
         var regexpParts = [
@@ -98,8 +92,8 @@ BEM.decl('uri', {
      * ?param=11 -> { param: ['11'] }
      * ?param=   -> { param: [''] }
      * ?param    -> { param: [] }
-     * @param  {string} str query
-     * @return {array}      array of arrays (key/value pairs)
+     * @param  {String} str query
+     * @returns {Array}     array of arrays (key/value pairs)
      */
     parseQuery: function(str) {
         var i, ps, kvp, k, v,
@@ -126,8 +120,8 @@ BEM.decl('uri', {
 
     /**
      * Serializes the internal state of the query pairs
-     * @param  {string} [val]   set a new query string
-     * @return {string}         query string
+     * @param  {String} [val]  set a new query string
+     * @returns {String}       query string
      */
     query: function(val) {
         var s = '';
@@ -144,7 +138,7 @@ BEM.decl('uri', {
             if (index > 0) {
                 s += '&';
             }
-            if (params[key] === null) {
+            if (typeof params[key] === 'object' && !params[key].length) {
                 s += key;
             } else {
                 params[key].forEach(function(v, i) {
@@ -161,20 +155,20 @@ BEM.decl('uri', {
 
     /**
      * returns an array of query param values for the key
-     * @param  {string} key query key
-     * @return {array}      array of values
+     * @param  {String} key query key
+     * @returns {Array}     array of values
      */
-    getQueryParamValues: function(key) {
+    getParam: function(key) {
         return this.queryParams[key];
     },
 
     /**
      * removes query parameters
-     * @param  {string} key     remove values for key
+     * @param  {String} key     remove values for key
      * @param  {val}    [val]   remove a specific value, otherwise removes all
-     * @return {Uri}            returns self for fluent chaining
+     * @returns {Uri}           returns self for fluent chaining
      */
-    deleteQueryParam: function(key, val) {
+    deleteParam: function(key, val) {
         var newParams = [];
 
         if (typeof val !== 'undefined') {
@@ -195,12 +189,12 @@ BEM.decl('uri', {
 
     /**
      * adds a query parameter
-     * @param  {string}  key        add values for key
-     * @param  {string}  val        value to add
+     * @param  {String}  key        add values for key
+     * @param  {String}  val        value to add
      * @param  {integer} [index]    specific index to add the value at
-     * @return {Uri}                returns self for fluent chaining
+     * @returns {Uri}               returns self for fluent chaining
      */
-    addQueryParam: function(key, val) {
+    addParam: function(key, val) {
         this.queryParams[key] = (this.queryParams[key] || []).concat(val);
         
         return this;
@@ -208,19 +202,19 @@ BEM.decl('uri', {
 
     /**
      * replaces query param values
-     * @param  {string} key         key to replace value for
-     * @param  {string} newVal      new value
-     * @param  {string} [oldVal]    replace only one specific value (otherwise replaces all)
-     * @return {Uri}                returns self for fluent chaining
+     * @param  {String} key         key to replace value for
+     * @param  {String} newVal      new value
+     * @param  {String} [oldVal]    replace only one specific value (otherwise replaces all)
+     * @returns {Uri}               returns self for fluent chaining
      */
-    replaceQueryParam: function(key, newVal, oldVal) {
-        return this.deleteQueryParam(key, oldVal)
-                   .addQueryParam(key, newVal);
+    replaceParam: function(key, newVal, oldVal) {
+        return this.deleteParam(key, oldVal)
+                   .addParam(key, newVal);
     },
 
     /**
      * Scheme name, colon and doubleslash, as required
-     * @return {string} http:// or possibly just //
+     * @returns {String} http:// or possibly just //
      */
     scheme: function() {
         var s = '';
@@ -243,8 +237,8 @@ BEM.decl('uri', {
 
     /**
      * Same as Mozilla nsIURI.prePath
-     * @return {string} scheme://user:password@host:port
      * @see  https://developer.mozilla.org/en/nsIURI
+     * @returns {String} scheme://user:password@host:port
      */
     origin: function() {
         var s = this.scheme();
@@ -261,7 +255,7 @@ BEM.decl('uri', {
     
     /**
      * Returns url root
-     * @return {string} scheme://host:port + path without last
+     * @returns {String} scheme://host:port + path without last
      */
     getRoot: function() {
         var s = this.origin();
@@ -272,10 +266,18 @@ BEM.decl('uri', {
 
         return s;
     },
+    
+    /**
+     * Returns an array of path parts
+     * @returns {Object} path parts
+     */
+    pathParts: function() {
+        return this.path().split('/');
+    },
 
     /**
      * Serializes the internal state of the Uri object
-     * @return {string}
+     * @returns {String}
      */
     toString: function() {
         var s = this.origin();
@@ -311,7 +313,7 @@ BEM.decl('uri', {
     /**
      * Serializes the internal state of the Uri object
      * and replaces empty parts from current page state
-     * @return {string}
+     * @returns {String}
      */
     build: function() {
         var s = '';
@@ -356,6 +358,11 @@ BEM.decl('uri', {
 
 }, {
 
+    /**
+     * Parses input url and returns Uri instance
+     * @param  {String}  str input url
+     * @returns {String}
+     */
     parse: function(str) {
         var uri = BEM.create({ block: 'uri' });
         

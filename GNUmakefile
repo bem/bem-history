@@ -3,6 +3,7 @@
 NODE_MODULES := ./node_modules/
 
 ENB := $(NODE_MODULES).bin/enb
+BOWER := $(NODE_MODULES).bin/bower
 NPM := npm
 
 ifneq (,$(findstring B,$(MAKEFLAGS)))
@@ -26,9 +27,8 @@ $(NODE_MODULES)::
 	@$(NPM) install
 
 install:
-	npm install
-	git submodule init
-	git submodule update
+	@$(NPM) install
+	@$(BOWER) install
 
 .PHONY: clean
 clean::

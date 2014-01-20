@@ -1,4 +1,5 @@
 node_modules/
 desktop.bundles/
+libs/
 .idea
 .DS_Store

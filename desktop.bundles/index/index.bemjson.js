@@ -10,7 +10,7 @@
             block: 'test',
             js: true
         },
-        { elem: 'js', url: 'http://yandex.st/jquery/1.7.2/jquery.min.js' },
+        { elem: 'js', url: 'http://yandex.st/jquery/1.8.3/jquery.min.js' },
         
         { elem: 'js', url: '../../node_modules/chai/chai.js' },
         { elem: 'js', url: '../../node_modules/mocha/mocha.js' },

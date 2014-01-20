@@ -1,15 +1,10 @@
 /**
- * Polyfill for History API.
+ * BEM wrap for History API.
  * @see https://developer.mozilla.org/en-US/docs/DOM/window.history
  *
  * @property {Object} state Current state.
  */
 
-// @TODO
-// 1.+ произвольный url (http://, /dfsdf/sdfsdf), разный origin
-// 2.+ "Только еще хочется, чтобы history, когда триггерит событие statechange, 
-// просовывал туда флаг native = true | false
-// Если вдруг это понадобится в location." @mishanga
 // 3. "Про автоматический редирект надо сделать возможность 
 // его отключить, т.к. это не всегда безопасно делать. Возможно, 
 // сервис захочет отправить какой-нибудь счётчик перед редиректом." @mishanga
@@ -22,7 +17,8 @@ BEM.decl('history', {
                 throw new Error('Use BEM.blocks[\'history\'].getInstance() instead of BEM.create(\'history\')');
             }
 
-            this._resetUrl()
+            this
+                ._resetUrl()
                 .bindEvents()
                 .syncState();
         }
@@ -67,13 +63,6 @@ BEM.decl('history', {
      * @returns {Object}
      */
     bindEvents: function() {
-        // this.on('statechange', function() {
-        //     console.log('\n\nstatechange');
-        //     console.log('   data:   ', this.state.data);
-        //     console.log('   title:  ', this.state.title);
-        //     console.log('   url:    ', this.state.url);
-        // });
-        
         return this;
     },
     
@@ -82,6 +71,7 @@ BEM.decl('history', {
      * Method have to be extended in modificators.
      *
      * @returns {Object}
+     * @private
      */
     _resetUrl: function() {
         return this;
@@ -93,15 +83,17 @@ BEM.decl('history', {
      *
      * @param {String} url
      * @returns {String}
+     * @private
      */
     _removeHashbang: function(url) {
-        var uri = BEM.blocks['uri'].parse(url),
-            hashBangUri = BEM.blocks['uri'].parse(uri.anchor().replace(/^!/, ''));
+        var uri = BEM.blocks.uri,
+            parsedUri = uri.parse(url),
+            hashbangUri = uri.parse(parsedUri.anchor().replace(/^!/, ''));
         
-        uri.anchor('');
-        uri.query(hashBangUri.query());
+        parsedUri.anchor('');
+        parsedUri.query(hashbangUri.query());
         
-        return uri.build();
+        return parsedUri.build();
     },
     
     /**
@@ -161,13 +153,17 @@ BEM.decl('history', {
 
 }, {
 
-    instance: null,
+    hasNativeAPI: function() {
+        return (window.history && 'pushState' in window.history);
+    },
+
+    _instance: null,
 
     getInstance: function() {
-        return this.instance || (this.instance = BEM.create({
+        return this._instance || (this._instance = BEM.create({
             block: 'history',
             mods: {
-                'provider': window.history.pushState ? 'history-api' : 'hashchange'
+                provider: this.hasNativeAPI() ? 'history-api' : 'hashchange'
             }
         }));
     }

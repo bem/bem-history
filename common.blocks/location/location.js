@@ -1,19 +1,12 @@
-// @TODO
-// 1.+ try {} catch {} при засовывании url в history, если падает -> redirect
-
 BEM.decl('location', {
 
     onSetMod: {
 
         js: function() {
-            this._history = BEM.blocks['history'].getInstance();
+            this._history = BEM.blocks.history.getInstance();
 
             this._syncState();
             this._history.on('statechange', this.changeThis(this._onStateChange));
-
-            // слушаем кастомное событие History.js
-            // BEM.DOM.win.bind('statechange', this.changeThis(this._onStateChange));
-            // @TODO падает при передачи this третьим аргументом            
         }
 
     },
@@ -25,27 +18,16 @@ BEM.decl('location', {
      * @param {Object} event params
      */
     _onStateChange: function() {
-        // console.log('\n\n!!!!!!!!! location _onStateChange fired, event:', event);
-        // console.log('params:', params);
-        
         this._syncState();
 
         if (this._state.trigger !== false) {
             this.trigger('change', this._state);
 
-            // позволяем делать перблочную привязку
-            // @ TODO: пока общий state object. потом можно сделать отдельный для каждого object
-            // BEM.blocks['location'].on('b-preview', function() {});
-            // TODO @mishanga переделать на каналы
-            // this._state.block &&
-            //     this.trigger(this._state.block, this._state);
+            // Позволяем делать перблочную привязку
             this._state.block &&
                 this.channel(this._state.block)
                     .trigger('change');
         }
-
-        // Всегда удаляем trigger, иначе back-button может не сработать
-        delete this._state.trigger;
     },
 
     /**
@@ -55,11 +37,10 @@ BEM.decl('location', {
      * @private
      */
     _syncState: function() {
-        // var state = BEM.blocks['history'].getInstance().state,
         var state = this._history.state,
-            uri = BEM.blocks['uri'].parse(state.url);
+            uri = BEM.blocks.uri.parse(state.url);
 
-        this._state = $.extend(state.data, {
+        this._state = $.extend({}, state.data, {
             referer: this._state && this._state.url,// реферер - предыдущий url
             url: uri.build(),                       // полный URL страницы –
             // http://yandex.com.tr/yandsearch?text=ololo&lr=213
@@ -80,8 +61,7 @@ BEM.decl('location', {
      * @param {boolean} data.history создавать новый state или заменять текущий
      */
     change: function(data) {
-        var uri = BEM.blocks['uri'].parse(data.url);
-            // stateUri = BEM.blocks['uri'].parse(this._state.url); // TODO @mishanga подумать про кеширование
+        var uri = BEM.blocks.uri.parse(data.url);
         
         if (data.url) {
             delete data.params;
@@ -90,17 +70,12 @@ BEM.decl('location', {
         data.url = uri.build();
 
         // Если есть параметры, то строим новый URL
-        // console.log('data params', data.params);
         if (data.params) {
-            var newUrl = BEM.blocks['uri'].parse(),
+            var newUrl = BEM.blocks.uri.parse(),
                 params = data.forceParams ? data.params : $.extend({}, this._state.params, data.params);
-                
-            // console.log('\n\nparams', params);
-            // console.log('state params', this._state.params);
-            
-            // newUrl.host(data.domain);
+
             Object.keys(params).forEach(function(key) {
-                newUrl.addQueryParam(key, params[key]);
+                newUrl.addParam(key, params[key]);
             });
             data.url = newUrl.build();
         }
@@ -122,7 +97,6 @@ BEM.decl('location', {
         }
     },
     
-    // TODO Как используется getState, может имеет смысл заменить на getUri и getReferer
     /**
      * Возвращает текущий state
      * @returns {Object} state
@@ -137,7 +111,7 @@ BEM.decl('location', {
      * @returns {Object} uriInstance    
      */
     getUri: function() {
-        return BEM.blocks['uri'].parse(this._state.url);
+        return BEM.blocks.uri.parse(this._state.url);
     },
     
     /**

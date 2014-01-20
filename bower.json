@@ -1,0 +1,16 @@
+{
+  "name": "bem-history",
+  "version": "1.1.0",
+  "description": "BEM-wrap for history API",
+  "icon": "",
+  "ignore": [
+    ".bem/cache",
+    "node_modules",
+    "lib",
+    "libs",
+    "examples.blocks"
+  ],
+  "devDependencies": {
+    "bem-bl": "git://github.com/bem/bem-bl.git#~0.3.19"
+  }
+}

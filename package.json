@@ -21,9 +21,10 @@
         "mocha": "1.8",
         "chai": "1.8.1",
         "phantomjs": "1.9",
-        "mocha-phantomjs": "3.0"
+        "mocha-phantomjs": "3.0",
+        "bower": "1.2"
     },
     "scripts": {
-        "test": "./node_modules/.bin/jshint-groups && ./node_modules/.bin/jscs . && ./node_modules/enb/bin/enb make && mocha-phantomjs ./desktop.bundles/index/index.html"
+        "test": "./node_modules/.bin/jshint-groups && ./node_modules/.bin/jscs common.blocks && ./node_modules/.bin/bower install && ./node_modules/enb/bin/enb make && mocha-phantomjs ./desktop.bundles/index/index.html"
     }
 }

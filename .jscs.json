@@ -1,14 +1,4 @@
 {
-    "excludeFiles": [
-        ".git/**",
-        ".bem/**",
-        "node_modules/**",
-        "libs/**",
-        "pages-*/**",
-        "*.bundles/**",
-        "bem-bl/**",
-        "bemhtml/**"
-    ],
     "requireCurlyBraces": [
         "else",
         "while",
@@ -67,7 +57,7 @@
         "string"
     ],
     "disallowKeywords": ["with"],
-    "disallowMulipleLineBreaks": true,
+    "disallowMultipleLineBreaks": true,
     "disallowKeywordsOnNewLine": ["else", "catch"],
     "requireLineFeedAtFileEnd": true,
     "validateJSDoc": {
