@@ -25,6 +25,6 @@
     },
     "private": true,
     "scripts": {
-        "test": "jshint-groups && jscs ."
+        "test": "./node_modules/.bin/jshint-groups && ./node_modules/.bin/jscs ./common.blocks"
     }
 }

@@ -1,31 +1,41 @@
 module.exports = {
     options: {
-        eqeqeq: true,
-        evil: true,
-        expr: true,
-        forin: true,
-        immed: true,
-        indent: 4,
-        latedef: true,
-        maxdepth: 4,
-        maxlen: 120,
-        maxparams: 4,
-        newcap: true,
-        noarg: true,
-        noempty: true,
-        nonew: true,
-        quotmark: 'single',
-        trailing: true,
-        undef: true
+        expr : true,
+        eqeqeq : true,
+        undef : true,
+        boss : true,
+        sub : true,
+        supernew : true,
+        loopfunc : true,
+        onecase : true,
+        quotmark : 'single'
     },
     groups: {
         client: {
             options: {
-                predef: ['BEM'],
+                predef: ['modules'],
                 browser: true,
                 jquery: true
             },
-            includes: ['common.blocks/**/*.js']
+            includes: ['common.blocks/**/*.js'],
+            excludes: [
+                '**/*.spec.js',
+                '**/*.deps.js'
+            ]
+        },
+        specjs : {
+            options : {
+                browser : true,
+                predef : [ 'modules',
+                    'describe',
+                    'it',
+                    'before',
+                    'beforeEach',
+                    'after',
+                    'afterEach'
+                ]
+            },
+            includes : ['**/*.spec.js']
         }
     }
 };

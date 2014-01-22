@@ -1,14 +1,13 @@
 {
     "excludeFiles": [
         ".git/**",
-        ".bem/cache/**",
-        "*.examples/**",
-        "*.pages/**",
-        "*.specs/**",
-        "*.tests/**",
-        "**/*.i18n/**",
+        ".bem/**",
+        "node_modules/**",
         "libs/**",
-        "node_modules/**"
+        "pages-*/**",
+        "*.bundles/**",
+        "bem-bl/**",
+        "bemhtml/**"
     ],
     "requireCurlyBraces": [
         "else",
@@ -68,7 +67,6 @@
         "string"
     ],
     "disallowKeywords": ["with"],
-    "disallowMulipleLineBreaks": true,
     "disallowKeywordsOnNewLine": ["else", "catch"],
     "requireLineFeedAtFileEnd": true,
     "validateJSDoc": {
@@ -77,5 +75,6 @@
     },
     "requireSpacesInsideObjectBrackets": "all",
     "disallowSpacesInsideArrayBrackets": true,
-    "requireSpaceAfterObjectKeys": true
+    "disallowSpaceAfterObjectKeys": true,
+    "disallowMultipleLineBreaks": true
 }

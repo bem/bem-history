@@ -21,17 +21,6 @@ modules.define('uri', function(provide) {
 // 3.+ license
 // 4. normalization. Создание копии объекта по uriParts через extend
 
-
-    /**
-     * unescape a query param value
-     * @param  {string} s encoded value
-     * @return {string}   decoded value
-     */
-/*
-    function decode(s) {
-        return decodeURIComponent(s).replace('+', ' ');
-    }
-*/
 /**
  * Creates a new Uri object
  * @constructor

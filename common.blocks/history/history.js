@@ -1,4 +1,4 @@
-modules.define('history', ['inherit', 'events', 'jquery'], function(provide, inherit, events, $) {
+modules.define('history', ['inherit', 'events', 'jquery', 'uri'], function(provide, inherit, events, $, Uri) {
 
 // Fallback for old browsers
 /*
@@ -13,7 +13,6 @@ if (!history.pushState) {
     });
     return;
 }*/
-
 
 provide(inherit(events.Emitter, {
     

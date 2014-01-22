@@ -3,7 +3,7 @@ modules.define('history', ['inherit', 'jquery'], function(provide, inherit, $, B
 if (!window.history) {
     provide(Base);
     return;
-};
+}
 
 provide(inherit(Base, {
     

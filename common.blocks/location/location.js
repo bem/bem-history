@@ -1,7 +1,7 @@
 modules.define(
     'location', 
-    ['inherit', 'events', 'history', 'objects'], 
-    function(provide, inherit, events, History, objects) {
+    ['inherit', 'events', 'history', 'objects', 'uri'], 
+    function(provide, inherit, events, History, objects, Uri) {
         
 // $.extend -> objects.extend
 
@@ -128,7 +128,7 @@ provide(new inherit(events.Emitter, {
      * @returns {Object} state
      */
     getState: function() {
-        console.log('getState deprecated! Use getReferer and getUri instead');
+        // console.log('getState deprecated! Use getReferer and getUri instead');
         return objects.extend(true, {}, this._state);
     },
     

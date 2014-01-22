@@ -1,9 +1,9 @@
-modules.define('history', ['inherit', 'jquery'], function(provide, inherit, $, Base) {
+modules.define('history', ['inherit', 'jquery', 'uri'], function(provide, inherit, $, Uri, Base) {
 
 if (!window.history && !window.onhashchange) {
     provide(Base);
     return;
-};
+}
 
 provide(inherit(Base, {
     
