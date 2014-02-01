@@ -1,6 +1,6 @@
 /**
- * Modificator for BEM-block history which provides history-api support
- * through hashchange fallback
+ * Modificator for BEM-block history which provides history API support
+ * through hashchange fallback.
  */
 BEM.decl({ block: 'history', modName: 'provider', modVal: 'hashchange' }, {
     

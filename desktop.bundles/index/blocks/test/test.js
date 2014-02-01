@@ -1,27 +1,6 @@
 BEM.DOM.decl('test', {
     onSetMod: {
         js: function() {
-            // window.history = {};
-            
-            // var h = BEM.blocks.history.getInstance(),
-            //     l = BEM.blocks.location.getInstance();
-            
-            // h.pushState(undefined, '', '?test=a');
-            // console.log('\n\nhistory state', h.state);
-            // 
-            // console.log('\n\nhistory state', h.state);
-            // console.log('location _state', l._state);
-            // 
-            // l.change({ params: { test: [1,2] }, forceParams: true });
-            // console.log('\n\nhistory state', h.state);
-            // console.log('location _state', l._state);
-            // 
-            // l.change({ params: { param2: [22] } });
-            // console.log('\n\nhistory state', h.state);
-            // console.log('location _state', l._state);
-                        
-            // mocha.setup('bdd');
-            
             var expect = chai.expect,
                 assert = chai.assert;
             
@@ -317,9 +296,6 @@ BEM.DOM.decl('test', {
                 })
                 
             })
-            
-            // mocha.checkLeaks();
-            // mocha.run();
         }
     }
 });

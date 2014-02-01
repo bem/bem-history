@@ -1,5 +1,5 @@
 /**
- * Modificator for BEM-block history which provides native history-api support
+ * Modificator for BEM-block history which provides native history API support.
  */
 BEM.decl({ block: 'history', modName: 'provider', modVal: 'history-api' }, {
 

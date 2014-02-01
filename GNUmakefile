@@ -24,11 +24,11 @@ $(ENB):: $(NODE_MODULES)
 
 $(NODE_MODULES)::
 	$(debug ---> Updating npm dependencies)
-	@$(NPM) install
+	@$(NPM) install --silent
 
 install:
-	@$(NPM) install
-	@$(BOWER) install
+	@$(NPM) install --silent
+	@$(BOWER) install --quiet
 
 .PHONY: clean
 clean::

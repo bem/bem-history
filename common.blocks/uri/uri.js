@@ -1,6 +1,6 @@
 /*!
  * Library for uri parsing and changing.
- * Based on jsUri but mostly refactored and rewritten
+ * Based on jsUri but mostly refactored and rewritten.
  * 
  * Includes parts of jsUri 
  * https://github.com/derek-watson/jsUri
@@ -18,7 +18,7 @@ BEM.decl('uri', {
     onSetMod: {
         js: function() {
             /**
-             * Defines getter/setter methods
+             * Defines getter/setter methods.
              */
             var _this = this;
             
@@ -26,6 +26,7 @@ BEM.decl('uri', {
                 _this[key] = function(val) {
                     if (typeof val !== 'undefined') {
                         this.uriParts[key] = val;
+                        return this;
                     }
         
                     return this.uriParts[key];
@@ -35,7 +36,7 @@ BEM.decl('uri', {
     },
     
     /**
-     * Encode string
+     * Encode string.
      * @param  {String} str raw string
      * @returns {String}    encoded string
      */
@@ -44,7 +45,7 @@ BEM.decl('uri', {
     },
     
     /**
-     * Decode string
+     * Decode string.
      * @param  {String} str encoded string
      * @returns {String}    original string
      */
@@ -62,7 +63,7 @@ BEM.decl('uri', {
     },
     
     /**
-     * Breaks a uri string down into its individual parts
+     * Breaks a uri string down into its individual parts.
      * @param  {String} str uri
      * @returns {Object}    parts
      */
@@ -88,7 +89,7 @@ BEM.decl('uri', {
     },
     
     /**
-     * Breaks a query string down into an array of key/value pairs
+     * Breaks a query string down into an array of key/value pairs.
      * ?param=11 -> { param: ['11'] }
      * ?param=   -> { param: [''] }
      * ?param    -> { param: [] }
@@ -119,7 +120,7 @@ BEM.decl('uri', {
     },
 
     /**
-     * Serializes the internal state of the query pairs
+     * Serializes the internal state of the query pairs.
      * @param  {String} [val]  set a new query string
      * @returns {String}       query string
      */
@@ -154,7 +155,7 @@ BEM.decl('uri', {
     },
 
     /**
-     * Returns an array of query param values for the key
+     * Returns an array of query param values for the key.
      * @param  {String} key query key
      * @returns {Array}     array of values
      */
@@ -163,7 +164,7 @@ BEM.decl('uri', {
     },
 
     /**
-     * Removes query parameters
+     * Removes query parameters.
      * @param  {String} key     remove values for key
      * @param  {val}    [val]   remove a specific value, otherwise removes all
      * @returns {Uri}           returns self for fluent chaining
@@ -188,7 +189,7 @@ BEM.decl('uri', {
     },
 
     /**
-     * Adds a query parameter
+     * Adds a query parameter.
      * @param  {String}  key        add values for key
      * @param  {String}  val        value to add
      * @param  {integer} [index]    specific index to add the value at
@@ -201,7 +202,7 @@ BEM.decl('uri', {
     },
 
     /**
-     * Replaces query param values
+     * Replaces query param values.
      * @param  {String} key         key to replace value for
      * @param  {String} newVal      new value
      * @param  {String} [oldVal]    replace only one specific value (otherwise replaces all)
@@ -213,7 +214,7 @@ BEM.decl('uri', {
     },
 
     /**
-     * Scheme name, colon and doubleslash, as required
+     * Scheme name, colon and doubleslash, as required.
      * @returns {String} http://
      */
     scheme: function() {
@@ -231,7 +232,7 @@ BEM.decl('uri', {
     },
 
     /**
-     * Same as Mozilla nsIURI.prePath
+     * Same as Mozilla nsIURI.prePath.
      * @see  https://developer.mozilla.org/en/nsIURI
      * @returns {String} scheme://host:port
      */
@@ -249,7 +250,7 @@ BEM.decl('uri', {
     },
     
     /**
-     * Returns url root
+     * Returns url root.
      * @returns {String} scheme://host:port + path without last
      */
     getRoot: function() {
@@ -263,7 +264,7 @@ BEM.decl('uri', {
     },
     
     /**
-     * Returns an array of path parts
+     * Returns an array of path parts.
      * @returns {Object} path parts
      */
     pathParts: function() {
@@ -271,7 +272,7 @@ BEM.decl('uri', {
     },
 
     /**
-     * Serializes the internal state of the Uri object
+     * Serializes the internal state of the Uri object.
      * @returns {String}
      */
     toString: function() {
@@ -307,7 +308,7 @@ BEM.decl('uri', {
     
     /**
      * Serializes the internal state of the Uri object
-     * and replaces empty parts from current page state
+     * and replaces empty parts from current page state.
      * @returns {String}
      */
     build: function() {
@@ -353,7 +354,7 @@ BEM.decl('uri', {
 }, {
 
     /**
-     * Parses input url and returns Uri instance
+     * Parses input url and returns Uri instance.
      * @param  {String}  str input url
      * @returns {String}
      */

@@ -12,7 +12,7 @@ BEM.decl('location', {
     },
     
     /**
-     * Reaction for the history state change
+     * Reaction for the history state change.
      *
      * @param {Object} event
      * @param {Object} event params
@@ -31,7 +31,7 @@ BEM.decl('location', {
     },
 
     /**
-     * Sunc own state with the history block state
+     * Sync own state with the history block state.
      *
      * @returns {Object} location
      * @private
@@ -54,7 +54,7 @@ BEM.decl('location', {
     },
 
     /**
-     * Method for a state change
+     * Method for a state change.
      * @param {Object} data
      * @param {Object} data.params query params
      * @param {String} data.url new url
@@ -98,7 +98,7 @@ BEM.decl('location', {
     },
     
     /**
-     * Returns current state
+     * Returns current state.
      * @returns {Object} state
      */
     getState: function() {
@@ -106,7 +106,7 @@ BEM.decl('location', {
     },
     
     /**
-     * Returns an Uri instance constructed from the current state url
+     * Returns an Uri instance constructed from the current state url.
      * @returns {Object} uriInstance    
      */
     getUri: function() {
@@ -114,7 +114,7 @@ BEM.decl('location', {
     },
     
     /**
-     * Returns previous url
+     * Returns previous url.
      * @returns {String} refererUrl    
      */
     getReferer: function() {
