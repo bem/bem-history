@@ -12,7 +12,7 @@ BEM.decl('location', {
     },
     
     /**
-     * Реакция на изменение состояния history
+     * Reaction for the history state change
      *
      * @param {Object} event
      * @param {Object} event params
@@ -23,7 +23,7 @@ BEM.decl('location', {
         if (this._state.trigger !== false) {
             this.trigger('change', this._state);
 
-            // Позволяем делать перблочную привязку
+            // Allows per block binding
             this._state.block &&
                 this.channel(this._state.block)
                     .trigger('change');
@@ -31,7 +31,7 @@ BEM.decl('location', {
     },
 
     /**
-     * Синхронизируем внутренний state с блоком history
+     * Sunc own state with the history block state
      *
      * @returns {Object} location
      * @private
@@ -41,12 +41,12 @@ BEM.decl('location', {
             uri = BEM.blocks.uri.parse(state.url);
 
         this._state = $.extend({}, state.data, {
-            referer: this._state && this._state.url,// реферер - предыдущий url
-            url: uri.build(),                       // полный URL страницы –
-            // http://yandex.com.tr/yandsearch?text=ololo&lr=213
-            hostname: uri.host(),                   // домен страницы - yandex.ru
-            path: uri.path(),                       // путь к текущей странице - /yandsearch
-            params: uri.queryParams                 // хеш cgi параметров – 
+            referer: this._state && this._state.url,// referer - previous url
+            url: uri.build(),                       // full page URL –
+            // http://yandex.ru/yandsearch?text=ololo&lr=213
+            hostname: uri.host(),                   // page hostname - yandex.ru
+            path: uri.path(),                       // path to the current page - /yandsearch
+            params: uri.queryParams                 // search params – 
             // { text: ['ololo'], lr: ['213'] }
         });
 
@@ -54,11 +54,12 @@ BEM.decl('location', {
     },
 
     /**
-     * Метод позволяющий создать или изменить state
-     * @param {object} data параметры:
-     * @param {string} data.url новый url
-     * @param {boolean} data.trigger необходимость триггерить событие
-     * @param {boolean} data.history создавать новый state или заменять текущий
+     * Method for a state change
+     * @param {Object} data
+     * @param {Object} data.params query params
+     * @param {String} data.url new url
+     * @param {Boolean} data.trigger trigger change event
+     * @param {Boolean} data.history write history record or replace current
      */
     change: function(data) {
         var uri = BEM.blocks.uri.parse(data.url);
@@ -69,7 +70,7 @@ BEM.decl('location', {
 
         data.url = uri.build();
 
-        // Если есть параметры, то строим новый URL
+        // Build a new url if the query params exists in data
         if (data.params) {
             var newUrl = BEM.blocks.uri.parse(),
                 params = data.forceParams ? data.params : $.extend({}, this._state.params, data.params);
@@ -80,7 +81,7 @@ BEM.decl('location', {
             data.url = newUrl.build();
         }
 
-        // По умолчанию триггерим событие change
+        // By default trigger change event
         data.trigger === false || (data.trigger = true);
 
         try {
@@ -88,7 +89,6 @@ BEM.decl('location', {
                 (data.history === false ? 'replace' : 'push'),
                 {
                     data: data,
-                    //title: data.title,
                     url: data.url
                 }
             );
@@ -98,16 +98,15 @@ BEM.decl('location', {
     },
     
     /**
-     * Возвращает текущий state
+     * Returns current state
      * @returns {Object} state
      */
     getState: function() {
-        // console.log('getState deprecated! Use getReferer and getUri instead');
         return $.extend(true, {}, this._state);
     },
     
     /**
-     * Возвращает инстанс Uri из текущего url
+     * Returns an Uri instance constructed from the current state url
      * @returns {Object} uriInstance    
      */
     getUri: function() {
@@ -115,7 +114,7 @@ BEM.decl('location', {
     },
     
     /**
-     * Возвращает предыдущий url
+     * Returns previous url
      * @returns {String} refererUrl    
      */
     getReferer: function() {

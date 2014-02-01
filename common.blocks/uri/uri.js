@@ -154,7 +154,7 @@ BEM.decl('uri', {
     },
 
     /**
-     * returns an array of query param values for the key
+     * Returns an array of query param values for the key
      * @param  {String} key query key
      * @returns {Array}     array of values
      */
@@ -163,7 +163,7 @@ BEM.decl('uri', {
     },
 
     /**
-     * removes query parameters
+     * Removes query parameters
      * @param  {String} key     remove values for key
      * @param  {val}    [val]   remove a specific value, otherwise removes all
      * @returns {Uri}           returns self for fluent chaining
@@ -188,7 +188,7 @@ BEM.decl('uri', {
     },
 
     /**
-     * adds a query parameter
+     * Adds a query parameter
      * @param  {String}  key        add values for key
      * @param  {String}  val        value to add
      * @param  {integer} [index]    specific index to add the value at
@@ -201,7 +201,7 @@ BEM.decl('uri', {
     },
 
     /**
-     * replaces query param values
+     * Replaces query param values
      * @param  {String} key         key to replace value for
      * @param  {String} newVal      new value
      * @param  {String} [oldVal]    replace only one specific value (otherwise replaces all)
@@ -214,7 +214,7 @@ BEM.decl('uri', {
 
     /**
      * Scheme name, colon and doubleslash, as required
-     * @returns {String} http:// or possibly just //
+     * @returns {String} http://
      */
     scheme: function() {
         var s = '';
@@ -226,11 +226,6 @@ BEM.decl('uri', {
             }
             s += '//';
         }
-        // else {
-        //     if (this.host()) {
-        //         s += '//';
-        //     }
-        // }
 
         return s;
     },
@@ -238,7 +233,7 @@ BEM.decl('uri', {
     /**
      * Same as Mozilla nsIURI.prePath
      * @see  https://developer.mozilla.org/en/nsIURI
-     * @returns {String} scheme://user:password@host:port
+     * @returns {String} scheme://host:port
      */
     origin: function() {
         var s = this.scheme();
@@ -318,13 +313,12 @@ BEM.decl('uri', {
     build: function() {
         var s = '';
         
-        // Нет протокола/хоста – ставим текущие
+        // No protocol/host – set current
         s += this.protocol() ? this.protocol() : window.location.protocol;
         s += (s.indexOf(':') !== s.length - 1) ? '://' : '//';
         
         s += this.host() ? this.host() : window.location.hostname;
         
-        // TODO remove :80 if http, :443 https
         if (this.port()) {
             s += ':' + this.port();
         } else if (!this.host()) {

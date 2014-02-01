@@ -4,11 +4,6 @@
  *
  * @property {Object} state Current state.
  */
-
-// 3. "Про автоматический редирект надо сделать возможность 
-// его отключить, т.к. это не всегда безопасно делать. Возможно, 
-// сервис захочет отправить какой-нибудь счётчик перед редиректом." @mishanga
-
 BEM.decl('history', {
 
     onSetMod: {
@@ -126,9 +121,9 @@ BEM.decl('history', {
      * @returns {Object} normalized state
      */
     normalizeState: function(data, title, url) {
-        // null -> дефолтное состояние state, которые мы не хотим слушать
-        // поэтому должны передавать либо undefined, либо пустой объект
-        // но не null
+        // null -> default state, which we don't want to listen
+        // so that data have to be undefined or an empty object
+        // but not null
         return {
             data:   data === null ? undefined : data,
             title:  title,
