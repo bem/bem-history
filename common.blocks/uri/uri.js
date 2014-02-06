@@ -13,6 +13,8 @@
  * Released under the MIT license.
  */
 
+/* jshint maxlen:170 */
+
 BEM.decl('uri', {
 
     onSetMod: {
@@ -68,13 +70,11 @@ BEM.decl('uri', {
      * @returns {Object}    parts
      */
     parseUri: function(str) {
-        var regexpParts = [
-                '^(?:(?![^:@]+:[^:@\\/]*@)([^:\\/?#.]+):)?(?:\\/\\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)',
-                '?([^:\\/?#]*)(?::(\\d*))?)',
-                '(((\\/(?:[^?#](?![^?#\\/]*\\.[^?#\\/.]+(?:[?#]|$)))*\\/?)',
-                '?([^?#\\/]*))(?:\\?([^#]*))?(?:#(.*))?)'
-            ],
-            parser = new RegExp(regexpParts.join('')),
+        /*
+        DO NOT split parser regex into parts because it can seriously affect performance!
+        jsHint maxlen changed to fix maxlength warning at this line.
+        */
+        var parser = /^(?:([^:\/?#]+):)?(?:\/\/((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?))?((((?:[^?#\/]*\/)*)([^?#]*))(?:\?([^#]*))?(?:#(.*))?)/,
             parserKeys = ['source', 'protocol', 'authority',
                           'userInfo', 'user', 'password', 'host', 'port',
                           'relative', 'path', 'directory', 'file', 'query', 'anchor'],
@@ -215,7 +215,7 @@ BEM.decl('uri', {
 
     /**
      * Scheme name, colon and doubleslash, as required.
-     * @returns {String} http://
+     * @returns {String} http:// or simply //
      */
     scheme: function() {
         var s = '';
@@ -225,6 +225,8 @@ BEM.decl('uri', {
             if (this.protocol().indexOf(':') !== this.protocol().length - 1) {
                 s += ':';
             }
+            s += '//';
+        } else if (this.host()) {
             s += '//';
         }
 
@@ -322,7 +324,7 @@ BEM.decl('uri', {
         
         if (this.port()) {
             s += ':' + this.port();
-        } else if (!this.host()) {
+        } else if (!this.host() && window.location.hostname) {
             s += ':' + window.location.port;
         }
         

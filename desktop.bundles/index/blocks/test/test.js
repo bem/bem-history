@@ -24,7 +24,7 @@ BEM.DOM.decl('test', {
                 it('can add a hostname to a relative path', function() {
                     u = BEM.blocks.uri.parse('/index.html');
                     u.host('wherever.com');
-                    expect(u.toString()).to.equal('wherever.com/index.html');
+                    expect(u.toString()).to.equal('//wherever.com/index.html');
                 })
 
                 it('can change a hostname', function() {
@@ -44,9 +44,9 @@ BEM.DOM.decl('test', {
                 })
 
                 it('should add a path to a domain', function() {
-                    u = BEM.blocks.uri.parse('test.com');
+                    u = BEM.blocks.uri.parse('//test.com');
                     u.path('/some/article.html');
-                    expect(u.toString()).to.equal('test.com/some/article.html')
+                    expect(u.toString()).to.equal('//test.com/some/article.html')
                 })
 
                 it('should change a path', function() {
@@ -95,45 +95,45 @@ BEM.DOM.decl('test', {
                 })
 
                 it('should add a query to a domain', function() {
-                    u = BEM.blocks.uri.parse('test.com')
+                    u = BEM.blocks.uri.parse('//test.com')
                     u.query('this=that&something=else')
-                    expect(u.toString()).to.equal('test.com/?this=that&something=else')
+                    expect(u.toString()).to.equal('//test.com/?this=that&something=else')
                 })
 
                 it('should swap a query', function() {
-                    u = BEM.blocks.uri.parse('www.test.com?this=that&a=1&b=2c=3')
+                    u = BEM.blocks.uri.parse('//www.test.com?this=that&a=1&b=2c=3')
                     u.query('this=that&something=else')
-                    expect(u.toString()).to.equal('www.test.com/?this=that&something=else')
+                    expect(u.toString()).to.equal('//www.test.com/?this=that&something=else')
                 })
 
                 it('should delete a query', function() {
-                    u = BEM.blocks.uri.parse('www.test.com?this=that&a=1&b=2c=3')
+                    u = BEM.blocks.uri.parse('//www.test.com?this=that&a=1&b=2c=3')
                     u.query(null)
-                    expect(u.toString()).to.equal('www.test.com')
+                    expect(u.toString()).to.equal('//www.test.com')
                 })
 
                 it('should empty a query', function() {
-                    u = BEM.blocks.uri.parse('www.test.com?this=that&a=1&b=2c=3')
+                    u = BEM.blocks.uri.parse('//www.test.com?this=that&a=1&b=2c=3')
                     u.query('')
-                    expect(u.toString()).to.equal('www.test.com')
+                    expect(u.toString()).to.equal('//www.test.com')
                 })
 
                 it('should add an anchor to a domain', function() {
-                    u = BEM.blocks.uri.parse('test.com')
+                    u = BEM.blocks.uri.parse('//test.com')
                     u.anchor('content')
-                    expect(u.toString()).to.equal('test.com/#content')
+                    expect(u.toString()).to.equal('//test.com/#content')
                 })
 
                 it('should add an anchor with a hash prefix to a domain', function() {
-                    u = BEM.blocks.uri.parse('test.com')
+                    u = BEM.blocks.uri.parse('//test.com')
                     u.anchor('#content')
-                    expect(u.toString()).to.equal('test.com/#content')
+                    expect(u.toString()).to.equal('//test.com/#content')
                 })
 
                 it('should add an anchor to a path', function() {
-                    u = BEM.blocks.uri.parse('a/b/c/123.html')
+                    u = BEM.blocks.uri.parse('/a/b/c/123.html')
                     u.anchor('content')
-                    expect(u.toString()).to.equal('a/b/c/123.html#content')
+                    expect(u.toString()).to.equal('/a/b/c/123.html#content')
                 })
 
                 it('should change an anchor', function() {
