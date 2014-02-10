@@ -32,7 +32,7 @@ function Uri(str) {
 
 Uri.parse = function(str) {
     return new Uri(str);
-}
+};
 
 /**
  * Encode string.

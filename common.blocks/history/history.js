@@ -1,23 +1,16 @@
+/**
+ * BEM wrap for History API.
+ * @module history
+ */
 modules.define('history', ['inherit', 'events', 'jquery', 'uri'], function(provide, inherit, events, $, Uri) {
-
-// Fallback for old browsers
-/*
-if (!history.pushState) {
-    provide({
-        pushState: function (state, title, url) {
-            if (url) window.location.href = url;
-        },
-        replaceState: function (state, title, url) {
-            if (url) window.location.href = url;
-        }
-    });
-    return;
-}*/
 
 provide(inherit(events.Emitter, {
     
     __constructor: function() {
-        
+        this
+            ._resetUrl()
+            .bindEvents()
+            .syncState();
     },
     
     /**
@@ -29,7 +22,7 @@ provide(inherit(events.Emitter, {
      * @returns {Object}
      */
     pushState: function(data, title, url) {
-        return this.changeState('push', this.normalizeState(data, title, url));
+        return this._changeState('push', this.normalizeState(data, title, url));
     },
 
     /**
@@ -41,7 +34,7 @@ provide(inherit(events.Emitter, {
      * @returns {Object}
      */
     replaceState: function (data, title, url) {
-        return this.changeState('replace', this.normalizeState(data, title, url));
+        return this._changeState('replace', this.normalizeState(data, title, url));
     },
     
     /**
@@ -51,13 +44,16 @@ provide(inherit(events.Emitter, {
      * @returns {Object}
      */
     bindEvents: function() {
-        // this.on('statechange', function() {
-        //     console.log('\n\nstatechange');
-        //     console.log('   data:   ', this.state.data);
-        //     console.log('   title:  ', this.state.title);
-        //     console.log('   url:    ', this.state.url);
-        // });
-        
+        return this;
+    },
+    
+    /**
+     * Base method for an events unbinding.
+     * Method may be extended in modificators.
+     *
+     * @returns {Object}
+     */
+    unbindEvents: function() {
         return this;
     },
     
@@ -79,27 +75,18 @@ provide(inherit(events.Emitter, {
      * @returns {String}
      */
     _removeHashbang: function(url) {
-        var uri = new Uri(url),
-            hashBangUri = new Uri(uri.anchor().replace(/^!/, ''));
+        var parsedUri = Uri.parse(url),
+            hashbangUri = Uri.parse(parsedUri.anchor().replace(/^!/, ''));
         
-        uri.anchor('');
-        uri.query(hashBangUri.query());
+        parsedUri.anchor('');
+        parsedUri.query(hashbangUri.query());
         
-        return uri.build();
+        return parsedUri.build();
     },
     
-    /**
-     * Base method for an events unbinding.
-     * Method may be extended in modificators.
-     *
-     * @returns {Object}
-     */
-    unbindEvents: function() {
-        return this;
-    },
     
     /**
-     * Base method for the initial state syncing with global history state.
+     * Base method for the state syncing with global history state.
      * Method may be extended in modificators.
      *
      * @returns {Object}
@@ -118,9 +105,9 @@ provide(inherit(events.Emitter, {
      * @returns {Object} normalized state
      */
     normalizeState: function(data, title, url) {
-        // null -> дефолтное состояние state, которые мы не хотим слушать
-        // поэтому должны передавать либо undefined, либо пустой объект
-        // но не null
+        // null -> default state, which we don't want to listen
+        // so that data have to be undefined or an empty object
+        // but not null
         return {
             data:   data === null ? undefined : data,
             title:  title,
@@ -137,7 +124,7 @@ provide(inherit(events.Emitter, {
      * @param {Object} state
      * @returns {Object}
      */
-    changeState: function(method, state) {
+    _changeState: function(method, state) {
         try {
             window.location.assign(state.url);
         } catch (e) {}

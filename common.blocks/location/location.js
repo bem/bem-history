@@ -1,3 +1,6 @@
+/**
+ * @module location
+ */
 modules.define(
     'location', 
     ['inherit', 'events', 'history', 'objects', 'uri'], 
@@ -5,149 +8,127 @@ modules.define(
         
 // $.extend -> objects.extend
 
-provide(new inherit(events.Emitter, {
+var BemLocation = inherit(events.Emitter, {
     
-    __constructor: function() {
-        this._history = new History();
+        __constructor: function() {
+            this._history = new History();
         
-        this._syncState();
-        this._history.on('statechange', this._onStateChange, this);
-    },
+            this._syncState();
+            this._history.on('statechange', this._onStateChange, this);
+        },
     
-    /**
-     * Реакция на изменение состояния history
-     *
-     * @param {Object} event
-     * @param {Object} event params
-     */
-    _onStateChange: function() {
-        // console.log('\n\n!!!!!!!!! location _onStateChange fired, event:', event);
-        // console.log('params:', params);
-        
-        this._syncState();
+        /**
+         * Reaction for the history state change.
+         *
+         * @param {Object} event
+         * @param {Object} event params
+         */
+        _onStateChange: function() {
+            this._syncState();
 
-        if (this._state.trigger !== false) {
-            this.trigger('change', this._state);
+            if (this._state.trigger !== false) {
+                this.emit('change', this._state);
 
-            // позволяем делать перблочную привязку
-            // @ TODO: пока общий state object. потом можно сделать отдельный для каждого object
-            // BEM.blocks['location'].on('b-preview', function() {});
-            // TODO @mishanga переделать на каналы
-            // this._state.block &&
-            //     this.trigger(this._state.block, this._state);
-            this._state.block &&
-                this.channel(this._state.block)
-                    .trigger('change');
-        }
+                // Allows per block binding
+                this._state.block &&
+                    this.channel(this._state.block)
+                        .emit('change');
+            }
+        },
 
-        // Всегда удаляем trigger, иначе back-button может не сработать
-        delete this._state.trigger;
-    },
+        /**
+         * Sync own state with the history block state.
+         *
+         * @returns {Object} location
+         * @private
+         */
+        _syncState: function() {
+            var state = this._history.state,
+                uri = Uri.parse(state.url);
 
-    /**
-     * Синхронизируем внутренний state с блоком history
-     *
-     * @returns {Object} location
-     * @private
-     */
-    _syncState: function() {
-        // var state = BEM.blocks['history'].getInstance().state,
-        var state = this._history.state,
-            uri = new Uri(state.url);
-
-        this._state = objects.extend(state.data, {
-            referer: this._state && this._state.url,// реферер - предыдущий url
-            url: uri.build(),                       // полный URL страницы –
-            // http://yandex.com.tr/yandsearch?text=ololo&lr=213
-            hostname: uri.host(),                   // домен страницы - yandex.ru
-            path: uri.path(),                       // путь к текущей странице - /yandsearch
-            params: uri.queryParams                 // хеш cgi параметров – 
-            // { text: ['ololo'], lr: ['213'] }
-        });
-
-        return this;
-    },
-
-    /**
-     * Метод позволяющий создать или изменить state
-     * @param {Object} data параметры:
-     * @param {string} data.url новый url
-     * @param {boolean} data.trigger необходимость триггерить событие
-     * @param {boolean} data.history создавать новый state или заменять текущий
-     * @param {Object} data.params параметры запроса
-     */
-    // TODO:
-    // 1) переименовать data.history
-    // 2) зачем нужен вариант отсутствия события change
-    change: function(data) {
-        var uri = new Uri(data.url);
-            // stateUri = new Uri(this._state.url); // TODO @mishanga подумать про кеширование
-        
-        if (data.url) {
-            delete data.params;
-        }
-
-        data.url = uri.build();
-
-        // Если есть параметры, то строим новый URL
-        // console.log('data params', data.params);
-        if (data.params) {
-            var newUrl = new Uri(),
-                params = data.forceParams ? data.params : objects.extend({}, this._state.params, data.params);
-                
-            // console.log('\n\nparams', params);
-            // console.log('state params', this._state.params);
-            
-            // newUrl.host(data.domain);
-            Object.keys(params).forEach(function(key) {
-                newUrl.addQueryParam(key, params[key]);
+            this._state = objects.extend(state.data, {
+                referer: this._state && this._state.url,// referer - previous url
+                url: uri.build(),                       // full page URL –
+                // http://yandex.ru/yandsearch?text=ololo&lr=213
+                hostname: uri.host(),                   // page hostname - yandex.ru
+                path: uri.path(),                       // path to the current page - /yandsearch
+                params: uri.queryParams                 // search params – 
+                // { text: ['ololo'], lr: ['213'] }
             });
-            data.url = newUrl.build();
-        }
 
-        // По умолчанию триггерим событие change
-        data.trigger === false || (data.trigger = true);
+            return this;
+        },
 
-        try {
-            this._history.changeState(
-                (data.history === false ? 'replace' : 'push'),
-                {
-                    data: data,
-                    //title: data.title,
-                    url: data.url
-                }
-            );
-        } catch (e) {
-            window.location.assign(data.url);
+        /**
+         * Method for a state change.
+         * @param {Object} data
+         * @param {Object} data.params query params
+         * @param {String} data.url new url
+         * @param {Boolean} data.trigger trigger change event
+         * @param {Boolean} data.history write history record or replace current
+         */
+        change: function(data) {
+            var uri = Uri.parse(data.url);
+        
+            if (data.url) {
+                delete data.params;
+            }
+
+            data.url = uri.build();
+
+            // Build a new url if the query params exists in data
+            if (data.params) {
+                var newUrl = Uri.parse(),
+                    params = data.forceParams ? data.params : objects.extend({}, this._state.params, data.params);
+
+                Object.keys(params).forEach(function(key) {
+                    newUrl.addParam(key, params[key]);
+                });
+                data.url = newUrl.build();
+            }
+
+            // By default trigger change event
+            data.trigger === false || (data.trigger = true);
+
+            try {
+                this._history.changeState(
+                    (data.history === false ? 'replace' : 'push'),
+                    {
+                        data: data,
+                        url: data.url
+                    }
+                );
+            } catch (e) {
+                window.location.assign(data.url);
+            }
+        },
+    
+        /**
+         * Returns current state.
+         * @returns {Object} state
+         */
+        getState: function() {
+            return objects.extend(true, {}, this._state);
+        },
+    
+        /**
+         * Returns an Uri instance constructed from the current state url.
+         * @returns {Object} uriInstance    
+         */
+        getUri: function() {
+            return Uri.parse(this._state.url);
+        },
+    
+        /**
+         * Returns previous url.
+         * @returns {String} refererUrl    
+         */
+        getReferer: function() {
+            return this._state.referer;
         }
-    },
     
-    // TODO Как используется getState, может имеет смысл заменить на getUri и getReferer
-    /**
-     * Возвращает текущий state
-     * @returns {Object} state
-     */
-    getState: function() {
-        // console.log('getState deprecated! Use getReferer and getUri instead');
-        return objects.extend(true, {}, this._state);
-    },
-    
-    /**
-     * Возвращает инстанс Uri из текущего url
-     * @returns {Object} uriInstance    
-     */
-    getUri: function() {
-        return new Uri(this._state.url);
-    },
-    
-    /**
-     * Возвращает предыдущий url
-     * @returns {String} refererUrl    
-     */
-    getReferer: function() {
-        return this._state.referer;
-    }
-    
-})());
+});
+
+provide(new BemLocation());
 
 });

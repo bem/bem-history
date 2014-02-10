@@ -1,6 +1,10 @@
+/**
+ * Modificator for BEM-block history which provides history API support
+ * through hashchange fallback.
+ */
 modules.define('history', ['inherit', 'jquery', 'uri'], function(provide, inherit, $, Uri, Base) {
 
-if (!window.history && !window.onhashchange) {
+if ((window.history && 'pushState' in window.history) || !window.onhashchange) {
     provide(Base);
     return;
 }
@@ -8,24 +12,18 @@ if (!window.history && !window.onhashchange) {
 provide(inherit(Base, {
     
     _onHashChange: function() {
-        // console.log('########## _onHashChange fired');
-        // console.log('    event:', event);
-        // console.log('    ' + event.originalEvent.oldURL + '    ->    ' + event.originalEvent.newURL + '\n');
-        
         this.state = this.normalizeState(undefined, document.title, this._removeHashbang(window.location.href));
 
         this.trigger('statechange', { state: this.state, nativeApi: false });
     },
     
     bindEvents: function() {
-        this.__base();
-        $(window).on('hashchange', this.changeThis(this._onHashChange));
+        $(window).on('hashchange', this._onHashChange);
         
         return this;
     },
     
     unbindEvents: function() {
-        this.__base();
         $(window).off('hashchange', this._onHashChange);
 
         return this;
@@ -37,40 +35,40 @@ provide(inherit(Base, {
     },
     
     /**
-     * Adds hashbang to url.
-     * ../search?p=1 => ../#!/search?p=1.
+     * Generates hashbang from url.
+     * ../search?p=1 => ..#!/search?p=1.
      *
      * @param {String} url
      * @returns {String}
+     * @private
      */
-    _addHashbang: function(url) {
-        var uri = new Uri(url),
-            path = uri.path().split('/');
+    _generateHashbang: function(url) {
+        var uri = Uri.parse(url),
+            path = uri.pathParts();
         
-        uri.anchor('!/' + path[path.length - 1] + uri.query());
-        uri.query('');
-        
-        return uri.build();
+        return ('!/' + path[path.length - 1] + uri.query());
     },
     
     _resetUrl: function() {
-        var uri = new Uri(window.location.href);
+        var uri = Uri.parse(window.location.href);
         
         if (!uri.anchor()) {
-            window.location.replace(this._addHashbang(window.location.href));
+            window.location.hash = this._generateHashbang(window.location.href);
         }
         return this;
     },
     
     changeState: function(method, state) {
-        var uri = new Uri(state.url);
+        var uri = Uri.parse(state.url);
         
-        // TODO full origin check
-        if (uri.host() && uri.host() !== window.location.hostname) {
+        if ((uri.host() && uri.host() !== window.location.hostname) ||
+            (uri.port() && uri.port() !== window.location.port) ||
+            (uri.protocol() && uri.protocol() !== window.location.protocol.replace(':', ''))) {
+
             throw new Error('SECURITY_ERR: DOM Exception 18');
         } else {
             this.state = state;
-            window.location.hash = this._addHashbang(state.url).replace(/^[^#]+#/, '');
+            window.location.hash = this._generateHashbang(state.url);
         }
     }
     
