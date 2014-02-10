@@ -4,7 +4,7 @@
  */
 modules.define('history', ['inherit', 'jquery', 'uri'], function(provide, inherit, $, Uri, Base) {
 
-if ((window.history && 'pushState' in window.history) || !window.onhashchange) {
+if (!('onhashchange' in window) || (window.history && 'pushState' in window.history)) {
     provide(Base);
     return;
 }
@@ -13,12 +13,12 @@ provide(inherit(Base, {
     
     _onHashChange: function() {
         this.state = this.normalizeState(undefined, document.title, this._removeHashbang(window.location.href));
-
-        this.trigger('statechange', { state: this.state, nativeApi: false });
+        
+        this.emit('statechange', { state: this.state, nativeApi: false });
     },
     
     bindEvents: function() {
-        $(window).on('hashchange', this._onHashChange);
+        $(window).on('hashchange', $.proxy(this._onHashChange, this));
         
         return this;
     },
@@ -64,7 +64,7 @@ provide(inherit(Base, {
         if ((uri.host() && uri.host() !== window.location.hostname) ||
             (uri.port() && uri.port() !== window.location.port) ||
             (uri.protocol() && uri.protocol() !== window.location.protocol.replace(':', ''))) {
-
+        
             throw new Error('SECURITY_ERR: DOM Exception 18');
         } else {
             this.state = state;

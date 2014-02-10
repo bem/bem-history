@@ -21,10 +21,12 @@
         "jscs": "1.0.11",
         "jshint": "2.3.0",
         "jshint-groups": "0.5.3",
-        "bower-npm-install": "~0.5.2"
+        "bower-npm-install": "~0.5.4"
     },
     "private": true,
     "scripts": {
-        "test": "./node_modules/.bin/jshint-groups && ./node_modules/.bin/jscs ./common.blocks"
+        "libs": "./node_modules/.bin/bower-npm-install",
+        "bem-test": "./node_modules/.bin/bem make sets",
+        "test": "./node_modules/.bin/jshint-groups && ./node_modules/.bin/jscs ./common.blocks && npm run libs && npm run bem-test"
     }
 }

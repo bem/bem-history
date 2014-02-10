@@ -32,7 +32,7 @@ provide(inherit(Base, {
     },
     
     bindEvents: function() {
-        $(window).on('popstate', this._onPopState);
+        $(window).on('popstate', $.proxy(this._onPopState, this));
 
         return this;
     },
@@ -64,7 +64,7 @@ provide(inherit(Base, {
         return this;
     },
     
-    _changeState: function(method, state) {
+    changeState: function(method, state) {
         window.history[method + 'State'](state.data, state.title || document.title, state.url);
         this.state = state;        
         

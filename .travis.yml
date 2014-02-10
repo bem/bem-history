@@ -5,6 +5,7 @@ node_js:
 branches:
   only:
     - v1
+    - v2
 matrix:
   allow_failures:
     - node_js: "0.11"

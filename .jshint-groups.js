@@ -35,7 +35,11 @@ module.exports = {
                     'afterEach'
                 ]
             },
-            includes : ['**/*.spec.js']
+            includes : ['**/*.spec.js'],
+            excludes: [
+                'node_modules/**',
+                '*.specs/**'
+            ]
         }
     }
 };

@@ -22,7 +22,7 @@ provide(inherit(events.Emitter, {
      * @returns {Object}
      */
     pushState: function(data, title, url) {
-        return this._changeState('push', this.normalizeState(data, title, url));
+        return this.changeState('push', this.normalizeState(data, title, url));
     },
 
     /**
@@ -34,7 +34,7 @@ provide(inherit(events.Emitter, {
      * @returns {Object}
      */
     replaceState: function (data, title, url) {
-        return this._changeState('replace', this.normalizeState(data, title, url));
+        return this.changeState('replace', this.normalizeState(data, title, url));
     },
     
     /**
@@ -124,7 +124,7 @@ provide(inherit(events.Emitter, {
      * @param {Object} state
      * @returns {Object}
      */
-    _changeState: function(method, state) {
+    changeState: function(method, state) {
         try {
             window.location.assign(state.url);
         } catch (e) {}
