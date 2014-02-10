@@ -1,5 +1,3 @@
-modules.define('uri', function(provide) {
-
 /*!
  * Library for uri parsing and changing.
  * Based on jsUri but mostly refactored and rewritten
@@ -15,35 +13,65 @@ modules.define('uri', function(provide) {
  * Released under the MIT license.
  */
 
-// @TODO
-// 1.+ param values as arrays (get, set, replace methods)
-// 2.+ query params as object { key1: [value], key2: [value1, value2] }
-// 3.+ license
-// 4. normalization. Создание копии объекта по uriParts через extend
+/* jshint maxlen:170 */
+
+/**
+ * @module uri
+ */
+modules.define('uri', function(provide) {
 
 /**
  * Creates a new Uri object
  * @constructor
- * @param {string} str
+ * @param {String} str
  */
 function Uri(str) {
     this.uriParts = this.parseUri(str);
     this.queryParams = this.parseQuery(this.uriParts.query);
 }
 
+Uri.parse = function(str) {
+    return new Uri(str);
+}
+
 /**
- * Breaks a uri string down into its individual parts
- * @param  {string} str uri
- * @return {object}     parts
+ * Encode string.
+ * @param  {String} str raw string
+ * @returns {String}    encoded string
  */
+Uri.prototype.encode = function(str) {
+    return encodeURIComponent(str);
+};
+
+/**
+ * Decode string.
+ * @param  {String} str encoded string
+ * @returns {String}    original string
+ */
+Uri.prototype.decode = function(str) {
+    return decodeURIComponent(str);
+};
+
+/**
+ * Normalizes url string to percentage encoding
+ * @param  {String} str original url
+ * @returns {String}    normalized string
+ */
+Uri.prototype.normalize = function(str) {
+    return (str || '').replace(/\+/g, '%20');
+};
+
+/**
+* Breaks a uri string down into its individual parts.
+* @param  {String} str uri
+* @returns {Object}    parts
+*/
 Uri.prototype.parseUri = function(str) {
-    var regexpParts = [
-            '^(?:(?![^:@]+:[^:@\\/]*@)([^:\\/?#.]+):)?(?:\\/\\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)',
-            '?([^:\\/?#]*)(?::(\\d*))?)',
-            '(((\\/(?:[^?#](?![^?#\\/]*\\.[^?#\\/.]+(?:[?#]|$)))*\\/?)',
-            '?([^?#\\/]*))(?:\\?([^#]*))?(?:#(.*))?)'
-        ],
-        parser = new RegExp(regexpParts.join('')),
+    /*
+    DO NOT split parser regex into parts because it can seriously affect performance!
+    jsHint maxlen changed to fix maxlength warning at this line.
+    */
+    var parser = /^(?:([^:\/?#]+):)?(?:\/\/((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?))?((((?:[^?#\/]*\/)*)([^?#]*))(?:\?([^#]*))?(?:#(.*))?)/,
         parserKeys = ['source', 'protocol', 'authority',
                       'userInfo', 'user', 'password', 'host', 'port',
                       'relative', 'path', 'directory', 'file', 'query', 'anchor'],
@@ -53,14 +81,17 @@ Uri.prototype.parseUri = function(str) {
     parserKeys.forEach(function(key, i) {
         parts[key] = m[i] || '';
     });
-
+    
     return parts;
 };
 
 /**
- * Breaks a query string down into an array of key/value pairs
- * @param  {string} str query
- * @return {array}      array of arrays (key/value pairs)
+ * Breaks a query string down into an array of key/value pairs.
+ * ?param=11 -> { param: ['11'] }
+ * ?param=   -> { param: [''] }
+ * ?param    -> { param: [] }
+ * @param  {String} str query
+ * @returns {Array}     array of arrays (key/value pairs)
  */
 Uri.prototype.parseQuery = function parseQuery(str) {
     var i, ps, kvp, k, v,
@@ -74,12 +105,12 @@ Uri.prototype.parseQuery = function parseQuery(str) {
 
     for (i = 0; i < ps.length; i++) {
         kvp = ps[i].split('=');
-        k = kvp[0];
-        v = kvp[1] || null;
+        k = this.decode(kvp[0]);
+        v = (kvp[1] || kvp[1] === '') ? this.decode(kvp[1]) : null;
         if (params[k]) {
-            params[k].push(v);
+            (v || v === '') && params[k].push(v);
         } else {
-            params[k] = [v];
+            params[k] = (v === null) ? [] : [v];
         }
     }
     return params;
@@ -92,6 +123,7 @@ Uri.prototype.parseQuery = function parseQuery(str) {
     Uri.prototype[key] = function(val) {
         if (typeof val !== 'undefined') {
             this.uriParts[key] = val;
+            return this;
         }
     
         return this.uriParts[key];
@@ -99,9 +131,9 @@ Uri.prototype.parseQuery = function parseQuery(str) {
 });
 
 /**
- * Serializes the internal state of the query pairs
- * @param  {string} [val]   set a new query string
- * @return {string}         query string
+ * Serializes the internal state of the query pairs.
+ * @param  {String} [val]  set a new query string
+ * @returns {String}       query string
  */
 Uri.prototype.query = function(val) {
     var s = '';
@@ -109,22 +141,23 @@ Uri.prototype.query = function(val) {
     if (typeof val !== 'undefined') {
         this.queryParams = this.parseQuery(val);
     }
-
+    
     var params = this.queryParams,
-        queryKeys = Object.keys(params);
+        queryKeys = Object.keys(params),
+        _this = this;
 
     queryKeys.forEach(function(key, index) {
         if (index > 0) {
             s += '&';
         }
-        if (params[key] === null) {
+        if (typeof params[key] === 'object' && !params[key].length) {
             s += key;
         } else {
             params[key].forEach(function(v, i) {
                 if (i > 0) {
                     s += '&';
                 }
-                s += key + '=' + v;
+                s += _this.encode(key) + '=' + _this.encode(v);
             });
         }
     });
@@ -133,21 +166,21 @@ Uri.prototype.query = function(val) {
 };
 
 /**
- * returns an array of query param values for the key
- * @param  {string} key query key
- * @return {array}      array of values
+ * Returns an array of query param values for the key.
+ * @param  {String} key query key
+ * @returns {Array}     array of values
  */
-Uri.prototype.getQueryParamValues = function(key) {
+Uri.prototype.getParam = function(key) {
     return this.queryParams[key];
 };
 
 /**
- * removes query parameters
- * @param  {string} key     remove values for key
+ * Removes query parameters.
+ * @param  {String} key     remove values for key
  * @param  {val}    [val]   remove a specific value, otherwise removes all
- * @return {Uri}            returns self for fluent chaining
+ * @returns {Uri}           returns self for fluent chaining
  */
-Uri.prototype.deleteQueryParam = function(key, val) {
+Uri.prototype.deleteParam = function(key, val) {
     var newParams = [];
 
     if (typeof val !== 'undefined') {
@@ -162,38 +195,38 @@ Uri.prototype.deleteQueryParam = function(key, val) {
     if (typeof val === 'undefined' || newParams.length === 0) {
         delete this.queryParams[key];
     }
-
+    
     return this;
 };
 
 /**
- * adds a query parameter
- * @param  {string}  key        add values for key
- * @param  {string}  val        value to add
+ * Adds a query parameter.
+ * @param  {String}  key        add values for key
+ * @param  {String}  val        value to add
  * @param  {integer} [index]    specific index to add the value at
- * @return {Uri}                returns self for fluent chaining
+ * @returns {Uri}               returns self for fluent chaining
  */
-Uri.prototype.addQueryParam = function(key, val) {
+Uri.prototype.addParam = function(key, val) {
     this.queryParams[key] = (this.queryParams[key] || []).concat(val);
-
+    
     return this;
 };
 
 /**
- * replaces query param values
- * @param  {string} key         key to replace value for
- * @param  {string} newVal      new value
- * @param  {string} [oldVal]    replace only one specific value (otherwise replaces all)
- * @return {Uri}                returns self for fluent chaining
+ * Replaces query param values.
+ * @param  {String} key         key to replace value for
+ * @param  {String} newVal      new value
+ * @param  {String} [oldVal]    replace only one specific value (otherwise replaces all)
+ * @returns {Uri}               returns self for fluent chaining
  */
-Uri.prototype.replaceQueryParam = function(key, newVal, oldVal) {
-    return this.deleteQueryParam(key, oldVal)
-               .addQueryParam(key, newVal);
+Uri.prototype.replaceParam = function(key, newVal, oldVal) {
+    return this.deleteParam(key, oldVal)
+               .addParam(key, newVal);
 };
 
 /**
- * Scheme name, colon and doubleslash, as required
- * @return {string} http:// or possibly just //
+ * Scheme name, colon and doubleslash, as required.
+ * @returns {String} http:// or simply //
  */
 Uri.prototype.scheme = function() {
     var s = '';
@@ -204,20 +237,17 @@ Uri.prototype.scheme = function() {
             s += ':';
         }
         s += '//';
+    } else if (this.host()) {
+        s += '//';
     }
-    // else {
-    //     if (this.host()) {
-    //         s += '//';
-    //     }
-    // }
 
     return s;
 };
 
 /**
- * Same as Mozilla nsIURI.prePath
- * @return {string} scheme://user:password@host:port
+ * Same as Mozilla nsIURI.prePath.
  * @see  https://developer.mozilla.org/en/nsIURI
+ * @returns {String} scheme://host:port
  */
 Uri.prototype.origin = function() {
     var s = this.scheme();
@@ -233,8 +263,30 @@ Uri.prototype.origin = function() {
 };
 
 /**
- * Serializes the internal state of the Uri object
- * @return {string}
+ * Returns url root.
+ * @returns {String} scheme://host:port + path without last
+ */
+Uri.prototype.getRoot = function() {
+    var s = this.origin();
+
+    if (this.path()) {
+        s += this.path().replace(/\/[^\/]*$/, '');
+    }
+
+    return s;
+};
+
+/**
+ * Returns an array of path parts.
+ * @returns {Object} path parts
+ */
+Uri.prototype.pathParts = function() {
+    return this.path().split('/');
+};
+
+/**
+ * Serializes the internal state of the Uri object.
+ * @returns {String}
  */
 Uri.prototype.toString = function() {
     var s = this.origin();
@@ -269,25 +321,24 @@ Uri.prototype.toString = function() {
 
 /**
  * Serializes the internal state of the Uri object
- * and replaces empty parts from current page state
- * @return {string}
+ * and replaces empty parts from current page state.
+ * @returns {String}
  */
 Uri.prototype.build = function() {
     var s = '';
-
-    // Нет протокола/хоста – ставим текущие
+    
+    // No protocol/host – set current
     s += this.protocol() ? this.protocol() : window.location.protocol;
     s += (s.indexOf(':') !== s.length - 1) ? '://' : '//';
-
+    
     s += this.host() ? this.host() : window.location.hostname;
-
-    // TODO remove :80 if http, :443 https
+    
     if (this.port()) {
         s += ':' + this.port();
     } else if (!this.host()) {
         s += ':' + window.location.port;
     }
-
+    
     if (this.path()) {
         s += this.path();
     } else if (!this.host()) {
@@ -295,7 +346,7 @@ Uri.prototype.build = function() {
     } else {
         s += '/';
     }
-
+    
     if (this.query()) {
         if (this.query().indexOf('?') !== 0) {
             s += '?';
@@ -309,7 +360,7 @@ Uri.prototype.build = function() {
         }
         s += this.anchor();
     }
-
+    
     return s;
 };
 
