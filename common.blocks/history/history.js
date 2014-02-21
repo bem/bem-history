@@ -5,12 +5,14 @@
 modules.define('history', ['inherit', 'events', 'jquery', 'uri'], function(provide, inherit, events, $, Uri) {
 
 provide(inherit(events.Emitter, {
-    
+    /**
+     * @constructor
+     */
     __constructor: function() {
         this
             ._resetUrl()
-            .bindEvents()
-            .syncState();
+            ._bindEvents()
+            ._syncState();
     },
     
     /**
@@ -22,7 +24,7 @@ provide(inherit(events.Emitter, {
      * @returns {Object}
      */
     pushState: function(data, title, url) {
-        return this.changeState('push', this.normalizeState(data, title, url));
+        return this.changeState('push', this._normalizeState(data, title, url));
     },
 
     /**
@@ -34,7 +36,7 @@ provide(inherit(events.Emitter, {
      * @returns {Object}
      */
     replaceState: function (data, title, url) {
-        return this.changeState('replace', this.normalizeState(data, title, url));
+        return this.changeState('replace', this._normalizeState(data, title, url));
     },
     
     /**
@@ -43,7 +45,7 @@ provide(inherit(events.Emitter, {
      *
      * @returns {Object}
      */
-    bindEvents: function() {
+    _bindEvents: function() {
         return this;
     },
     
@@ -53,7 +55,7 @@ provide(inherit(events.Emitter, {
      *
      * @returns {Object}
      */
-    unbindEvents: function() {
+    _unbindEvents: function() {
         return this;
     },
     
@@ -91,8 +93,8 @@ provide(inherit(events.Emitter, {
      *
      * @returns {Object}
      */
-    syncState: function() {
-        this.state = this.normalizeState(undefined, document.title, window.location.href);
+    _syncState: function() {
+        this.state = this._normalizeState(undefined, document.title, window.location.href);
         return this;
     },
     
@@ -104,7 +106,7 @@ provide(inherit(events.Emitter, {
      * @param {String} url
      * @returns {Object} normalized state
      */
-    normalizeState: function(data, title, url) {
+    _normalizeState: function(data, title, url) {
         // null -> default state, which we don't want to listen
         // so that data have to be undefined or an empty object
         // but not null

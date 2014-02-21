@@ -22,7 +22,7 @@ provide(inherit(Base, {
             return;
         }
 
-        this.state = this.normalizeState(state, document.title, window.location.href);
+        this.state = this._normalizeState(state, document.title, window.location.href);
         
         // Remove trigger param to fix back-forward buttons work
         // after location trigger=false flag usage
@@ -31,13 +31,13 @@ provide(inherit(Base, {
         this.emit('statechange', { state: state, nativeApi: true });
     },
     
-    bindEvents: function() {
+    _bindEvents: function() {
         $(window).on('popstate', $.proxy(this._onPopState, this));
 
         return this;
     },
 
-    unbindEvents: function() {
+    _unbindEvents: function() {
         $(window).off('popstate', this._onPopState);
 
         return this;
@@ -52,13 +52,13 @@ provide(inherit(Base, {
         return this;
     },
     
-    syncState: function() {
+    _syncState: function() {
         // Replace null with undefined to catch initial popstate
         if (window.history.state === null) {
             window.history.replaceState(undefined, document.title, window.location.href);
         }
-        if (this.state === null || this.state === undefined) {
-            this.state = this.normalizeState(undefined, document.title, window.location.href);
+        if (!this.state) {
+            this.state = this._normalizeState(undefined, document.title, window.location.href);
         }
 
         return this;

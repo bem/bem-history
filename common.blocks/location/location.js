@@ -5,11 +5,15 @@ modules.define(
     'location', 
     ['inherit', 'events', 'history', 'objects', 'uri'], 
     function(provide, inherit, events, History, objects, Uri) {
-        
-// $.extend -> objects.extend
 
+/**
+ * @class BemLocation
+ * @augments events:Emitter
+ */
 var BemLocation = inherit(events.Emitter, {
-    
+    /**
+     * @constructor
+     */
     __constructor: function() {
         this._history = new History();
     
@@ -28,11 +32,6 @@ var BemLocation = inherit(events.Emitter, {
 
         if (this._state.trigger !== false) {
             this.emit('change', this._state);
-
-            // Allows per block binding
-            this._state.block &&
-                this.channel(this._state.block)
-                    .emit('change');
         }
     },
 

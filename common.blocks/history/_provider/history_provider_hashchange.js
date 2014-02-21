@@ -10,27 +10,29 @@ if (!('onhashchange' in window) || (window.history && 'pushState' in window.hist
 }
 
 provide(inherit(Base, {
-    
+    /**
+     * @constructor
+     */
     _onHashChange: function() {
-        this.state = this.normalizeState(undefined, document.title, this._removeHashbang(window.location.href));
+        this.state = this._normalizeState(undefined, document.title, this._removeHashbang(window.location.href));
         
         this.emit('statechange', { state: this.state, nativeApi: false });
     },
     
-    bindEvents: function() {
+    _bindEvents: function() {
         $(window).on('hashchange', $.proxy(this._onHashChange, this));
         
         return this;
     },
     
-    unbindEvents: function() {
+    _unbindEvents: function() {
         $(window).off('hashchange', this._onHashChange);
 
         return this;
     },
     
-    syncState: function() {
-        this.state = this.normalizeState(undefined, document.title, this._removeHashbang(window.location.href));
+    _syncState: function() {
+        this.state = this._normalizeState(undefined, document.title, this._removeHashbang(window.location.href));
         return this;
     },
     
