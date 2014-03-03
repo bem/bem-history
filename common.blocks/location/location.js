@@ -23,7 +23,6 @@ var BemLocation = inherit(events.Emitter, {
 
     /**
      * Reaction for the history state change.
-     *
      * @param {Object} event
      * @param {Object} event params
      */
@@ -37,7 +36,6 @@ var BemLocation = inherit(events.Emitter, {
 
     /**
      * Sync own state with the history block state.
-     *
      * @returns {Object} location
      * @private
      */
@@ -59,11 +57,14 @@ var BemLocation = inherit(events.Emitter, {
     },
 
     /**
-     * Method for a state change.
+     * Method for a location change. It's possible to change location
+     * by an exact url or a query params (params can be overwritten using the forceParams flag).
+     * Method work depends on the provided data.
      * @param {Object} data
      * @param {Object} data.params query params
      * @param {String} data.url new url
      * @param {Boolean} data.trigger trigger change event
+     * @param {Boolean} data.forceParams replace current params flag
      * @param {Boolean} data.history write history record or replace current
      */
     change: function(data) {
@@ -112,7 +113,7 @@ var BemLocation = inherit(events.Emitter, {
 
     /**
      * Returns an Uri instance constructed from the current state url.
-     * @returns {Object} uriInstance    
+     * @returns {uri}
      */
     getUri: function() {
         return Uri.parse(this._state.url);
@@ -120,7 +121,7 @@ var BemLocation = inherit(events.Emitter, {
 
     /**
      * Returns previous url.
-     * @returns {String} refererUrl    
+     * @returns {String} refererUrl
      */
     getReferer: function() {
         return this._state.referer;
