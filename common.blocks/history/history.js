@@ -78,10 +78,10 @@ provide(inherit(events.Emitter, {
      */
     _removeHashbang: function(url) {
         var parsedUri = Uri.parse(url),
-            hashbangUri = Uri.parse(parsedUri.anchor().replace(/^!/, ''));
+            hashbangUri = Uri.parse(parsedUri.getAnchor().replace(/^!/, ''));
         
-        parsedUri.anchor('');
-        parsedUri.query(hashbangUri.query());
+        parsedUri.setAnchor('');
+        parsedUri.setQuery(hashbangUri.getQuery());
         
         return parsedUri.build();
     },

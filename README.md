@@ -25,7 +25,7 @@ modules.require(['uri', 'history', 'location'], function(Uri, History, location)
     var u = Uri.parse('http://example.org:8080/path?test=1&test=2&param2=22');
     
     // Change port
-    u.port(80);
+    u.setPort(80);
     
     // Change query params
     u.deleteParam('test', '2');

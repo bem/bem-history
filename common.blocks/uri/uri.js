@@ -21,7 +21,7 @@
 modules.define('uri', function(provide) {
 
 /**
- * Creates a new Uri object
+ * Creates a new Uri object.
  * @constructor
  * @param {String} str
  */
@@ -53,7 +53,7 @@ Uri.prototype.decode = function(str) {
 };
 
 /**
- * Normalizes url string to percentage encoding
+ * Normalizes url string to percentage encoding.
  * @param  {String} str original url
  * @returns {String}    normalized string
  */
@@ -117,32 +117,34 @@ Uri.prototype.parseQuery = function parseQuery(str) {
 };
 
 /**
- * Define getter/setter methods
+ * Define getter/setter methods.
  */
-['protocol', 'host', 'port', 'path', 'anchor'].forEach(function(key) {
-    Uri.prototype[key] = function(val) {
-        if (typeof val !== 'undefined') {
-            this.uriParts[key] = val;
-            return this;
-        }
+['Protocol', 'Host', 'Port', 'Path', 'Anchor'].forEach(function(key) {
+    Uri.prototype['get' + key] = function(val) {
+        return this.uriParts[key.toLowerCase()];
+    };
     
-        return this.uriParts[key];
+    Uri.prototype['set' + key] = function(val) {
+        this.uriParts[key.toLowerCase()] = val;
+        return this;
     };
 });
 
 /**
+ * Returns an object of query params.
+ * @returns {Object}
+ */
+Uri.prototype.getParams = function(val) {
+    return this.queryParams;
+};
+
+/**
  * Serializes the internal state of the query pairs.
- * @param  {String} [val]  set a new query string
  * @returns {String}       query string
  */
-Uri.prototype.query = function(val) {
-    var s = '';
-
-    if (typeof val !== 'undefined') {
-        this.queryParams = this.parseQuery(val);
-    }
-    
-    var params = this.queryParams,
+Uri.prototype.getQuery = function(val) {
+    var s = '',
+        params = this.queryParams,
         queryKeys = Object.keys(params),
         _this = this;
 
@@ -166,6 +168,19 @@ Uri.prototype.query = function(val) {
 };
 
 /**
+ * Url query setter.
+ * @param  {String} [val] set a new query string
+ * @returns {uri}
+ */
+Uri.prototype.setQuery = function(val) {
+    if (typeof val !== 'undefined') {
+        this.queryParams = this.parseQuery(val);
+    }
+
+    return this;
+};
+
+/**
  * Returns an array of query param values for the key.
  * @param  {String} key query key
  * @returns {Array}     array of values
@@ -178,7 +193,7 @@ Uri.prototype.getParam = function(key) {
  * Removes query parameters.
  * @param  {String} key     remove values for key
  * @param  {val}    [val]   remove a specific value, otherwise removes all
- * @returns {Uri}           returns self for fluent chaining
+ * @returns {uri}           returns self for fluent chaining
  */
 Uri.prototype.deleteParam = function(key, val) {
     var newParams = [];
@@ -203,8 +218,7 @@ Uri.prototype.deleteParam = function(key, val) {
  * Adds a query parameter.
  * @param  {String}  key        add values for key
  * @param  {String}  val        value to add
- * @param  {integer} [index]    specific index to add the value at
- * @returns {Uri}               returns self for fluent chaining
+ * @returns {uri}               returns self for fluent chaining
  */
 Uri.prototype.addParam = function(key, val) {
     this.queryParams[key] = (this.queryParams[key] || []).concat(val);
@@ -217,7 +231,7 @@ Uri.prototype.addParam = function(key, val) {
  * @param  {String} key         key to replace value for
  * @param  {String} newVal      new value
  * @param  {String} [oldVal]    replace only one specific value (otherwise replaces all)
- * @returns {Uri}               returns self for fluent chaining
+ * @returns {uri}               returns self for fluent chaining
  */
 Uri.prototype.replaceParam = function(key, newVal, oldVal) {
     return this.deleteParam(key, oldVal)
@@ -228,16 +242,16 @@ Uri.prototype.replaceParam = function(key, newVal, oldVal) {
  * Scheme name, colon and doubleslash, as required.
  * @returns {String} http:// or simply //
  */
-Uri.prototype.scheme = function() {
+Uri.prototype.getScheme = function() {
     var s = '';
 
-    if (this.protocol()) {
-        s += this.protocol();
-        if (this.protocol().indexOf(':') !== this.protocol().length - 1) {
+    if (this.getProtocol()) {
+        s += this.getProtocol();
+        if (this.getProtocol().indexOf(':') !== this.getProtocol().length - 1) {
             s += ':';
         }
         s += '//';
-    } else if (this.host()) {
+    } else if (this.getHost()) {
         s += '//';
     }
 
@@ -249,13 +263,13 @@ Uri.prototype.scheme = function() {
  * @see  https://developer.mozilla.org/en/nsIURI
  * @returns {String} scheme://host:port
  */
-Uri.prototype.origin = function() {
-    var s = this.scheme();
+Uri.prototype.getOrigin = function() {
+    var s = this.getScheme();
 
-    if (this.host()) {
-        s += this.host();
-        if (this.port()) {
-            s += ':' + this.port();
+    if (this.getHost()) {
+        s += this.getHost();
+        if (this.getPort()) {
+            s += ':' + this.getPort();
         }
     }
 
@@ -267,10 +281,10 @@ Uri.prototype.origin = function() {
  * @returns {String} scheme://host:port + path without last
  */
 Uri.prototype.getRoot = function() {
-    var s = this.origin();
+    var s = this.getOrigin();
 
-    if (this.path()) {
-        s += this.path().replace(/\/[^\/]*$/, '');
+    if (this.getPath()) {
+        s += this.getPath().replace(/\/[^\/]*$/, '');
     }
 
     return s;
@@ -280,8 +294,8 @@ Uri.prototype.getRoot = function() {
  * Returns an array of path parts.
  * @returns {Object} path parts
  */
-Uri.prototype.pathParts = function() {
-    return this.path().split('/');
+Uri.prototype.getPathParts = function() {
+    return this.getPath().split('/');
 };
 
 /**
@@ -289,31 +303,31 @@ Uri.prototype.pathParts = function() {
  * @returns {String}
  */
 Uri.prototype.toString = function() {
-    var s = this.origin();
+    var s = this.getOrigin();
 
-    if (this.path()) {
-        if (this.path().indexOf('/') !== 0 && s[s.length - 1] !== '/') {
-            s += '/' + this.path();
+    if (this.getPath()) {
+        if (this.getPath().indexOf('/') !== 0 && s[s.length - 1] !== '/') {
+            s += '/' + this.getPath();
         } else {
-            s += this.path();
+            s += this.getPath();
         }
     } else {
-        if (this.host() && (this.query().toString() || this.anchor())) {
+        if (this.getHost() && (this.getQuery().toString() || this.getAnchor())) {
             s += '/';
         }
     }
-    if (this.query().toString()) {
-        if (this.query().toString().indexOf('?') !== 0) {
+    if (this.getQuery().toString()) {
+        if (this.getQuery().toString().indexOf('?') !== 0) {
             s += '?';
         }
-        s += this.query().toString();
+        s += this.getQuery().toString();
     }
 
-    if (this.anchor()) {
-        if (this.anchor().indexOf('#') !== 0) {
+    if (this.getAnchor()) {
+        if (this.getAnchor().indexOf('#') !== 0) {
             s += '#';
         }
-        s += this.anchor();
+        s += this.getAnchor();
     }
 
     return s;
@@ -328,37 +342,37 @@ Uri.prototype.build = function() {
     var s = '';
     
     // No protocol/host – set current
-    s += this.protocol() ? this.protocol() : window.location.protocol;
+    s += this.getProtocol() ? this.getProtocol() : window.location.protocol;
     s += (s.indexOf(':') !== s.length - 1) ? '://' : '//';
     
-    s += this.host() ? this.host() : window.location.hostname;
+    s += this.getHost() ? this.getHost() : window.location.hostname;
     
-    if (this.port()) {
-        s += ':' + this.port();
-    } else if (!this.host() && window.location.hostname) {
+    if (this.getPort()) {
+        s += ':' + this.getPort();
+    } else if (!this.getHost() && window.location.hostname) {
         s += ':' + window.location.port;
     }
     
-    if (this.path()) {
-        s += this.path();
-    } else if (!this.host()) {
+    if (this.getPath()) {
+        s += this.getPath();
+    } else if (!this.getHost()) {
         s += window.location.pathname;
     } else {
         s += '/';
     }
     
-    if (this.query()) {
-        if (this.query().indexOf('?') !== 0) {
+    if (this.getQuery()) {
+        if (this.getQuery().indexOf('?') !== 0) {
             s += '?';
         }
-        s += this.query();
+        s += this.getQuery();
     }
 
-    if (this.anchor()) {
-        if (this.anchor().indexOf('#') !== 0) {
+    if (this.getAnchor()) {
+        if (this.getAnchor().indexOf('#') !== 0) {
             s += '#';
         }
-        s += this.anchor();
+        s += this.getAnchor();
     }
     
     return s;

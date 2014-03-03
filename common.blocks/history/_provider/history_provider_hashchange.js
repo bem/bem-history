@@ -46,15 +46,15 @@ provide(inherit(Base, {
      */
     _generateHashbang: function(url) {
         var uri = Uri.parse(url),
-            path = uri.pathParts();
+            path = uri.getPathParts();
         
-        return ('!/' + path[path.length - 1] + uri.query());
+        return ('!/' + path[path.length - 1] + uri.getQuery());
     },
     
     _resetUrl: function() {
         var uri = Uri.parse(window.location.href);
         
-        if (!uri.anchor()) {
+        if (!uri.getAnchor()) {
             window.location.hash = this._generateHashbang(window.location.href);
         }
         return this;
@@ -63,9 +63,9 @@ provide(inherit(Base, {
     changeState: function(method, state) {
         var uri = Uri.parse(state.url);
         
-        if ((uri.host() && uri.host() !== window.location.hostname) ||
-            (uri.port() && uri.port() !== window.location.port) ||
-            (uri.protocol() && uri.protocol() !== window.location.protocol.replace(':', ''))) {
+        if ((uri.getHost() && uri.getHost() !== window.location.hostname) ||
+            (uri.getPort() && uri.getPort() !== window.location.port) ||
+            (uri.getProtocol() && uri.getProtocol() !== window.location.protocol.replace(':', ''))) {
         
             throw new Error('SECURITY_ERR: DOM Exception 18');
         } else {

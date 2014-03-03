@@ -46,7 +46,7 @@ provide(inherit(Base, {
     _resetUrl: function() {
         var uri = Uri.parse(window.location.href);
         
-        if (uri.anchor()) {
+        if (uri.getAnchor()) {
             window.history.replaceState(null, document.title, this._removeHashbang(window.location.href));
         }
         return this;

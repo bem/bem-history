@@ -47,9 +47,9 @@ var BemLocation = inherit(events.Emitter, {
             referer: this._state && this._state.url,// referer - previous url
             url: uri.build(),                       // full page URL –
             // http://yandex.ru/yandsearch?text=ololo&lr=213
-            hostname: uri.host(),                   // page hostname - yandex.ru
-            path: uri.path(),                       // path to the current page - /yandsearch
-            params: uri.queryParams                 // search params – 
+            hostname: uri.getHost(),                   // page hostname - yandex.ru
+            path: uri.getPath(),                       // path to the current page - /yandsearch
+            params: uri.getParams()                 // search params – 
             // { text: ['ololo'], lr: ['213'] }
         });
         
