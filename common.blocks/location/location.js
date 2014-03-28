@@ -29,7 +29,7 @@ var BemLocation = inherit(events.Emitter, {
     _onStateChange: function() {
         this._syncState();
 
-        if (this._state.trigger !== false) {
+        if (this._state.silent !== true) {
             this.emit('change', this._state);
         }
     },
@@ -44,12 +44,12 @@ var BemLocation = inherit(events.Emitter, {
             uri = Uri.parse(state.url);
         
         this._state = objects.extend(state.data, {
-            referer: this._state && this._state.url,// referer - previous url
-            url: uri.build(),                       // full page URL –
+            referer: this._state && this._state.url, // referer - previous url
+            url: uri.build(),                        // full page URL –
             // http://yandex.ru/yandsearch?text=ololo&lr=213
-            hostname: uri.getHost(),                   // page hostname - yandex.ru
-            path: uri.getPath(),                       // path to the current page - /yandsearch
-            params: uri.getParams()                 // search params – 
+            hostname: uri.getHost(),                 // page hostname - yandex.ru
+            path: uri.getPath(),                     // path to the current page - /yandsearch
+            params: uri.getParams()                  // search params –
             // { text: ['ololo'], lr: ['213'] }
         });
         
@@ -63,9 +63,9 @@ var BemLocation = inherit(events.Emitter, {
      * @param {Object} data
      * @param {Object} data.params query params
      * @param {String} data.url new url
-     * @param {Boolean} data.trigger trigger change event
+     * @param {Boolean} data.silent do not trigger change event
      * @param {Boolean} data.forceParams replace current params flag
-     * @param {Boolean} data.history write history record or replace current
+     * @param {Boolean} data.replace write history record or replace current
      */
     change: function(data) {
         var uri = Uri.parse(data.url);
@@ -81,18 +81,18 @@ var BemLocation = inherit(events.Emitter, {
             var newUrl = Uri.parse(),
                 params = data.forceParams ? data.params : objects.extend({}, this._state.params, data.params);
             
-            Object.keys(params).forEach(function(key) {
-                newUrl.addParam(key, params[key]);
+            objects.each(params, function(value, key) {
+                newUrl.addParam(key, value);
             });
             data.url = newUrl.build();
         }
 
         // By default trigger change event
-        data.trigger === false || (data.trigger = true);
+        data.silent === true || (data.silent = false);
         
         try {
             this._history.changeState(
-                (data.history === false ? 'replace' : 'push'),
+                (data.replace === true ? 'replace' : 'push'),
                 {
                     data: data,
                     url: data.url

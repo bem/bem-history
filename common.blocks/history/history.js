@@ -50,16 +50,6 @@ provide(inherit(events.Emitter, {
     },
     
     /**
-     * Base method for an events unbinding.
-     * Method may be extended in modificators.
-     *
-     * @returns {Object}
-     */
-    _unbindEvents: function() {
-        return this;
-    },
-    
-    /**
      * Base method for url check and reset.
      * Method have to be extended in modificators.
      *
@@ -80,8 +70,9 @@ provide(inherit(events.Emitter, {
         var parsedUri = Uri.parse(url),
             hashbangUri = Uri.parse(parsedUri.getAnchor().replace(/^!/, ''));
         
-        parsedUri.setAnchor('');
-        parsedUri.setQuery(hashbangUri.getQuery());
+        parsedUri
+            .setAnchor('')
+            .setQuery(hashbangUri.getQuery());
         
         return parsedUri.build();
     },
@@ -111,9 +102,9 @@ provide(inherit(events.Emitter, {
         // so that data have to be undefined or an empty object
         // but not null
         return {
-            data:   data === null ? undefined : data,
-            title:  title,
-            url:    url
+            data: data === null ? undefined : data,
+            title: title,
+            url: url
         };
     },
     

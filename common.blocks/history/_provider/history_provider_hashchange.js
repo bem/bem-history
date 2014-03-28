@@ -25,12 +25,6 @@ provide(inherit(Base, {
         return this;
     },
     
-    _unbindEvents: function() {
-        $(window).off('hashchange', this._onHashChange);
-
-        return this;
-    },
-    
     _syncState: function() {
         this.state = this._normalizeState(undefined, document.title, this._removeHashbang(window.location.href));
         return this;

@@ -24,21 +24,15 @@ provide(inherit(Base, {
 
         this.state = this._normalizeState(state, document.title, window.location.href);
         
-        // Remove trigger param to fix back-forward buttons work
-        // after location trigger=false flag usage
-        this.state.data && delete this.state.data.trigger;
+        // Remove silent param to fix back-forward buttons work
+        // after location silent=true flag usage
+        this.state.data && delete this.state.data.silent;
         
         this.emit('statechange', { state: state, nativeApi: true });
     },
     
     _bindEvents: function() {
         $(window).on('popstate', $.proxy(this._onPopState, this));
-
-        return this;
-    },
-
-    _unbindEvents: function() {
-        $(window).off('popstate', this._onPopState);
 
         return this;
     },
