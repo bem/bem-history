@@ -13,13 +13,18 @@
     "license": "MIT",
     "dependencies": {},
     "devDependencies": {
-        "enb": "0.8.24",
-        "enb-bemhtml": "0.0.7",
+        "enb": "0.8.43",
+        "enb-bemhtml": "0.2.1",
         "jscs": "1.0.0",
         "jshint": "2.1.4",
-        "jshint-groups": "0.5.1"
+        "jshint-groups": "0.5.1",
+        "mocha": "1.8",
+        "chai": "1.8.1",
+        "phantomjs": "1.9",
+        "mocha-phantomjs": "3.0",
+        "bower": "1.2"
     },
     "scripts": {
-        "test": "./node_modules/.bin/jshint-groups && ./node_modules/.bin/jscs ."
+        "test": "./node_modules/.bin/jshint-groups && ./node_modules/.bin/jscs common.blocks && ./node_modules/.bin/bower install && ./node_modules/enb/bin/enb make && mocha-phantomjs ./desktop.bundles/index/index.html"
     }
 }

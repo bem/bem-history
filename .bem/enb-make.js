@@ -35,9 +35,8 @@ module.exports = function(config) {
 
 function getLevels(config) {
     return [
-        'bem-bl/blocks-common',
-        'bem-bl/blocks-desktop',
-        'bemhtml/common.blocks',
+        'libs/bem-bl/blocks-common',
+        'libs/bem-bl/blocks-desktop',
         'common.blocks',
         'desktop.bundles/index/blocks'
     ].map(function(level) {

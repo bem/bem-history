@@ -1,5 +1,6 @@
 module.exports = {
     options: {
+        es3: true,
         eqeqeq: true,
         evil: true,
         expr: true,
@@ -15,8 +16,10 @@ module.exports = {
         noempty: true,
         nonew: true,
         quotmark: 'single',
+        sub: true,
         trailing: true,
-        undef: true
+        undef: true,
+        unused: true
     },
     groups: {
         client: {

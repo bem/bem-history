@@ -3,6 +3,7 @@
 NODE_MODULES := ./node_modules/
 
 ENB := $(NODE_MODULES).bin/enb
+BOWER := $(NODE_MODULES).bin/bower
 NPM := npm
 
 ifneq (,$(findstring B,$(MAKEFLAGS)))
@@ -23,7 +24,11 @@ $(ENB):: $(NODE_MODULES)
 
 $(NODE_MODULES)::
 	$(debug ---> Updating npm dependencies)
-	@$(NPM) install
+	@$(NPM) install --silent
+
+install:
+	@$(NPM) install --silent
+	@$(BOWER) install --quiet
 
 .PHONY: clean
 clean::
