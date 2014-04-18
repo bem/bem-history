@@ -104,7 +104,7 @@ BEM.decl('uri', {
             return params;
         }
 
-        ps = str.replace('?', '').split(/[&;]/);
+        ps = str.replace('?', '').split('&');
 
         for (i = 0; i < ps.length; i++) {
             kvp = ps[i].split('=');
