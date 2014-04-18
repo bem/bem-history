@@ -210,6 +210,16 @@ BEM.DOM.decl('test', {
                     u = BEM.blocks.uri.parse('http://test.com/ololo/trololo.html?param1=1#!123');
                     expect(u.getRoot()).to.equal('http://test.com/ololo');
                 })
+                
+                it('should be able to decode cp1251 encoded params', function() {
+                    u = BEM.blocks.uri.parse('http://test.com/ololo/trololo.html?text=%F2%E0%E1%EB%EE');
+                    expect(u.getParam('text')[0]).to.equal('табло');
+                })
+                
+                it('should not fall on params encoded with unknown encoding', function() {
+                    u = BEM.blocks.uri.parse('http://test.com/ololo/trololo.html?text=%COCOCO');
+                    expect(u.getParam('text')[0]).to.equal('%COCOCO');
+                })
             })
             
             var windowHistoryBackup = window.history;
