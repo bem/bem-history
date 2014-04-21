@@ -135,9 +135,13 @@ BEM.decl('uri', {
         ps = str.replace('?', '').split('&');
 
         for (i = 0; i < ps.length; i++) {
+            // Split only by first occurrence of =
             kvp = ps[i].split('=');
+            kvp = [kvp.shift(), kvp[0] !== undefined ? kvp.join('=') : null];
+            
             k = this.decode(kvp[0]);
             v = (kvp[1] || kvp[1] === '') ? this.decode(kvp[1]) : null;
+            
             if (params[k]) {
                 (v || v === '') && params[k].push(v);
             } else {
