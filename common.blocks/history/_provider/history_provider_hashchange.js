@@ -44,12 +44,11 @@ BEM.decl({ block: 'history', modName: 'provider', modVal: 'hashchange' }, {
         return ('!/' + path[path.length - 1] + uri.query());
     },
     
+    /**
+     * Do not reset url after the history initialization.
+     * Hashbang will be added during the first changeState.
+     */
     _resetUrl: function() {
-        var uri = BEM.blocks.uri.parse(window.location.href);
-        
-        if (!uri.anchor()) {
-            window.location.hash = this._generateHashbang(window.location.href);
-        }
         return this;
     },
     
