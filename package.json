@@ -25,6 +25,6 @@
         "bower": "1.2"
     },
     "scripts": {
-        "test": "./node_modules/.bin/jshint-groups && ./node_modules/.bin/jscs common.blocks && ./node_modules/.bin/bower install && ./node_modules/enb/bin/enb make && mocha-phantomjs ./desktop.bundles/index/index.html"
+        "test": "./node_modules/.bin/jshint-groups && ./node_modules/.bin/jscs common.blocks && ./node_modules/.bin/bower install && ./node_modules/enb/bin/enb make --no-cache && mocha-phantomjs ./desktop.bundles/index/index.html"
     }
 }

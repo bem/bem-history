@@ -82,8 +82,10 @@ BEM.decl('history', {
      */
     _removeHashbang: function(url) {
         var uri = BEM.blocks.uri,
-            parsedUri = uri.parse(url),
-            hashbangUri = uri.parse(parsedUri.anchor().replace(/^!/, ''));
+            parsedUri = uri.parse(url);
+        
+        if (parsedUri.anchor() === '') { return url; }
+        var hashbangUri = uri.parse(parsedUri.anchor().replace(/^!/, ''));
         
         parsedUri.anchor('');
         parsedUri.query(hashbangUri.query());
