@@ -20,6 +20,12 @@ BEM.decl('location', {
     _onStateChange: function() {
         this._syncState();
 
+        // Some browsers (like Chromium v36) emit "popstate" event when you return from other site
+        // using back/forward buttons. But some doesn't (like FireFox v28). 
+        // We don't want to track this "popstate" event like location change.
+        if (this._state.referer === window.location.href) return;
+
+        // Check that event isn't disabled.
         if (this._state.trigger !== false) {
             this.trigger('change', this._state);
 
