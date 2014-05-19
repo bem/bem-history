@@ -84,7 +84,7 @@ BEM.decl('uri', {
     },
     
     /**
-     * Normalizes url string to percentage encoding.
+     * Normalizes spaces in the url string to percentage encoding.
      * @param  {String} str original url
      * @returns {String}    normalized string
      */
@@ -388,7 +388,7 @@ BEM.decl('uri', {
 }, {
 
     /**
-     * Parses input url and returns Uri instance.
+     * Parses an input url and returns Uri instance.
      * @param  {String}  str input url
      * @returns {String}
      */
@@ -399,6 +399,15 @@ BEM.decl('uri', {
         uri.queryParams = uri.parseQuery(uri.uriParts.query);
         
         return uri;
+    },
+    
+    /**
+     * Normalizes a full url to percentage encoding.
+     * @param  {String}  str input url
+     * @returns {String}
+     */
+    normalize: function(str) {
+        return this.parse(str).toString();
     }
 
 }
