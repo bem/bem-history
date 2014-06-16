@@ -45,7 +45,7 @@
          */
         getRoot : function() {
 
-            return location.protocol + '//' + (location.hostname || location.host) + '/';
+            return location.protocol + '//' + (location.hostname || location.host) + (location.port ? ':' + location.port : '') + '/';
 
         },
 
