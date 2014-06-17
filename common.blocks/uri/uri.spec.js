@@ -194,6 +194,16 @@ describe('uri', function() {
         u = Uri.parse('http://test.com/ololo/trololo.html?param1=1#!123');
         u.getRoot().should.be.eql('http://test.com/ololo');
     });
+    
+    it('should be able to decode cp1251 encoded params', function() {
+        u = Uri.parse('http://test.com/ololo/trololo.html?text=%F2%E0%E1%EB%EE');
+        u.getParam('text')[0].should.be.eql('табло');
+    });
+    
+    it('should not fall on params encoded with unknown encoding', function() {
+        u = Uri.parse('http://test.com/ololo/trololo.html?text=%COCO%C0C0');
+        u.getParam('text')[0].should.be.eql('%COCO%C0C0');
+    });
 });
 
 provide();

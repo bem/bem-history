@@ -18,7 +18,7 @@
 /**
  * @module uri
  */
-modules.define('uri', function(provide) {
+modules.define('uri', ['querystring__uri'], function(provide, decoder) {
 
 /**
  * Creates a new Uri object.
@@ -49,7 +49,7 @@ Uri.prototype.encode = function(str) {
  * @returns {String}    original string
  */
 Uri.prototype.decode = function(str) {
-    return decodeURIComponent(str);
+    return decoder.decodeURIComponent(str);
 };
 
 /**
