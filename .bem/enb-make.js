@@ -38,6 +38,7 @@ function getLevels(config) {
         'libs/bem-bl/blocks-common',
         'libs/bem-bl/blocks-desktop',
         'common.blocks',
+        'touch.blocks',
         'desktop.bundles/index/blocks'
     ].map(function(level) {
         return config.resolvePath(level);
