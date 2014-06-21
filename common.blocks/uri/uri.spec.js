@@ -204,6 +204,12 @@ describe('uri', function() {
         u = Uri.parse('http://test.com/ololo/trololo.html?text=%COCO%C0C0');
         u.getParam('text')[0].should.be.eql('%COCO%C0C0');
     });
+    
+    it('should be able to normalize a full url to percentage encoding', function() {
+        Uri
+            .normalize('http://yandex.ru/yandsearch?text=yandex+почта&lr=213')
+            .should.be.eql('http://yandex.ru/yandsearch?text=yandex%20%D0%BF%D0%BE%D1%87%D1%82%D0%B0&lr=213');
+    });
 });
 
 provide();

@@ -27,11 +27,25 @@ modules.define('uri', ['querystring__uri'], function(provide, decoder) {
  */
 function Uri(str) {
     this.uriParts = this.parseUri(str);
-    this.queryParams = this.parseQuery(this.uriParts.query);
+    this.queryParams = this.parseQuery(this.normalize(this.uriParts.query));
 }
 
+/**
+ * Parse string and return Uri instance.
+ * @param {String} str
+ * @returns {Uri}  Uri instance
+ */
 Uri.parse = function(str) {
     return new Uri(str);
+};
+
+/**
+ * Normalizes a full url to percentage encoding.
+ * @param  {String}  str input url
+ * @returns {String}
+ */
+Uri.normalize = function(str) {
+    return Uri.parse(str).toString();
 };
 
 /**
@@ -101,12 +115,16 @@ Uri.prototype.parseQuery = function parseQuery(str) {
         return params;
     }
 
-    ps = str.replace('?', '').split(/[&;]/);
+    ps = str.replace('?', '').split('&');
 
     for (i = 0; i < ps.length; i++) {
+        // Split only by first occurrence of =
         kvp = ps[i].split('=');
+        kvp = [kvp.shift(), kvp[0] !== undefined ? kvp.join('=') : null];
+        
         k = this.decode(kvp[0]);
         v = (kvp[1] || kvp[1] === '') ? this.decode(kvp[1]) : null;
+        
         if (params[k]) {
             (v || v === '') && params[k].push(v);
         } else {
