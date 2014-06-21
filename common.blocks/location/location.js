@@ -29,6 +29,11 @@ var BEMLocation = inherit(events.Emitter, {
     _onStateChange: function() {
         this._syncState();
 
+        // Some browsers (like Chromium v36) emit "popstate" event when you return from other site
+        // using back/forward buttons. But some doesn't (like FireFox v28). 
+        // We don't want to track this "popstate" event like location change.
+        if (this._state.referer === Uri.normalize(window.location.href)) return;
+
         if (this._state.silent !== true) {
             this.emit('change', this._state);
         }
