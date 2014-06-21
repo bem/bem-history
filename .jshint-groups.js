@@ -17,7 +17,10 @@ module.exports = {
                 browser: true,
                 jquery: true
             },
-            includes: ['common.blocks/**/*.js'],
+            includes: [
+                'common.blocks/**/*.js',
+                'touch.blocks/**/*.js'
+            ],
             excludes: [
                 '**/*.spec.js',
                 '**/*.deps.js'

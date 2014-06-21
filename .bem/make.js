@@ -44,7 +44,8 @@ MAKE.decl('SetsNode', {
      */
     getSets : function() {
         return {
-            'desktop' : [ 'common.blocks' ]
+            'desktop' : [ 'common.blocks' ],
+            'touch' : [ 'common.blocks', 'touch.blocks' ]
         };
     },
 
@@ -98,6 +99,15 @@ MAKE.decl('TargetBundleNode', {
             environ.getLibPath('bem-core', 'common.blocks'),
             environ.getLibPath('bem-core', 'desktop.blocks'),
             'common.blocks'
+        ];
+    },
+    
+    'touch-levels' : function() {
+        return [
+            environ.getLibPath('bem-core', 'common.blocks'),
+            environ.getLibPath('bem-core', 'touch.blocks'),
+            'common.blocks',
+            'touch.blocks'
         ];
     },
 

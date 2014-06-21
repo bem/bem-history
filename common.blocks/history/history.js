@@ -4,7 +4,11 @@
  */
 modules.define('history', ['inherit', 'events', 'jquery', 'uri'], function(provide, inherit, events, $, Uri) {
 
-provide(inherit(events.Emitter, {
+/**
+ * @class BEMHistory
+ * @augments events:Emitter
+ */
+var BEMHistory = inherit(events.Emitter, {
     /**
      * @constructor
      */
@@ -67,8 +71,10 @@ provide(inherit(events.Emitter, {
      * @returns {String}
      */
     _removeHashbang: function(url) {
-        var parsedUri = Uri.parse(url),
-            hashbangUri = Uri.parse(parsedUri.getAnchor().replace(/^!/, ''));
+        var parsedUri = Uri.parse(url);
+
+        if (parsedUri.getAnchor() === '') { return url; }
+        var hashbangUri = Uri.parse(parsedUri.getAnchor().replace(/^!/, ''));
         
         parsedUri
             .setAnchor('')
@@ -123,6 +129,12 @@ provide(inherit(events.Emitter, {
         } catch (e) {}
     }
     
-}));
+});
+
+BEMHistory.hasNativeAPI = function() {
+    return (window.history && 'pushState' in window.history);
+};
+
+provide(BEMHistory);
 
 });

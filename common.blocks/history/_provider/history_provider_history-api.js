@@ -2,8 +2,8 @@
  * Modificator for BEM-block history which provides native history API support.
  */
 modules.define('history', ['inherit', 'jquery', 'uri'], function(provide, inherit, $, Uri, Base) {
-    
-if (!(window.history && 'pushState' in window.history)) {
+
+if (!Base.hasNativeAPI()) {
     provide(Base);
     return;
 }

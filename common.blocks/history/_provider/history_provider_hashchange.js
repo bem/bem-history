@@ -4,7 +4,7 @@
  */
 modules.define('history', ['inherit', 'jquery', 'uri'], function(provide, inherit, $, Uri, Base) {
 
-if (!('onhashchange' in window) || (window.history && 'pushState' in window.history)) {
+if (!('onhashchange' in window) || Base.hasNativeAPI()) {
     provide(Base);
     return;
 }
@@ -45,12 +45,11 @@ provide(inherit(Base, {
         return ('!/' + path[path.length - 1] + uri.getQuery());
     },
     
+    /**
+     * Do not reset url after the history initialization.
+     * Hashbang will be added during the first changeState.
+     */
     _resetUrl: function() {
-        var uri = Uri.parse(window.location.href);
-        
-        if (!uri.getAnchor()) {
-            window.location.hash = this._generateHashbang(window.location.href);
-        }
         return this;
     },
     

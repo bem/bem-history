@@ -7,10 +7,10 @@ modules.define(
     function(provide, inherit, events, History, objects, Uri) {
 
 /**
- * @class BemLocation
+ * @class BEMLocation
  * @augments events:Emitter
  */
-var BemLocation = inherit(events.Emitter, {
+var BEMLocation = inherit(events.Emitter, {
     /**
      * @constructor
      */
@@ -129,6 +129,6 @@ var BemLocation = inherit(events.Emitter, {
     
 });
 
-provide(new BemLocation());
+provide(new BEMLocation());
 
 });
