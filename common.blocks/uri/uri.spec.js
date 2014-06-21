@@ -64,12 +64,12 @@ describe('uri', function() {
     
     it('should be able to parse query', function() {
         u = Uri.parse('http://test.com/index.html?param1=1&param2=21&param2=22');
-        u.queryParams.should.be.eql({ param1: ['1'], param2: ['21', '22'] });
+        u.queryParams.should.be.eql({ param1 : ['1'], param2 : ['21', '22'] });
     });
     
     it('should differ ?param from ?param=', function() {
         u = Uri.parse('http://test.com/index.html?param1&param2=&param1');
-        u.queryParams.should.be.eql({ param1: [], param2: [''] });
+        u.queryParams.should.be.eql({ param1 : [], param2 : [''] });
     });
     
     it('should add { param: [] } to query as ?param', function() {
@@ -172,13 +172,13 @@ describe('uri', function() {
         u.toString().should.be.eql('http://example.com/search?q=100%25');
     });
 
-    it('should insert missing slash when origin and path have no slash', function () {
+    it('should insert missing slash when origin and path have no slash', function() {
         u = Uri.parse('http://test.com');
         u.setPath('relativePath');
         u.toString().should.be.eql('http://test.com/relativePath');
     });
 
-    it('should remove extra slash when origin and path both provide a slash', function () {
+    it('should remove extra slash when origin and path both provide a slash', function() {
         u = Uri.parse('http://test.com/');
         u.setPath('/relativePath');
         u.toString().should.be.eql('http://test.com/relativePath');

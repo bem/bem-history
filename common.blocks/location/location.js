@@ -2,8 +2,8 @@
  * @module location
  */
 modules.define(
-    'location', 
-    ['inherit', 'events', 'history', 'objects', 'uri'], 
+    'location',
+    ['inherit', 'events', 'history', 'objects', 'uri'],
     function(provide, inherit, events, History, objects, Uri) {
 
 /**
@@ -14,9 +14,9 @@ var BEMLocation = inherit(events.Emitter, {
     /**
      * @constructor
      */
-    __constructor: function() {
+    __constructor : function() {
         this._history = new History();
-    
+
         this._syncState();
         this._history.on('statechange', this._onStateChange, this);
     },
@@ -26,15 +26,15 @@ var BEMLocation = inherit(events.Emitter, {
      * @param {Object} event
      * @param {Object} event params
      */
-    _onStateChange: function() {
+    _onStateChange : function() {
         this._syncState();
 
         // Some browsers (like Chromium v36) emit "popstate" event when you return from other site
-        // using back/forward buttons. But some doesn't (like FireFox v28). 
+        // using back/forward buttons. But some doesn't (like FireFox v28).
         // We don't want to track this "popstate" event like location change.
-        if (this._state.referer === Uri.normalize(window.location.href)) return;
+        if(this._state.referer === Uri.normalize(window.location.href)) return;
 
-        if (this._state.silent !== true) {
+        if(this._state.silent !== true) {
             this.emit('change', this._state);
         }
     },
@@ -44,20 +44,20 @@ var BEMLocation = inherit(events.Emitter, {
      * @returns {Object} location
      * @private
      */
-    _syncState: function() {
+    _syncState : function() {
         var state = this._history.state,
             uri = Uri.parse(state.url);
-        
+
         this._state = objects.extend(state.data, {
-            referer: this._state && this._state.url, // referer - previous url
-            url: uri.build(),                        // full page URL –
+            referer : this._state && this._state.url, // referer - previous url
+            url : uri.build(),                        // full page URL –
             // http://yandex.ru/yandsearch?text=ololo&lr=213
-            hostname: uri.getHost(),                 // page hostname - yandex.ru
-            path: uri.getPath(),                     // path to the current page - /yandsearch
-            params: uri.getParams()                  // search params –
+            hostname : uri.getHost(),                 // page hostname - yandex.ru
+            path : uri.getPath(),                     // path to the current page - /yandsearch
+            params : uri.getParams()                  // search params –
             // { text: ['ololo'], lr: ['213'] }
         });
-        
+
         return this;
     },
 
@@ -72,20 +72,20 @@ var BEMLocation = inherit(events.Emitter, {
      * @param {Boolean} data.forceParams replace current params flag
      * @param {Boolean} data.replace write history record or replace current
      */
-    change: function(data) {
+    change : function(data) {
         var uri = Uri.parse(data.url);
-    
-        if (data.url) {
+
+        if(data.url) {
             delete data.params;
         }
 
         data.url = uri.build();
 
         // Build a new url if the query params exists in data
-        if (data.params) {
+        if(data.params) {
             var newUrl = Uri.parse(),
                 params = data.forceParams ? data.params : objects.extend({}, this._state.params, data.params);
-            
+
             objects.each(params, function(value, key) {
                 newUrl.addParam(key, value);
             });
@@ -94,13 +94,13 @@ var BEMLocation = inherit(events.Emitter, {
 
         // By default trigger change event
         data.silent === true || (data.silent = false);
-        
+
         try {
             this._history.changeState(
                 (data.replace === true ? 'replace' : 'push'),
                 {
-                    data: data,
-                    url: data.url
+                    data : data,
+                    url : data.url
                 }
             );
         } catch (e) {
@@ -112,7 +112,7 @@ var BEMLocation = inherit(events.Emitter, {
      * Returns current state.
      * @returns {Object} state
      */
-    getState: function() {
+    getState : function() {
         return objects.extend(true, {}, this._state);
     },
 
@@ -120,7 +120,7 @@ var BEMLocation = inherit(events.Emitter, {
      * Returns an Uri instance constructed from the current state url.
      * @returns {uri}
      */
-    getUri: function() {
+    getUri : function() {
         return Uri.parse(this._state.url);
     },
 
@@ -128,10 +128,10 @@ var BEMLocation = inherit(events.Emitter, {
      * Returns previous url.
      * @returns {String} refererUrl
      */
-    getReferer: function() {
+    getReferer : function() {
         return this._state.referer;
     }
-    
+
 });
 
 provide(new BEMLocation());

@@ -1,3 +1,3 @@
 ({
-    shouldDeps: 'location'
-});
+    shouldDeps : 'location'
+})

@@ -1,3 +1,3 @@
 ({
-    shouldDeps: ['events', 'inherit', 'jquery', 'history', 'uri']
-});
+    shouldDeps : ['events', 'inherit', 'jquery', 'history', 'uri']
+})

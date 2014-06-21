@@ -12,13 +12,13 @@ var BEMHistory = inherit(events.Emitter, {
     /**
      * @constructor
      */
-    __constructor: function() {
+    __constructor : function() {
         this
             ._resetUrl()
             ._bindEvents()
             ._syncState();
     },
-    
+
     /**
      * Adds new state to browsing history.
      *
@@ -27,7 +27,7 @@ var BEMHistory = inherit(events.Emitter, {
      * @param {String} [url] Location url.
      * @returns {Object}
      */
-    pushState: function(data, title, url) {
+    pushState : function(data, title, url) {
         return this.changeState('push', this._normalizeState(data, title, url));
     },
 
@@ -39,30 +39,30 @@ var BEMHistory = inherit(events.Emitter, {
      * @param {String} [url] Location url.
      * @returns {Object}
      */
-    replaceState: function (data, title, url) {
+    replaceState : function(data, title, url) {
         return this.changeState('replace', this._normalizeState(data, title, url));
     },
-    
+
     /**
      * Base method for an events binding.
      * Method have to be extended in modificators.
      *
      * @returns {Object}
      */
-    _bindEvents: function() {
+    _bindEvents : function() {
         return this;
     },
-    
+
     /**
      * Base method for url check and reset.
      * Method have to be extended in modificators.
      *
      * @returns {Object}
      */
-    _resetUrl: function() {
+    _resetUrl : function() {
         return this;
     },
-    
+
     /**
      * Removes hashbang from url.
      * /?p=1#!/?p=2 => /?p=2.
@@ -70,31 +70,30 @@ var BEMHistory = inherit(events.Emitter, {
      * @param {String} url
      * @returns {String}
      */
-    _removeHashbang: function(url) {
+    _removeHashbang : function(url) {
         var parsedUri = Uri.parse(url);
 
-        if (parsedUri.getAnchor() === '') { return url; }
+        if(parsedUri.getAnchor() === '') { return url; }
         var hashbangUri = Uri.parse(parsedUri.getAnchor().replace(/^!/, ''));
-        
+
         parsedUri
             .setAnchor('')
             .setQuery(hashbangUri.getQuery());
-        
+
         return parsedUri.build();
     },
-    
-    
+
     /**
      * Base method for the state syncing with global history state.
      * Method may be extended in modificators.
      *
      * @returns {Object}
      */
-    _syncState: function() {
+    _syncState : function() {
         this.state = this._normalizeState(undefined, document.title, window.location.href);
         return this;
     },
-    
+
     /**
      * Normalizes state to the appropriate form.
      *
@@ -103,17 +102,17 @@ var BEMHistory = inherit(events.Emitter, {
      * @param {String} url
      * @returns {Object} normalized state
      */
-    _normalizeState: function(data, title, url) {
+    _normalizeState : function(data, title, url) {
         // null -> default state, which we don't want to listen
         // so that data have to be undefined or an empty object
         // but not null
         return {
-            data: data === null ? undefined : data,
-            title: title,
-            url: url
+            data : data === null ? undefined : data,
+            title : title,
+            url : url
         };
     },
-    
+
     /**
      * Changes current state.
      * By default it performs simple page redirect.
@@ -123,12 +122,12 @@ var BEMHistory = inherit(events.Emitter, {
      * @param {Object} state
      * @returns {Object}
      */
-    changeState: function(method, state) {
+    changeState : function(method, state) {
         try {
             window.location.assign(state.url);
         } catch (e) {}
     }
-    
+
 });
 
 BEMHistory.hasNativeAPI = function() {

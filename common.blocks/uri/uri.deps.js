@@ -1,3 +1,3 @@
 ({
-    shouldDeps: { block: 'querystring', elem: 'uri' }
+    shouldDeps : { block : 'querystring', elem : 'uri' }
 })

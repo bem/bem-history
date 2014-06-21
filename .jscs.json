@@ -1,80 +1,35 @@
 {
     "excludeFiles": [
+        ".bem/cache/**",
+        ".enb/tmp/**",
         ".git/**",
-        ".bem/**",
-        "node_modules/**",
         "libs/**",
-        "pages-*/**",
+        "node_modules/**",
         "*.bundles/**",
-        "bem-bl/**",
-        "bemhtml/**"
+        "*.examples/**",
+        "*.tests/**",
+        "*.specs/**"
     ],
-    "requireCurlyBraces": [
-        "else",
-        "while",
-        "do"
-    ],
-    "requireSpaceAfterKeywords": [
-        "if",
-        "else",
-        "for",
-        "while",
-        "do",
-        "switch",
-        "return",
-        "catch"
-    ],
-    "requireMultipleVarDecl": true,
-    "disallowLeftStickedOperators": [
-        "?",
-        "+",
-        "-",
-        "/",
-        "*",
-        "=",
-        "==",
-        "===",
-        "!=",
-        "!==",
-        ">",
-        ">=",
-        "<",
-        "<="
-    ],
-    "disallowRightStickedOperators": [
-        "?",
-        "+",
-        "/",
-        "*",
-        ":",
-        ",",
-        "=",
-        "==",
-        "===",
-        "!=",
-        "!==",
-        ">",
-        ">=",
-        "<",
-        "<="
-    ],
-    "requireRightStickedOperators": ["!"],
-    "requireLeftStickedOperators": [","],
-    "disallowImplicitTypeConversion": [
-        "numeric",
-        "boolean",
-        "binary",
-        "string"
-    ],
+    "fileExtensions": [".js", ".bemtree", ".bemhtml"],
+    "requireSpaceAfterKeywords": ["do", "else"],
+    "disallowSpaceAfterKeywords": ["if", "for", "while", "switch"],
+    "disallowSpacesInFunctionExpression": {
+        "beforeOpeningRoundBrace": true
+    },
+    "disallowSpacesInsideArrayBrackets": true,
+    "requireSpacesInsideObjectBrackets": "all",
+    "requireSpaceAfterObjectKeys": true,
+    "disallowSpaceAfterPrefixUnaryOperators": ["++", "--", "+", "-", "~", "!"],
+    "disallowSpaceBeforePostfixUnaryOperators": ["++", "--"],
+    "disallowSpaceBeforeBinaryOperators": [","],
+    "requireSpaceBeforeBinaryOperators": ["+", "-", "/", "*", "=", "==", "===", "!=", "!==", ">", ">=", "<", "<=", "&&", "||"],
+    "requireSpaceAfterBinaryOperators": [",", "+", "-", "/", "*", "=", "==", "===", "!=", "!==", ">", ">=", "<", "<=", "&&", "||"],
     "disallowKeywords": ["with"],
-    "disallowKeywordsOnNewLine": ["else", "catch"],
+    "disallowKeywordsOnNewLine": ["else"],
     "requireLineFeedAtFileEnd": true,
+    "disallowMultipleLineBreaks": true,
     "validateJSDoc": {
         "checkParamNames": true,
         "requireParamTypes": true
-    },
-    "requireSpacesInsideObjectBrackets": "all",
-    "disallowSpacesInsideArrayBrackets": true,
-    "disallowSpaceAfterObjectKeys": true,
-    "disallowMultipleLineBreaks": true
+    }
 }
