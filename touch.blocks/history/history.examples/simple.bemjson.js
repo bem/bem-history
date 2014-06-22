@@ -1,6 +1,6 @@
 ({
-    block: 'page',
-    title: 'bem-history: history',
-    head: { elem: 'js', url: '_simple.js' },
-    content: 'touch history'
-});
+    block : 'page',
+    title : 'bem-history: history',
+    scripts : [{ elem : 'js', url : '_simple.js' }],
+    content : 'touch history'
+})

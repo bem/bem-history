@@ -1,5 +1,5 @@
 module.exports = {
-    options: {
+    options : {
         expr : true,
         eqeqeq : true,
         undef : true,
@@ -10,26 +10,37 @@ module.exports = {
         onecase : true,
         quotmark : 'single'
     },
-    groups: {
-        client: {
-            options: {
-                predef: ['modules'],
-                browser: true,
-                jquery: true
+
+    groups : {
+        vanillajs : {
+            options : {
+                predef : ['modules']
             },
-            includes: [
-                'common.blocks/**/*.js',
-                'touch.blocks/**/*.js'
-            ],
-            excludes: [
+            includes : ['*.blocks/**/*.vanilla.js']
+        },
+
+        browserjs : {
+            options : {
+                browser : true,
+                predef : ['modules']
+            },
+            includes : ['*.blocks/**/*.js'],
+            excludes : [
+                '**/*.bem/*.js',
+                '**/*.i18n/*.js',
+                '**/*.bemjson.js',
+                '**/*.deps.js',
+                '**/*.node.js',
                 '**/*.spec.js',
-                '**/*.deps.js'
+                '**/*.vanilla.js'
             ]
         },
+
         specjs : {
             options : {
                 browser : true,
-                predef : [ 'modules',
+                predef : [
+                    'modules',
                     'describe',
                     'it',
                     'before',
@@ -38,10 +49,24 @@ module.exports = {
                     'afterEach'
                 ]
             },
-            includes : ['**/*.spec.js'],
-            excludes: [
-                'node_modules/**',
-                '*.specs/**'
+            includes : ['*.blocks/**/*.spec.js']
+        },
+
+        bemjsonjs : {
+            options : {
+                asi : true
+            },
+            includes : [
+                '*.bundles/**/*.bemjson.js',
+                '**/*.examples/**/*.bemjson.js',
+                '**/*.tests/**/*.bemjson.js'
+            ],
+            excudes : [
+                '**/.bem/**/*',
+                '*.tests/**/*',
+                '*.specs/**/*',
+                'libs/**/*',
+                'node_modules/**/*'
             ]
         }
     }

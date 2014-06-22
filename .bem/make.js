@@ -18,10 +18,10 @@ try {
 
 MAKE.decl('Arch', {
 
-    blocksLevelsRegexp: /^.+?\.blocks$/,
-    bundlesLevelsRegexp: /^.+?\.pages$/,
+    blocksLevelsRegexp : /^.+?\.blocks$/,
+    bundlesLevelsRegexp : /^.+?\.pages$/,
 
-    createCustomNodes: function(common, libs, blocks) {
+    createCustomNodes : function(common, libs, blocks) {
         var SetsNode = MAKE.getNodeClass('SetsNode');
 
         if(typeof SetsNode.createId === 'undefined') {
@@ -35,7 +35,6 @@ MAKE.decl('Arch', {
 
 });
 
-
 MAKE.decl('SetsNode', {
 
     /**
@@ -44,17 +43,16 @@ MAKE.decl('SetsNode', {
      */
     getSets : function() {
         return {
-            'desktop' : [ 'common.blocks' ],
-            'touch' : [ 'common.blocks', 'touch.blocks' ]
+            'desktop' : ['common.blocks'],
+            'touch' : ['common.blocks', 'touch.blocks']
         };
     },
 
     getSourceTechs : function() {
-        return [ 'examples', 'specs' ];
+        return ['examples', 'specs'];
     }
 
 });
-
 
 MAKE.decl('BundleNode', {
 
@@ -74,7 +72,7 @@ MAKE.decl('BundleNode', {
     },
 
     getForkedTechs : function() {
-        return this.__base().concat([ 'browser.js+bemhtml' ]);
+        return this.__base().concat(['browser.js+bemhtml']);
     },
 
     getLevels : function() {
@@ -91,7 +89,6 @@ MAKE.decl('BundleNode', {
 
 });
 
-
 MAKE.decl('TargetBundleNode', {
 
     'desktop-levels' : function() {
@@ -101,7 +98,7 @@ MAKE.decl('TargetBundleNode', {
             'common.blocks'
         ];
     },
-    
+
     'touch-levels' : function() {
         return [
             environ.getLibPath('bem-core', 'common.blocks'),
@@ -134,7 +131,6 @@ MAKE.decl('TargetBundleNode', {
 
 });
 
-
 MAKE.decl('ExampleNode', {
 
     getLevels : function() {
@@ -145,7 +141,6 @@ MAKE.decl('ExampleNode', {
     }
 
 });
-
 
 MAKE.decl('SpecNode', {
 

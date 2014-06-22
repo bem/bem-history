@@ -1,8 +1,8 @@
 /*!
  * Library for uri parsing and changing.
  * Based on jsUri but mostly refactored and rewritten
- * 
- * Includes parts of jsUri 
+ *
+ * Includes parts of jsUri
  * https://github.com/derek-watson/jsUri
  * Copyright 2012, Derek Watson
  * Released under the MIT license.
@@ -95,7 +95,7 @@ Uri.prototype.parseUri = function(str) {
     parserKeys.forEach(function(key, i) {
         parts[key] = m[i] || '';
     });
-    
+
     return parts;
 };
 
@@ -111,21 +111,21 @@ Uri.prototype.parseQuery = function parseQuery(str) {
     var i, ps, kvp, k, v,
         params = {};
 
-    if (typeof str !== 'string' || str === '') {
+    if(typeof str !== 'string' || str === '') {
         return params;
     }
 
     ps = str.replace('?', '').split('&');
 
-    for (i = 0; i < ps.length; i++) {
+    for(i = 0; i < ps.length; i++) {
         // Split only by first occurrence of =
         kvp = ps[i].split('=');
         kvp = [kvp.shift(), kvp[0] !== undefined ? kvp.join('=') : null];
-        
+
         k = this.decode(kvp[0]);
         v = (kvp[1] || kvp[1] === '') ? this.decode(kvp[1]) : null;
-        
-        if (params[k]) {
+
+        if(params[k]) {
             (v || v === '') && params[k].push(v);
         } else {
             params[k] = (v === null) ? [] : [v];
@@ -141,7 +141,7 @@ Uri.prototype.parseQuery = function parseQuery(str) {
     Uri.prototype['get' + key] = function(val) {
         return this.uriParts[key.toLowerCase()];
     };
-    
+
     Uri.prototype['set' + key] = function(val) {
         this.uriParts[key.toLowerCase()] = val;
         return this;
@@ -167,14 +167,14 @@ Uri.prototype.getQuery = function(val) {
         _this = this;
 
     queryKeys.forEach(function(key, index) {
-        if (index > 0) {
+        if(index > 0) {
             s += '&';
         }
-        if (typeof params[key] === 'object' && !params[key].length) {
+        if(typeof params[key] === 'object' && !params[key].length) {
             s += key;
         } else {
             params[key].forEach(function(v, i) {
-                if (i > 0) {
+                if(i > 0) {
                     s += '&';
                 }
                 s += _this.encode(key) + '=' + _this.encode(v);
@@ -191,7 +191,7 @@ Uri.prototype.getQuery = function(val) {
  * @returns {uri}
  */
 Uri.prototype.setQuery = function(val) {
-    if (typeof val !== 'undefined') {
+    if(typeof val !== 'undefined') {
         this.queryParams = this.parseQuery(val);
     }
 
@@ -216,19 +216,19 @@ Uri.prototype.getParam = function(key) {
 Uri.prototype.deleteParam = function(key, val) {
     var newParams = [];
 
-    if (typeof val !== 'undefined') {
+    if(typeof val !== 'undefined') {
         this.queryParams[key].forEach(function(paramValue) {
-            if (paramValue !== val) {
+            if(paramValue !== val) {
                 newParams.push(paramValue);
             }
         });
         this.queryParams[key] = newParams;
     }
 
-    if (typeof val === 'undefined' || newParams.length === 0) {
+    if(typeof val === 'undefined' || newParams.length === 0) {
         delete this.queryParams[key];
     }
-    
+
     return this;
 };
 
@@ -240,7 +240,7 @@ Uri.prototype.deleteParam = function(key, val) {
  */
 Uri.prototype.addParam = function(key, val) {
     this.queryParams[key] = (this.queryParams[key] || []).concat(val);
-    
+
     return this;
 };
 
@@ -263,13 +263,13 @@ Uri.prototype.replaceParam = function(key, newVal, oldVal) {
 Uri.prototype.getScheme = function() {
     var s = '';
 
-    if (this.getProtocol()) {
+    if(this.getProtocol()) {
         s += this.getProtocol();
-        if (this.getProtocol().indexOf(':') !== this.getProtocol().length - 1) {
+        if(this.getProtocol().indexOf(':') !== this.getProtocol().length - 1) {
             s += ':';
         }
         s += '//';
-    } else if (this.getHost()) {
+    } else if(this.getHost()) {
         s += '//';
     }
 
@@ -284,9 +284,9 @@ Uri.prototype.getScheme = function() {
 Uri.prototype.getOrigin = function() {
     var s = this.getScheme();
 
-    if (this.getHost()) {
+    if(this.getHost()) {
         s += this.getHost();
-        if (this.getPort()) {
+        if(this.getPort()) {
             s += ':' + this.getPort();
         }
     }
@@ -301,7 +301,7 @@ Uri.prototype.getOrigin = function() {
 Uri.prototype.getRoot = function() {
     var s = this.getOrigin();
 
-    if (this.getPath()) {
+    if(this.getPath()) {
         s += this.getPath().replace(/\/[^\/]*$/, '');
     }
 
@@ -323,26 +323,26 @@ Uri.prototype.getPathParts = function() {
 Uri.prototype.toString = function() {
     var s = this.getOrigin();
 
-    if (this.getPath()) {
-        if (this.getPath().indexOf('/') !== 0 && s[s.length - 1] !== '/') {
+    if(this.getPath()) {
+        if(this.getPath().indexOf('/') !== 0 && s[s.length - 1] !== '/') {
             s += '/' + this.getPath();
         } else {
             s += this.getPath();
         }
     } else {
-        if (this.getHost() && (this.getQuery().toString() || this.getAnchor())) {
+        if(this.getHost() && (this.getQuery().toString() || this.getAnchor())) {
             s += '/';
         }
     }
-    if (this.getQuery().toString()) {
-        if (this.getQuery().toString().indexOf('?') !== 0) {
+    if(this.getQuery().toString()) {
+        if(this.getQuery().toString().indexOf('?') !== 0) {
             s += '?';
         }
         s += this.getQuery().toString();
     }
 
-    if (this.getAnchor()) {
-        if (this.getAnchor().indexOf('#') !== 0) {
+    if(this.getAnchor()) {
+        if(this.getAnchor().indexOf('#') !== 0) {
             s += '#';
         }
         s += this.getAnchor();
@@ -358,41 +358,41 @@ Uri.prototype.toString = function() {
  */
 Uri.prototype.build = function() {
     var s = '';
-    
+
     // No protocol/host – set current
     s += this.getProtocol() ? this.getProtocol() : window.location.protocol;
     s += (s.indexOf(':') !== s.length - 1) ? '://' : '//';
-    
+
     s += this.getHost() ? this.getHost() : window.location.hostname;
-    
-    if (this.getPort()) {
+
+    if(this.getPort()) {
         s += ':' + this.getPort();
-    } else if (!this.getHost() && window.location.hostname) {
+    } else if(!this.getHost() && window.location.hostname) {
         s += ':' + window.location.port;
     }
-    
-    if (this.getPath()) {
+
+    if(this.getPath()) {
         s += this.getPath();
-    } else if (!this.getHost()) {
+    } else if(!this.getHost()) {
         s += window.location.pathname;
     } else {
         s += '/';
     }
-    
-    if (this.getQuery()) {
-        if (this.getQuery().indexOf('?') !== 0) {
+
+    if(this.getQuery()) {
+        if(this.getQuery().indexOf('?') !== 0) {
             s += '?';
         }
         s += this.getQuery();
     }
 
-    if (this.getAnchor()) {
-        if (this.getAnchor().indexOf('#') !== 0) {
+    if(this.getAnchor()) {
+        if(this.getAnchor().indexOf('#') !== 0) {
             s += '#';
         }
         s += this.getAnchor();
     }
-    
+
     return s;
 };
 
