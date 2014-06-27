@@ -68,8 +68,9 @@ var BEMLocation = inherit(events.Emitter, {
      * @param {Object} data
      * @param {Object} data.params query params
      * @param {String} data.url new url
-     * @param {Boolean} data.silent do not trigger change event
-     * @param {Boolean} data.forceParams replace current params flag
+     * @param {Boolean} [data.silent = false] do not trigger change event
+     * @param {Boolean} data.forceParams flag to overwrite current params with new. 
+     *                                   By default new params are extended with old
      * @param {Boolean} data.replace write history record or replace current
      */
     change : function(data) {
@@ -83,7 +84,7 @@ var BEMLocation = inherit(events.Emitter, {
 
         // Build a new url if the query params exists in data
         if(data.params) {
-            var newUrl = Uri.parse(),
+            var newUrl = new Uri(),
                 params = data.forceParams ? data.params : objects.extend({}, this._state.params, data.params);
 
             objects.each(params, function(value, key) {
@@ -93,15 +94,12 @@ var BEMLocation = inherit(events.Emitter, {
         }
 
         // By default trigger change event
-        data.silent === true || (data.silent = false);
+        data.silent || (data.silent = false);
 
         try {
             this._history.changeState(
-                (data.replace === true ? 'replace' : 'push'),
-                {
-                    data : data,
-                    url : data.url
-                }
+                (data.replace ? 'replace' : 'push'),
+                data
             );
         } catch (e) {
             window.location.assign(data.url);
@@ -113,7 +111,7 @@ var BEMLocation = inherit(events.Emitter, {
      * @returns {Object} state
      */
     getState : function() {
-        return objects.extend(true, {}, this._state);
+        return objects.extend({}, this._state);
     },
 
     /**

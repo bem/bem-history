@@ -59,7 +59,7 @@ provide(inherit(Base, {
     },
 
     changeState : function(method, state) {
-        window.history[method + 'State'](state.data, state.title || document.title, state.url);
+        window.history[method + 'State'](state, state.title || document.title, state.url);
         this.state = state;
 
         return this.emit('statechange', { state : state, nativeApi : true });

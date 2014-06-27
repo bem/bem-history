@@ -42,7 +42,7 @@ provide(inherit(Base, {
         var uri = Uri.parse(url),
             path = uri.getPathParts();
 
-        return ('!/' + path[path.length - 1] + uri.getQuery());
+        return '!/' + path[path.length - 1] + uri.getQuery();
     },
 
     /**
