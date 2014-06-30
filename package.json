@@ -8,18 +8,27 @@
     },
     "keywords": [
         "bem",
-        "history"
+        "history",
+        "history api"
     ],
+    "engines": {
+      "node": ">= 0.10.0"
+    },
     "license": "MIT",
     "dependencies": {},
     "devDependencies": {
-        "bem": "0.5.33",
-        "bem-environ": "1.2.0",
-        "jscs": "1.0.0",
-        "jshint": "2.1.4",
-        "jshint-groups": "0.5.1"
+        "bem": "~0.8.1",
+        "bem-environ": "~1.4.0",
+        "git-hooks": "~0.0.6",
+        "jscs": "~1.5.3",
+        "jshint-groups": "0.6.0",
+        "bower-npm-install": "~0.5.4"
     },
+    "private": true,
     "scripts": {
-        "test": "./node_modules/.bin/jshint-groups && ./node_modules/.bin/jscs ."
+        "deps": "bower-npm-install",
+        "bem-test": "bem make sets",
+        "lint": "jshint-groups && jscs .",
+        "test": "npm run lint && npm run deps && npm run bem-test"
     }
 }

@@ -1,83 +1,139 @@
-modules.define('history', ['inherit', 'events', 'jquery'], function(provide, inherit, events, $) {
+/**
+ * BEM wrap for History API.
+ * @module history
+ */
+modules.define('history', ['inherit', 'events', 'jquery', 'uri'], function(provide, inherit, events, $, Uri) {
 
-// Fallback for old browsers
-if (history.pushState) {
-    provide({
-        pushState: function (state, title, url) {
-            if (url) window.location.href = url;
-        },
-        replaceState: function (state, title, url) {
-            if (url) window.location.href = url;
-        }
-    });
-    return;
-}
-
-provide(new (inherit(events.Emitter, {
-
+/**
+ * @class BEMHistory
+ * @augments events:Emitter
+ */
+var BEMHistory = inherit(events.Emitter, {
+    /**
+     * @constructor
+     */
     __constructor : function() {
-        if (history.state === null) {
-            history.replaceState(undefined, document.title);
-        }
-        $(window).on('popstate', $.proxy(this._onPopState, this));
+        this
+            ._resetUrl()
+            ._bindEvents()
+            ._syncState();
     },
 
     /**
      * Adds new state to browsing history.
      *
-     * @param {Object} state New state.
+     * @param {Object} data New state data.
      * @param {String} title Document title.
      * @param {String} [url] Location url.
      * @returns {Object}
      */
-    pushState: function(state, title, url) {
-        return this._changeState('push', arguments);
+    pushState : function(data, title, url) {
+        return this.changeState('push', this._normalizeState(data, title, url));
     },
 
     /**
      * Replaces current state.
      *
-     * @param {Object} state New state.
+     * @param {Object} data New state data
      * @param {String} title Document title.
      * @param {String} [url] Location url.
      * @returns {Object}
      */
-    replaceState: function(state, title, url) {
-        return this._changeState('replace', arguments);
+    replaceState : function(data, title, url) {
+        return this.changeState('replace', this._normalizeState(data, title, url));
+    },
+
+    /**
+     * Base method for an events binding.
+     * Method have to be extended in modificators.
+     *
+     * @returns {Object}
+     */
+    _bindEvents : function() {
+        return this;
+    },
+
+    /**
+     * Base method for url check and reset.
+     * Method have to be extended in modificators.
+     *
+     * @returns {Object}
+     */
+    _resetUrl : function() {
+        return this;
+    },
+
+    /**
+     * Removes hashbang from url.
+     * /?p=1#!/?p=2 => /?p=2.
+     *
+     * @param {String} url
+     * @returns {String}
+     */
+    _removeHashbang : function(url) {
+        var parsedUri = Uri.parse(url);
+
+        if(parsedUri.getAnchor() === '') { return url; }
+        var hashbangUri = Uri.parse(parsedUri.getAnchor().replace(/^!/, ''));
+
+        parsedUri
+            .setAnchor('')
+            .setQuery(hashbangUri.getQuery());
+
+        return parsedUri.build();
+    },
+
+    /**
+     * Base method for the state syncing with global history state.
+     * Method may be extended in modificators.
+     *
+     * @returns {Object}
+     */
+    _syncState : function() {
+        this.state = this._normalizeState(undefined, document.title, window.location.href);
+        return this;
+    },
+
+    /**
+     * Normalizes state to the appropriate form.
+     *
+     * @param {Object} data
+     * @param {String} title
+     * @param {String} url
+     * @returns {Object} normalized state
+     */
+    _normalizeState : function(data, title, url) {
+        // null -> default state, which we don't want to listen
+        // so that data have to be undefined or an empty object
+        // but not null
+        return {
+            data : data === null ? undefined : data,
+            title : title,
+            url : url
+        };
     },
 
     /**
      * Changes current state.
+     * By default it performs simple page redirect.
+     * Method may be extended in modificators.
      *
-     * @param {String} method Push or replace method.
-     * @param {Array} args Real method params.
+     * @param {String} method Push or Replace method.
+     * @param {Object} state
      * @returns {Object}
-     * @private
      */
-    _changeState: function(method, args) {
-        var state = this.state = args[0];
-
+    changeState : function(method, state) {
         try {
-            history[method + 'State'].apply(history, args);
-        } catch (e) {
-            return this.trigger('error', { state: state, error: e });
-        }
-
-        return this.trigger('statechange', { state: state });
-    },
-
-    /**
-     * Reaction for popstate jQuery event.
-     */
-    _onPopState: function (e) {
-        var state = e.originalEvent.state;
-        // ignore initial popstate
-        if (state === null) {
-            return;
-        }
-        this.state = state;
-        this.trigger('statechange', { state: state });
+            window.location.assign(state.url);
+        } catch (e) {}
     }
-}))());
+
+});
+
+BEMHistory.hasNativeAPI = function() {
+    return (window.history && 'pushState' in window.history);
+};
+
+provide(BEMHistory);
 
 });

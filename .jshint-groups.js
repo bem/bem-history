@@ -1,31 +1,73 @@
 module.exports = {
-    options: {
-        eqeqeq: true,
-        evil: true,
-        expr: true,
-        forin: true,
-        immed: true,
-        indent: 4,
-        latedef: true,
-        maxdepth: 4,
-        maxlen: 120,
-        maxparams: 4,
-        newcap: true,
-        noarg: true,
-        noempty: true,
-        nonew: true,
-        quotmark: 'single',
-        trailing: true,
-        undef: true
+    options : {
+        expr : true,
+        eqeqeq : true,
+        undef : true,
+        boss : true,
+        sub : true,
+        supernew : true,
+        loopfunc : true,
+        onecase : true,
+        quotmark : 'single'
     },
-    groups: {
-        client: {
-            options: {
-                predef: ['BEM'],
-                browser: true,
-                jquery: true
+
+    groups : {
+        vanillajs : {
+            options : {
+                predef : ['modules']
             },
-            includes: ['common.blocks/**/*.js']
+            includes : ['*.blocks/**/*.vanilla.js']
+        },
+
+        browserjs : {
+            options : {
+                browser : true,
+                predef : ['modules']
+            },
+            includes : ['*.blocks/**/*.js'],
+            excludes : [
+                '**/*.bem/*.js',
+                '**/*.i18n/*.js',
+                '**/*.bemjson.js',
+                '**/*.deps.js',
+                '**/*.node.js',
+                '**/*.spec.js',
+                '**/*.vanilla.js'
+            ]
+        },
+
+        specjs : {
+            options : {
+                browser : true,
+                predef : [
+                    'modules',
+                    'describe',
+                    'it',
+                    'before',
+                    'beforeEach',
+                    'after',
+                    'afterEach'
+                ]
+            },
+            includes : ['*.blocks/**/*.spec.js']
+        },
+
+        bemjsonjs : {
+            options : {
+                asi : true
+            },
+            includes : [
+                '*.bundles/**/*.bemjson.js',
+                '**/*.examples/**/*.bemjson.js',
+                '**/*.tests/**/*.bemjson.js'
+            ],
+            excudes : [
+                '**/.bem/**/*',
+                '*.tests/**/*',
+                '*.specs/**/*',
+                'libs/**/*',
+                'node_modules/**/*'
+            ]
         }
     }
 };
