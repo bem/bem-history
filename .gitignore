@@ -1,8 +1,10 @@
 .bem/cache/
 .bem/snapshots/
+.enb/tmp/
 node_modules/
 libs/
 
 /*.examples
 /*.specs
 /*.tests
+/*.docs
