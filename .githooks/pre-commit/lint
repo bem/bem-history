@@ -5,6 +5,7 @@
 
 PATCH_FILE="working-tree.patch"
 NPM_BIN="./node_modules/.bin"
+JSCS_CONFIG="./.jscs.json"
 
 function cleanup {
     exit_code=$?
@@ -24,5 +25,5 @@ git checkout -- .
 git_cached_files=$(git diff --cached --name-only --diff-filter=ACMR | xargs echo)
 if [ "$git_cached_files" ]; then
     $NPM_BIN/jshint-groups $git_cached_files || exit 1
-    $NPM_BIN/jscs $git_cached_files || exit 1
+    $NPM_BIN/jscs --config=$JSCS_CONFIG $git_cached_files || exit 1
 fi

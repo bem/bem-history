@@ -3,12 +3,15 @@
         ".bem/cache/**",
         ".enb/tmp/**",
         ".git/**",
+        ".githooks/**",
         "libs/**",
         "node_modules/**",
         "*.bundles/**",
         "*.examples/**",
         "*.tests/**",
-        "*.specs/**"
+        "*.specs/**",
+        "*.md",
+        "*.json"
     ],
     "fileExtensions": [".js", ".bemtree", ".bemhtml"],
     "requireSpaceAfterKeywords": ["do", "else"],
