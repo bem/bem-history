@@ -15,10 +15,11 @@
       "node": ">= 0.10.0"
     },
     "license": "MIT",
-    "dependencies": {},
+    "dependencies": {
+        "bem-environ": "~1.4.0"
+    },
     "devDependencies": {
         "bem": "~0.8.1",
-        "bem-environ": "~1.4.0",
         "git-hooks": "~0.0.6",
         "jscs": "~1.5.3",
         "jshint-groups": "0.6.0",
