@@ -71,10 +71,11 @@ var BEMHistory = inherit(events.Emitter, {
      * @returns {String}
      */
     _removeHashbang : function(url) {
-        var parsedUri = Uri.parse(url);
+        var parsedUri = Uri.parse(url),
+            hash = parsedUri.getAnchor();
 
-        if(parsedUri.getAnchor() === '') { return url; }
-        var hashbangUri = Uri.parse(parsedUri.getAnchor().replace(/^!/, ''));
+        if(hash === '' || hash[0] !== '!') { return url; }
+        var hashbangUri = Uri.parse(hash.replace(/^!/, ''));
 
         parsedUri
             .setAnchor('')
