@@ -1,6 +1,7 @@
 /**
  * @module location
  */
+
 modules.define(
     'location',
     ['inherit', 'events', 'history', 'objects', 'uri'],
@@ -9,8 +10,9 @@ modules.define(
 /**
  * @class BEMLocation
  * @augments events:Emitter
+ * @exports location
  */
-var BEMLocation = inherit(events.Emitter, {
+var BEMLocation = inherit(events.Emitter, /** @lends BEMLocation.prototype */{
     /**
      * @constructor
      */
@@ -25,6 +27,7 @@ var BEMLocation = inherit(events.Emitter, {
      * Reaction for the history state change.
      * @param {Object} event
      * @param {Object} event params
+     * @private
      */
     _onStateChange : function() {
         this._syncState();
@@ -69,7 +72,7 @@ var BEMLocation = inherit(events.Emitter, {
      * @param {Object} data.params query params
      * @param {String} data.url new url
      * @param {Boolean} [data.silent = false] do not trigger change event
-     * @param {Boolean} data.forceParams flag to overwrite current params with new. 
+     * @param {Boolean} data.forceParams flag to overwrite current params with new.
      *                                   By default new params are extended with old
      * @param {Boolean} data.replace write history record or replace current
      */

@@ -2,13 +2,15 @@
  * BEM wrap for History API.
  * @module history
  */
+
 modules.define('history', ['inherit', 'events', 'jquery', 'uri'], function(provide, inherit, events, $, Uri) {
 
 /**
  * @class BEMHistory
  * @augments events:Emitter
+ * @exports history
  */
-var BEMHistory = inherit(events.Emitter, {
+var BEMHistory = inherit(events.Emitter, /** @lends BEMHistory.prototype */{
     /**
      * @constructor
      */
@@ -47,6 +49,7 @@ var BEMHistory = inherit(events.Emitter, {
      * Base method for an events binding.
      * Method have to be extended in modificators.
      *
+     * @private
      * @returns {Object}
      */
     _bindEvents : function() {
@@ -57,6 +60,7 @@ var BEMHistory = inherit(events.Emitter, {
      * Base method for url check and reset.
      * Method have to be extended in modificators.
      *
+     * @private
      * @returns {Object}
      */
     _resetUrl : function() {
@@ -65,6 +69,9 @@ var BEMHistory = inherit(events.Emitter, {
 
     /**
      * Removes hashbang from url.
+     *
+     * @private
+     * @example
      * /?p=1#!/?p=2 => /?p=2.
      *
      * @param {String} url
@@ -88,6 +95,7 @@ var BEMHistory = inherit(events.Emitter, {
      * Base method for the state syncing with global history state.
      * Method may be extended in modificators.
      *
+     * @private
      * @returns {Object}
      */
     _syncState : function() {
@@ -98,6 +106,7 @@ var BEMHistory = inherit(events.Emitter, {
     /**
      * Normalizes state to the appropriate form.
      *
+     * @private
      * @param {Object} data
      * @param {String} title
      * @param {String} url

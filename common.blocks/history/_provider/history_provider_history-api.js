@@ -1,5 +1,7 @@
 /**
  * Modificator for BEM-block history which provides native history API support.
+ *
+ * @module history
  */
 modules.define('history', ['inherit', 'jquery', 'uri'], function(provide, inherit, $, Uri, Base) {
 
@@ -8,7 +10,12 @@ if(!Base.hasNativeAPI()) {
     return;
 }
 
-provide(inherit(Base, {
+/**
+ * @exports
+ * @class history
+ * @augments Base
+ */
+provide(inherit(Base, /** @lends history.prototype */{
 
     /**
      * Reaction for the window popstate event.
@@ -58,6 +65,13 @@ provide(inherit(Base, {
         return this;
     },
 
+    /**
+     * Change window location hash
+     *
+     * @param {String} method
+     * @param {Object} state
+     * @returns {event} 'statechange' event with data
+     */
     changeState : function(method, state) {
         window.history[method + 'State'](state, state.title || document.title, state.url);
         this.state = state;

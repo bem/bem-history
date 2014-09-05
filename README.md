@@ -29,17 +29,17 @@ modules.require(['uri'], function(Uri) {
 
     // Parse url
     var u = Uri.parse('http://example.org:8080/path?test=1&test=2&param2=22');
-    
+
     // Change port
     u.setPort(80);
-    
+
     // Change query params
     u.deleteParam('test', '2');
     u.replaceParam('param2', 2);
-    
+
     // Serialize url
     u.toString(); // "http://example.org:8080/path?test=1&param2=2"
-    
+
 });
 ```
 
@@ -53,7 +53,7 @@ modules.require(['history'], function(History) {
     // Push new or replace history state
     history.changeState('push', { title: 'Title', url: 'http://example.org:8080/path' });
     history.changeState('replace', { title: 'Title', url: 'http://example.org:8080/path?test=1' });
-    
+
 });
 ```
 
@@ -66,7 +66,7 @@ modules.require(['location'], function(location) {
 
     // Change current location using only the new query params
     location.change({ params: { param1: [11,12], param2: 'ololo' } });
-    window.location.href; // "http://example.org:8080/path?param1=11&param1=12&param2=ololo"  
-    
+    window.location.href; // "http://example.org:8080/path?param1=11&param1=12&param2=ololo"
+
 });
 ```
