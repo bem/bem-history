@@ -205,7 +205,7 @@ BEM.decl('uri', {
         var newParams = [];
 
         if (typeof val !== 'undefined') {
-            this.queryParams[key].forEach(function(paramValue) {
+            (this.queryParams[key] || []).forEach(function(paramValue) {
                 if (paramValue !== val) {
                     newParams.push(paramValue);
                 }
