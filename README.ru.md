@@ -4,7 +4,7 @@ bem-history
 ## Что это?
 БЭМ-обертка над History API:
 * работает в браузерах со встроенной поддержкой History API и с возможностью фолбэка на событие `hashchange`;
-* позволяет работать с `url`, `location` и `history` браузера в терминах [БЭМ](http:/ru.bem.info/).
+* позволяет работать с `url`, `location` и `history` браузера в терминах [БЭМ](http://ru.bem.info/).
 
 ## Состав
 
