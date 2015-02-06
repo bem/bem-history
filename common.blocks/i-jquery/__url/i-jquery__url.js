@@ -236,9 +236,9 @@
         normalizeHash : function(hash) {
 
             return hash
-                .replace(/[^#]*#!?/, '')
-                .replace(/#.*/, '');
-
+                .replace(this._hashBangRegEx, '') // удалить хеш-бэнг
+                .replace(/[^#]*/, '')  // удалить всё, что до хеша
+                .replace(/(#|\/|\?|&)/g, ''); // удалить все спецсимволы из хеша (NERPA-1406 : Ссылки с анкорами в МН приводят к 404 странице)
         },
 
         /**
