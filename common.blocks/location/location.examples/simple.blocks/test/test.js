@@ -12,7 +12,7 @@ provide(BEMDOM.decl({ block : this.name }, {
     },
 
     changeParams : function() {
-        var msg = 'Location has changed!!! ' + window.location.href;
+        var msg = 'Location has been changed!!! ' + window.location.href;
 
         location.change({ params : { location : 'param', has : 'changed' } });
         BEMDOM.update(this.domElem, msg);

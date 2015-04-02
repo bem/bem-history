@@ -8,8 +8,8 @@
         "node_modules/**",
         "*.bundles/**",
         "*.examples/**",
-        "*.tests/**",
         "*.specs/**",
+        "*.docs/**",
         "*.md",
         "*.json"
     ],

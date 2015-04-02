@@ -58,13 +58,13 @@ module.exports = {
             },
             includes : [
                 '*.bundles/**/*.bemjson.js',
-                '**/*.examples/**/*.bemjson.js',
-                '**/*.tests/**/*.bemjson.js'
+                '**/*.examples/**/*.bemjson.js'
             ],
             excudes : [
                 '**/.bem/**/*',
-                '*.tests/**/*',
+                '*.examples/**/*',
                 '*.specs/**/*',
+                '*.docs/**/*',
                 'libs/**/*',
                 'node_modules/**/*'
             ]
