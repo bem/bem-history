@@ -3,7 +3,7 @@
 .enb/tmp/
 node_modules/
 libs/
-
+.idea/
 /*.examples
 /*.specs
 /*.tests

@@ -48,6 +48,7 @@
     "scripts": {
         "start": "magic server",
         "deps": "bower i",
+	"build-all": "npm run deps && magic make desktop.examples desktop.docs touch.examples touch.docs",
         "lint": "jshint-groups && jscs .",
         "test": "npm run lint && npm run deps && npm run specs",
         "specs": "magic run specs"

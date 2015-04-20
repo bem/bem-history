@@ -20,7 +20,7 @@
  */
 modules.define('uri', ['querystring__uri'], function(provide, decoder) {
 
-/**
+/*
  * Creates a new Uri object.
  * @constructor
  * @param {String} str
