@@ -71,7 +71,7 @@ var BEMLocation = inherit(events.Emitter, /** @lends BEMLocation.prototype */{
      * @param {Object} data
      * @param {Object} data.params query params
      * @param {String} data.url new url
-     * @param {Boolean} [data.silent = false] do not trigger change event
+     * @param {Boolean} [data.silent=false] do not trigger change event
      * @param {Boolean} data.forceParams flag to overwrite current params with new.
      *                                   By default new params are extended with old
      * @param {Boolean} data.replace write history record or replace current
