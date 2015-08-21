@@ -171,7 +171,7 @@ Uri.prototype.getQuery = function(val) {
             s += '&';
         }
         if(typeof params[key] === 'object' && !params[key].length) {
-            s += key;
+            s += _this.encode(key);
         } else {
             params[key].forEach(function(v, i) {
                 if(i > 0) {

@@ -78,6 +78,12 @@ describe('uri', function() {
         u.toString().should.be.eql('http://test.com/index.html?param');
     });
 
+    it('should encode empty param', function() {
+        u = Uri.parse('http://test.com/index.html');
+        u.addParam('param[]', []);
+        u.toString().should.be.eql('http://test.com/index.html?param%5B%5D');
+    });
+
     it('should add a query to nothing', function() {
         u = Uri.parse('');
         u.setQuery('this=that&something=else');
