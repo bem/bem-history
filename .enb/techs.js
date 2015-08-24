@@ -6,15 +6,15 @@ module.exports = {
     },
     bem : require('enb-bem-techs'),
     css : {
-        stylus : require('enb-stylus/techs/css-stylus')
+        stylus : require('enb-stylus/techs/stylus')
     },
-    js : require('./techs/js-borschik-include'),
+    js : require('enb-borschik/techs/js-borschik-include'),
     ym : require('enb-modules/techs/prepend-modules'),
     engines : {
-        bemhtml : require('enb-bemxjst/techs/bemhtml-old')
+        bemhtml : require('enb-bemxjst/techs/bemhtml')
     },
     html : {
-        bemhtml : require('enb-bemxjst/techs/html-from-bemjson')
+        bemhtml : require('enb-bemxjst/techs/bemjson-to-html')
     },
     borschik : require('enb-borschik/techs/borschik')
 };

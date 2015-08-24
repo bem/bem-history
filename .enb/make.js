@@ -46,7 +46,7 @@ module.exports = function(config) {
             // Base techs
             nodeConfig.addTechs([
                 [techs.bem.bemjsonToBemdecl],
-                [techs.bem.depsOld],
+                [techs.bem.deps],
                 [techs.bem.files]
             ]);
 
@@ -54,7 +54,9 @@ module.exports = function(config) {
             nodeConfig.addTechs([
                 [techs.css.stylus],
                 [techs.js, {
-                    filesTarget : '?.js.files'
+                    filesTarget : '?.js.files',
+                    target : '?.browser.js',
+                    sourceSuffixes : ['vanilla.js', 'browser.js', 'js']
                 }],
                 [techs.files.merge, {
                     target : '?.pre.js',
@@ -77,7 +79,7 @@ module.exports = function(config) {
                     sources : ['?.bemdecl.js', '?.js-js.bemdecl.js'],
                     target : '?.js.bemdecl.js'
                 }],
-                [techs.bem.depsOld, {
+                [techs.bem.deps, {
                     target : '?.js.deps.js',
                     bemdeclFile : '?.js.bemdecl.js'
                 }],
@@ -95,7 +97,7 @@ module.exports = function(config) {
                     sourceTech : 'js',
                     destTech : 'bemhtml'
                 }],
-                [techs.bem.depsOld, {
+                [techs.bem.deps, {
                     target : '?.template.deps.js',
                     bemdeclFile : '?.template.bemdecl.js'
                 }],
@@ -247,7 +249,7 @@ function getBrowsers(platform) {
                 'last 2 versions',
                 'ie 10',
                 'ff 24',
-                'opera 12.16'
+                'opera 12.1'
             ];
     }
 }
