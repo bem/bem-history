@@ -19,8 +19,6 @@ BEM wrap for History API:
 
 ![bem-history workflow](https://dl.dropboxusercontent.com/u/1122837/bem-history_from-browser.svg)
 
-
-
 ## Usage
 
 ### uri

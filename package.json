@@ -1,55 +1,48 @@
 {
-    "name": "bem-history",
-    "version": "3.0.0",
-    "description": "BEM wrap for History API",
-    "repository": {
-        "type": "git",
-        "url": "git://github.com/bem/bem-history.git"
-    },
-    "keywords": [
-        "bem",
-        "history",
-        "history api"
-    ],
-    "engines": {
-      "node": ">= 0.10.0"
-    },
-    "license": "MIT",
-    "dependencies": {
-        "bem-environ": "~1.4.0"
-    },
-    "devDependencies": {
-        "bem": "~0.8.1",
-        "git-hooks": "~0.0.6",
-        "jscs": "^1.11.2",
-        "jscs-bem": "^0.1.2",
-        "jshint": "2.6.0",
-        "jshint-groups": "0.7.0",
-        "bower-npm-install": "~0.5.4",
-        "bem-naming": "0.5.1",
-        "enb": "0.15.0",
-        "enb-bem": "0.1.0-beta5",
-        "enb-bem-techs": "^1.0.3",
-        "enb-magic-platform": "0.4.5",
-        "enb-autoprefixer": "0.2.3",
-        "enb-bem-docs": "0.8.0",
-        "enb-bem-examples": "0.5.9",
-        "enb-bem-specs": "0.5.6",
-        "enb-bemxjst": "1.3.4",
-        "enb-bh": "0.4.1",
-        "enb-borschik": "1.5.0",
-        "enb-diverse-js": "0.1.0",
-        "enb-modules": "0.2.0",
-        "enb-stylus": "1.2.3",
-        "borschik-tech-cleancss": "2.0.1",
-        "stylus": "0.50.0"
-    },
-    "private": true,
-    "scripts": {
-        "start": "magic server",
-        "deps": "bower i",
-        "lint": "jshint-groups && jscs .",
-        "test": "npm run lint && npm run deps && npm run specs",
-        "specs": "magic run specs"
-    }
+  "name": "bem-history",
+  "version": "3.0.0",
+  "description": "BEM wrap for History API",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/bem/bem-history.git"
+  },
+  "keywords": [
+    "bem",
+    "history",
+    "history api"
+  ],
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "bem-naming": "^0.5.1",
+    "borschik-tech-cleancss": "^2.0.1",
+    "bower": "^1.5.1",
+    "enb": "^0.17.2",
+    "enb-bem-docs": "^0.8.1",
+    "enb-bem-examples": "^0.5.10",
+    "enb-bem-specs": "^0.6.0",
+    "enb-bem-techs": "^2.0.0",
+    "enb-bemxjst": "^v2.0.0-rc",
+    "enb-bh": "^v1.0.0-rc2",
+    "enb-borschik": "^v2.0.0-beta1",
+    "enb-diverse-js": "^0.1.0",
+    "enb-magic-platform": "^0.5.0",
+    "enb-modules": "^0.2.0",
+    "enb-stylus": "^v2.0.0",
+    "git-hooks": "~0.0.6",
+    "jscs": "^1.11.2",
+    "jscs-bem": "^0.1.2",
+    "jshint": "2.6.0",
+    "jshint-groups": "0.7.0"
+  },
+  "private": true,
+  "scripts": {
+    "start": "magic server",
+    "deps": "bower i",
+    "lint": "jshint-groups && jscs .",
+    "test": "npm run lint && npm run deps && npm run specs",
+    "specs": "magic run specs"
+  }
 }
