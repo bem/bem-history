@@ -36,7 +36,7 @@ modules.require(['uri'], function(Uri) {
     u.replaceParam('param2', 2);
     
     // Обратно сериализуем url
-    u.toString(); // "http://example.org:8080/path?test=1&param2=2"
+    u.toString(); // "http://example.org:80/path?test=1&param2=2"
     
 });
 ```
