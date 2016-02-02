@@ -367,7 +367,7 @@ Uri.prototype.build = function() {
 
     if(this.getPort()) {
         s += ':' + this.getPort();
-    } else if(!this.getHost() && window.location.hostname) {
+    } else if(!this.getHost() && window.location.port) {
         s += ':' + window.location.port;
     }
 
