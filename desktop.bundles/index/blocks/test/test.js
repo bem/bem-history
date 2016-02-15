@@ -221,6 +221,11 @@ BEM.DOM.decl('test', {
                     expect(u.getParam('text')[0]).to.equal('%COCO%C0C0');
                 })
                 
+                it('should correctly parse url with query containing "@"', function() {
+                    u = BEM.blocks.uri.parse('http://example.com/?text=@fake.com');
+                    expect(u.toString()).to.equal('http://example.com/?text=%40fake.com');
+                });
+                
                 it('should be able to normalize a full url to percentage encoding', function() {
                     u = BEM.blocks.uri.parse('http://yandex.ru/yandsearch?text=yandex+почта&lr=213');
                     expect(u.toString()).to.equal('http://yandex.ru/yandsearch?text=yandex%20%D0%BF%D0%BE%D1%87%D1%82%D0%B0&lr=213');
