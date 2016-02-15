@@ -13,8 +13,6 @@
  * Released under the MIT license.
  */
 
-/* jshint maxlen:170 */
-
 /**
  * @module uri
  */
@@ -81,11 +79,7 @@ Uri.prototype.normalize = function(str) {
 * @returns {Object}    parts
 */
 Uri.prototype.parseUri = function(str) {
-    /*
-    DO NOT split parser regex into parts because it can seriously affect performance!
-    jsHint maxlen changed to fix maxlength warning at this line.
-    */
-    var parser = /^(?:([^:\/?#]+):)?(?:\/\/((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?))?((((?:[^?#\/]*\/)*)([^?#]*))(?:\?([^#]*))?(?:#(.*))?)/,
+    var parser = /^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/)?((?:(([^:@\/]*)(?::([^:@\/]*))?)?@)?(\[[0-9a-fA-F:.]+\]|[^:\/?#]*)(?::(\d+|(?=:)))?:?)((((?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/, /* jshint ignore:line */
         parserKeys = ['source', 'protocol', 'authority',
                       'userInfo', 'user', 'password', 'host', 'port',
                       'relative', 'path', 'directory', 'file', 'query', 'anchor'],
