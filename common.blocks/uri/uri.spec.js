@@ -210,7 +210,12 @@ describe('uri', function() {
         u = Uri.parse('http://test.com/ololo/trololo.html?text=%COCO%C0C0');
         u.getParam('text')[0].should.be.eql('%COCO%C0C0');
     });
-    
+
+    it('should correctly parse url with query containing "@"', function() {
+        u = Uri.parse('http://example.com/?text=@fake.com');
+        u.toString().should.be.eql('http://example.com/?text=%40fake.com');
+    });
+
     it('should be able to normalize a full url to percentage encoding', function() {
         Uri
             .normalize('http://yandex.ru/yandsearch?text=yandex+почта&lr=213')
