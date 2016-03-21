@@ -48,16 +48,24 @@ provide(inherit(Base, /** @lends history.prototype */{
         var uri = Uri.parse(window.location.href);
 
         if(uri.getAnchor()) {
-            window.history.replaceState(null, document.title, this._removeHashbang(window.location.href));
+            window.history.replaceState({}, document.title, this._removeHashbang(window.location.href));
         }
         return this;
     },
 
     _syncState : function() {
-        // Replace null with undefined to catch initial popstate
-        if(window.history.state === null) {
-            window.history.replaceState(undefined, document.title, window.location.href);
+        var state = window.history.state;
+
+        // Replace null with empty object to catch initial popstate.
+        // Initial val must be null (in specification).
+        // But in the UC browser for Android history.state is always undefined.
+        if(state === null || typeof state === 'undefined') {
+            // In the Chrome browser for iOS when history.state
+            // replaced with undefined the popstate event will not be triggered.
+            // So, we can replace it with empty object.
+            window.history.replaceState({}, document.title, window.location.href);
         }
+
         if(!this.state) {
             this.state = this._normalizeState(undefined, document.title, window.location.href);
         }
