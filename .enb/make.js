@@ -143,7 +143,7 @@ module.exports = function(config) {
         config.mode('production', function() {
             config.nodes(nodes, function(nodeConfig) {
                 nodeConfig.addTechs([
-                    [techs.borschik, { source : '?.css', target : '_?.css', freeze : true, tech : 'cleancss', minify : true }],
+                    [techs.borschik, { source : '?.css', target : '_?.css', freeze : true, minify : true }],
                     [techs.borschik, { source : '?.js', target : '_?.js', freeze : true, minify : true }]
                 ]);
             });
@@ -199,7 +199,14 @@ module.exports = function(config) {
                 destPath : platform + '.specs',
                 levels : getLibLevels(platform),
                 sourceLevels : getSpecLevels(platform),
-                jsSuffixes : ['vanilla.js', 'browser.js', 'js']
+                jsSuffixes : ['vanilla.js', 'browser.js', 'js'],
+                scripts : ['https://yastatic.net/es5-shims/0.0.2/es5-shims.min.js'],
+                templateEngine : {
+                    templateTech : require('enb-bemxjst/techs/bemhtml'),
+                    templateOptions : { sourceSuffixes : ['bemhtml', 'bemhtml.js'] },
+                    htmlTech : require('enb-bemxjst/techs/bemjson-to-html'),
+                    htmlTechOptionNames : { bemjsonFile : 'bemjsonFile', templateFile : 'bemhtmlFile' }
+                }
             });
 
             configureNodes(platform, [platform + '.tests/*/*', platform + '.examples/*/*']);
