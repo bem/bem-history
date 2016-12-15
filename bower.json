@@ -1,13 +1,25 @@
 {
   "name": "bem-history",
-  "version": "3.2.0",
   "description": "BEM wrap for History API",
-  "bugs": "https://github.com/bem/bem-history/issues",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/bem/bem-history.git"
+  },
+  "homepage": "https://bem.info/libs/bem-history/",
+  "main": "",
+  "keywords": [
+    "bem",
+    "history",
+    "history api",
+    "window location"
+  ],
   "ignore": [
-    ".bem/cache",
-    "node_modules",
-    "libs",
-    "*.bundles"
+    "*",
+    "!common.blocks",
+    "!desktop.blocks",
+    "!touch.blocks",
+    "!*.md",
+    "!LICENSE.txt"
   ],
   "dependencies": {
     "bem-core": ">= 2.6.0 < 4.0.0"
@@ -15,5 +27,5 @@
   "devDependencies": {
     "bem-pr": "^0.13.0"
   },
-  "private": true
+  "license": "MPL-2.0"
 }

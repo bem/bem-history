@@ -14,7 +14,12 @@
   "engines": {
     "node": ">= 4"
   },
-  "license": "MIT",
+  "homepage": "https://bem.info/libs/bem-history/",
+  "bugs": "https://github.com/bem/bem-history/issues",
+  "license": "MPL-2.0",
+  "peerDependency": {
+    "bem-core": "^3.0.1"
+  },
   "devDependencies": {
     "bem-naming": "^0.5.1",
     "bower": "^1.7.9",
@@ -23,13 +28,13 @@
     "enb-bem-examples": "^1.0.2",
     "enb-bem-specs": "^0.9.0",
     "enb-bem-techs": "^2.2.1",
-    "enb-bemxjst": "^6.4.1",
+    "enb-bemxjst": "^7.6.0",
     "enb-bh": "^v1.2.0",
     "enb-borschik": "^v2.4.0",
     "enb-js": "^1.1.0",
     "enb-magic-factory": "^0.5.0",
     "enb-magic-platform": "^0.7.0",
-    "enb-modules": "^0.2.0",
+    "enb-modules": "^0.4.0",
     "enb-stylus": "^v2.3.0",
     "git-hooks": "^1.0.2",
     "jscs": "^1.11.2",
@@ -37,12 +42,17 @@
     "jshint": "^2.6.0",
     "jshint-groups": "^0.8.0"
   },
-  "private": true,
   "scripts": {
     "start": "magic server",
     "deps": "bower i",
     "lint": "jshint-groups && jscs .",
     "test": "npm run lint && npm run deps && npm run specs",
     "specs": "magic run specs"
-  }
+  },
+  "files": [
+    "common.blocks",
+    "desktop.blocks",
+    "touch.blocks",
+    "README.ru.md"
+  ]
 }
