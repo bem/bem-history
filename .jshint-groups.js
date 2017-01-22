@@ -28,6 +28,7 @@ module.exports = {
             excludes : [
                 '**/*.bem/*.js',
                 '**/*.i18n/*.js',
+                '**/*.bemhtml.js',
                 '**/*.bemjson.js',
                 '**/*.deps.js',
                 '**/*.node.js',
@@ -50,6 +51,35 @@ module.exports = {
                 ]
             },
             includes : ['*.blocks/**/*.spec.js']
+        },
+
+        bemhtml : {
+            options : {
+                predef : [
+                    'apply',
+                    'applyCtx',
+                    'applyNext',
+                    'attrs',
+                    'bem',
+                    'block',
+                    'cls',
+                    'content',
+                    'def',
+                    'elem',
+                    'js',
+                    'local',
+                    'match',
+                    'mix',
+                    'mod',
+                    'mode',
+                    'tag',
+                    'wrap',
+                    'replace',
+                    'extend',
+                    'once'
+                ]
+            },
+            includes : ['*.blocks/**/*.bemhtml.js']
         },
 
         bemjsonjs : {

@@ -4,7 +4,7 @@ var DEFAULT_LANGS = ['ru', 'en'],
     naming = require('bem-naming'),
     techs = require('./techs'),
     PLATFORMS = {
-        'desktop' : ['common']
+        desktop : ['common']
     };
 
 module.exports = function(config) {
@@ -109,13 +109,18 @@ module.exports = function(config) {
                 [techs.engines.bemhtml, {
                     target : '?.browser.bemhtml.js',
                     filesTarget : '?.template.files',
-                    devMode : false
+                    sourceSuffixes : ['bemhtml', 'bemhtml.js'],
+                    engineOptions : { elemJsInstances : true }
                 }]
             ]);
 
             // Build htmls
             nodeConfig.addTechs([
-                [techs.engines.bemhtml, { devMode : false }],
+                [techs.engines.bemhtml, {
+                    sourceSuffixes : ['bemhtml', 'bemhtml.js'],
+                    forceBaseTemplates : true,
+                    engineOptions : { elemJsInstances : true }
+                }],
                 [techs.html.bemhtml]
             ]);
 
@@ -152,18 +157,17 @@ module.exports = function(config) {
 
     function configureLevels(platform, nodes) {
         config.nodes(nodes, function(nodeConfig) {
-            var nodeDir = nodeConfig.getNodePath(),
-                blockSublevelDir = path.join(nodeDir, '..', '.blocks'),
-                sublevelDir = path.join(nodeDir, 'blocks'),
-                extendedLevels = [].concat(getTestLevels(platform));
-
-            if(fs.existsSync(blockSublevelDir)) {
-                extendedLevels.push(blockSublevelDir);
-            }
-
-            if(fs.existsSync(sublevelDir)) {
-                extendedLevels.push(sublevelDir);
-            }
+            var nodeDirname = nodeConfig.getNodePath(),
+                blockName = path.basename(path.dirname(nodeDirname)),
+                exampleName = path.basename(nodeDirname),
+                extendedLevels = [].concat(
+                    getTestLevels(platform),
+                    [
+                        path.join(nodeDirname, blockName + '.blocks'),
+                        path.join(nodeDirname, exampleName + '.blocks'),
+                        path.join(nodeDirname, 'blocks')
+                    ].filter(fs.existsSync)
+                );
 
             nodeConfig.addTech([techs.bem.levels, { levels : extendedLevels }]);
         });
@@ -203,7 +207,10 @@ module.exports = function(config) {
                 scripts : ['https://yastatic.net/es5-shims/0.0.2/es5-shims.min.js'],
                 templateEngine : {
                     templateTech : require('enb-bemxjst/techs/bemhtml'),
-                    templateOptions : { sourceSuffixes : ['bemhtml', 'bemhtml.js'] },
+                    templateOptions : {
+                        sourceSuffixes : ['bemhtml', 'bemhtml.js'],
+                        engineOptions : { elemJsInstances : true }
+                    },
                     htmlTech : require('enb-bemxjst/techs/bemjson-to-html'),
                     htmlTechOptionNames : { bemjsonFile : 'bemjsonFile', templateFile : 'bemhtmlFile' }
                 }

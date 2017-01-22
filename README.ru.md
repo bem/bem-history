@@ -8,8 +8,7 @@ bem-history
 
 ## Состав
 
-### Блоки
-* `uri` – блок для парсинга url;
+* `uri__querystring` – модуль для парсинга url;
 * `history` – блок, обеспечивающий взаимодействие с браузерным History API с помощью двух модификаторов:
  * `provider_history-api` – если есть встроенная поддержка History API;
  * `provider_hashchange` – реализация с помощью фолбэка hashchange;
@@ -21,23 +20,23 @@ bem-history
 
 ## Использование
 
-### uri
+### uri__querystring
 ```js
-modules.require(['uri'], function(Uri) {
+modules.require(['uri__querystring'], function(Querystring) {
 
     // Парсим url
-    var u = Uri.parse('http://example.org:8080/path?test=1&test=2&param2=22');
-    
+    var u = Querystring.Uri.parse('http://example.org:8080/path?test=1&test=2&param2=22');
+
     // Изменяем порт
     u.setPort(80);
-    
+
     // Изменяем параметры запроса
     u.deleteParam('test', '2');
     u.replaceParam('param2', 2);
-    
+
     // Обратно сериализуем url
     u.toString(); // "http://example.org:80/path?test=1&param2=2"
-    
+
 });
 ```
 
@@ -51,7 +50,7 @@ modules.require(['history'], function(History) {
     // Добавляем запись или заменяем текущее состояние с помощью методов pushState/replaceState
     history.changeState('push', { title: 'Title', url: 'http://example.org:8080/path' });
     history.changeState('replace', { title: 'Title', url: 'http://example.org:8080/path?test=1' });
-    
+
 });
 ```
 
@@ -65,6 +64,6 @@ modules.require(['location'], function(location) {
     // Изменяем текущий location, используя только новые параметры запроса
     location.change({ params: { param1: [11,12], param2: 'ololo' } });
     window.location.href; // "http://example.org:8080/path?param1=11&param1=12&param2=ololo"
-    
+
 });
 ```

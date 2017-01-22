@@ -1,4 +1,4 @@
-modules.define('history', ['inherit', 'jquery', 'uri'], function(provide, inherit, $, Uri, Base) {
+modules.define('history', ['inherit', 'jquery', 'uri__querystring'], function(provide, inherit, $, Querystring, Base) {
 
 Base.hasNativeAPI = function() {
     var result = (window.history && 'pushState' in window.history);

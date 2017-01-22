@@ -1,14 +1,14 @@
-## uri
+## uri__querystring
 
-Блок для парсинга url.
+Модуль для парсинга url. Расширяет базовый модуль из `bem-core` дополнительным классом `Uri`.
 
 ### Использование
 
 ```js
-modules.require(['uri'], function(Uri) {
+modules.require(['uri__querystring'], function(Querystring) {
 
     // Парсим url
-    var u = Uri.parse('http://example.org:8080/path?test=1&test=2&param2=22');
+    var u = Querystring.Uri.parse('http://example.org:8080/path?test=1&test=2&param2=22');
 
     // Изменяем порт
     u.setPort(80);

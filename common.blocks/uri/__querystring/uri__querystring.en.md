@@ -1,14 +1,14 @@
-## uri
+## uri__querystring
 
-Module for an url parsing.
+Module for an url parsing. Extends module from `bem-core` with additional `Uri` class.
 
 ### Usage
 
 ```js
-modules.require(['uri'], function(Uri) {
+modules.require(['uri__querystring'], function(Querystring) {
 
     // Parse url
-    var u = Uri.parse('http://example.org:8080/path?test=1&test=2&param2=22');
+    var u = Querystring.Uri.parse('http://example.org:8080/path?test=1&test=2&param2=22');
 
     // Change port
     u.setPort(80);

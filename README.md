@@ -8,8 +8,7 @@ BEM wrap for History API:
 
 ## Components
 
-### Blocks
-* `uri` – module for an url parsing;
+* `uri__querystring` – module for an url parsing;
 * `history` – module provides work with a browser History with two modificators:
  * `provider_history-api` – supports a native History API;
  * `provider_hashchange` – supports fallback on the hashchange event;
@@ -21,12 +20,12 @@ BEM wrap for History API:
 
 ## Usage
 
-### uri
+### uri__querystring
 ```js
-modules.require(['uri'], function(Uri) {
+modules.require(['uri__querystring'], function(Querystring) {
 
     // Parse url
-    var u = Uri.parse('http://example.org:8080/path?test=1&test=2&param2=22');
+    var u = Querystring.Uri.parse('http://example.org:8080/path?test=1&test=2&param2=22');
 
     // Change port
     u.setPort(80);

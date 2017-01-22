@@ -1,11 +1,13 @@
-modules.define('test', ['i-bem__dom', 'location'], function(provide, BEMDOM, location) {
+modules.define('test', ['i-bem-dom', 'location'], function(provide, bemDom, location) {
 
-provide(BEMDOM.decl({ block : this.name }, {
+provide(bemDom.declBlock(this.name, {
     onSetMod : {
         'js' : {
             'inited' : function() {
-                this.bindTo('click', function(){
-                    (this.params.change === 'params') ? this.changeParams() : this.changeHref();
+                this._domEvents().on('click', function() {
+                    this.params.change === 'params' ?
+                        this.changeParams() :
+                        this.changeHref();
                 });
             }
         }
@@ -15,12 +17,12 @@ provide(BEMDOM.decl({ block : this.name }, {
         var msg = 'Location has been changed!!! ' + window.location.href;
 
         location.change({ params : { location : 'param', has : 'changed' } });
-        BEMDOM.update(this.domElem, msg);
+        bemDom.update(this.domElem, msg);
     },
 
     changeHref : function() {
         location.change({ url : 'http://yandex.ru' });
-        BEMDOM.update(this.domElem, 'See you later!');
+        bemDom.update(this.domElem, 'See you later!');
     }
 
 }));

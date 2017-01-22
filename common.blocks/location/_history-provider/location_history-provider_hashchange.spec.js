@@ -1,8 +1,9 @@
 window.history = {};
 
-modules.define('spec', ['uri', 'location', 'jquery'], function(provide, Uri, location, $) {
+modules.define('spec', ['uri__querystring', 'location', 'jquery'], function(provide, Querystring, location, $) {
 
 describe('location hashchange', function() {
+    var Uri = Querystring.Uri;
 
     it('should change location by path', function() {
         location.change({ url : '/desktop.specs/history_provider_hashchange/location_history-provider_hashchange.html?test=a&ololo=123' });

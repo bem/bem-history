@@ -5,7 +5,7 @@
  * @module history
  */
 
-modules.define('history', ['inherit', 'jquery', 'uri'], function(provide, inherit, $, Uri, Base) {
+modules.define('history', ['inherit', 'jquery', 'uri__querystring'], function(provide, inherit, $, Querystring, Base) {
 
 if(!('onhashchange' in window) || Base.hasNativeAPI()) {
     provide(Base);
@@ -49,7 +49,7 @@ provide(inherit(Base, /** @lends history.prototype */{
      * @private
      */
     _generateHashbang : function(url) {
-        var uri = Uri.parse(url),
+        var uri = Querystring.Uri.parse(url),
             path = uri.getPathParts();
 
         return '!/' + path[path.length - 1] + uri.getQuery();
@@ -73,7 +73,7 @@ provide(inherit(Base, /** @lends history.prototype */{
      * @param {Object} state
      */
     changeState : function(method, state) {
-        var uri = Uri.parse(state.url);
+        var uri = Querystring.Uri.parse(state.url);
 
         if((uri.getHost() && uri.getHost() !== window.location.hostname) ||
             (uri.getPort() && uri.getPort() !== window.location.port) ||

@@ -22,7 +22,7 @@
     "!LICENSE.txt"
   ],
   "dependencies": {
-    "bem-core": ">= 2.6.0 < 4.0.0"
+    "bem-core": ">= 4.1.1 < 5.0.0"
   },
   "devDependencies": {
     "bem-pr": "^0.13.0"

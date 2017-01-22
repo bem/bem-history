@@ -3,7 +3,7 @@
  *
  * @module history
  */
-modules.define('history', ['inherit', 'jquery', 'uri'], function(provide, inherit, $, Uri, Base) {
+modules.define('history', ['inherit', 'jquery', 'uri__querystring'], function(provide, inherit, $, Querystring, Base) {
 
 if(!Base.hasNativeAPI()) {
     provide(Base);
@@ -45,7 +45,7 @@ provide(inherit(Base, /** @lends history.prototype */{
     },
 
     _resetUrl : function() {
-        var uri = Uri.parse(window.location.href);
+        var uri = Querystring.Uri.parse(window.location.href);
 
         if(uri.getAnchor()) {
             window.history.replaceState({}, document.title, this._removeHashbang(window.location.href));

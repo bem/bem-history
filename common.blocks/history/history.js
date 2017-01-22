@@ -3,7 +3,7 @@
  * @module history
  */
 
-modules.define('history', ['inherit', 'events', 'jquery', 'uri'], function(provide, inherit, events, $, Uri) {
+modules.define('history', ['inherit', 'events', 'jquery', 'uri__querystring'], function(provide, inherit, events, $, Querystring) {
 
 /**
  * @class BEMHistory
@@ -78,7 +78,8 @@ var BEMHistory = inherit(events.Emitter, /** @lends BEMHistory.prototype */{
      * @returns {String}
      */
     _removeHashbang : function(url) {
-        var parsedUri = Uri.parse(url),
+        var Uri = Querystring.Uri,
+            parsedUri = Uri.parse(url),
             hash = parsedUri.getAnchor();
 
         if(hash === '' || hash[0] !== '!') { return url; }

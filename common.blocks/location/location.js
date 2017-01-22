@@ -4,8 +4,8 @@
 
 modules.define(
     'location',
-    ['inherit', 'events', 'history', 'objects', 'uri'],
-    function(provide, inherit, events, History, objects, Uri) {
+    ['inherit', 'events', 'history', 'objects', 'uri__querystring'],
+    function(provide, inherit, events, History, objects, Querystring) {
 
 /**
  * @class BEMLocation
@@ -35,7 +35,7 @@ var BEMLocation = inherit(events.Emitter, /** @lends BEMLocation.prototype */{
         // Some browsers (like Chromium v36) emit "popstate" event when you return from other site
         // using back/forward buttons. But some doesn't (like FireFox v28).
         // We don't want to track this "popstate" event like location change.
-        if(this._state.referer === Uri.normalize(window.location.href)) return;
+        if(this._state.referer === Querystring.Uri.normalize(window.location.href)) return;
 
         if(this._state.silent !== true) {
             this.emit('change', this._state);
@@ -49,7 +49,7 @@ var BEMLocation = inherit(events.Emitter, /** @lends BEMLocation.prototype */{
      */
     _syncState : function() {
         var state = this._history.state,
-            uri = Uri.parse(state.url);
+            uri = Querystring.Uri.parse(state.url);
 
         this._state = objects.extend(state.data, {
             referer : this._state && this._state.url, // referer - previous url
@@ -77,7 +77,7 @@ var BEMLocation = inherit(events.Emitter, /** @lends BEMLocation.prototype */{
      * @param {Boolean} data.replace write history record or replace current
      */
     change : function(data) {
-        var uri = Uri.parse(data.url);
+        var uri = Querystring.Uri.parse(data.url);
 
         if(data.url) {
             delete data.params;
@@ -87,7 +87,7 @@ var BEMLocation = inherit(events.Emitter, /** @lends BEMLocation.prototype */{
 
         // Build a new url if the query params exists in data
         if(data.params) {
-            var newUrl = new Uri(),
+            var newUrl = new Querystring.Uri(),
                 params = data.forceParams ? data.params : objects.extend({}, this._state.params, data.params);
 
             objects.each(params, function(value, key) {
@@ -122,7 +122,7 @@ var BEMLocation = inherit(events.Emitter, /** @lends BEMLocation.prototype */{
      * @returns {uri}
      */
     getUri : function() {
-        return Uri.parse(this._state.url);
+        return Querystring.Uri.parse(this._state.url);
     },
 
     /**

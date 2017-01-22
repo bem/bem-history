@@ -1,12 +1,12 @@
-modules.define('test', ['i-bem__dom', 'uri'], function(provide, BEMDOM, Uri) {
+modules.define('test', ['i-bem-dom', 'uri__querystring'], function(provide, bemDom, Querystring) {
 
-provide(BEMDOM.decl({ block : this.name }, {
+provide(bemDom.declBlock(this.name, {
     onSetMod : {
         'js' : {
             'inited' : function() {
-                var uri = Uri.parse(window.location.href);
+                var uri = Querystring.Uri.parse(window.location.href);
 
-                this.bindTo('click', function() {
+                this._domEvents().on('click', function() {
                     var action = this.getMod('action');
 
                     uri
@@ -18,7 +18,7 @@ provide(BEMDOM.decl({ block : this.name }, {
 
                     var content = 'Current location has been changed to ' + uri.toString();
 
-                    BEMDOM.update(this.domElem, content);
+                    bemDom.update(this.domElem, content);
                 });
             }
         }

@@ -1,6 +1,7 @@
-modules.define('spec', ['uri', 'location'], function(provide, Uri, location) {
+modules.define('spec', ['uri__querystring', 'location'], function(provide, Querystring, location) {
 
 describe('location native API', function() {
+        var Uri = Querystring.Uri;
 
         it('should change location by path', function() {
             location.change({ url : '/desktop.specs/location/spec-js+browser-js+bemhtml/spec-js+browser-js+bemhtml.html?test=a&ololo=123' });
