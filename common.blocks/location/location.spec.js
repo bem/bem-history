@@ -21,6 +21,18 @@ describe('location native API', function() {
             (u.getPath() + u.getQuery()).should.be.eql('/desktop.specs/location/spec-js+browser-js+bemhtml/spec-js+browser-js+bemhtml.html?test=1&test=2&param2=22');
         });
 
+        it('shoud raise security error for different domain', function() {
+            var before = Querystring.Uri.parse(window.location.href);
+
+            try {
+                location.change({ url : 'http://example.com' });
+            } catch(e) {
+                /security/i.test(e.name).should.be.true;
+            }
+
+            var after = Querystring.Uri.parse(window.location.href);
+            after.getHost().should.be.eql(before.getHost());
+        });
 });
 
 provide();

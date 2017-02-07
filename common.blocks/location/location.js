@@ -105,6 +105,10 @@ var BEMLocation = inherit(events.Emitter, /** @lends BEMLocation.prototype */{
                 data
             );
         } catch (e) {
+            if(/security/i.test(e.name)) {
+                throw e;
+            }
+
             window.location.assign(data.url);
         }
     },
