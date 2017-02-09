@@ -51,7 +51,7 @@ var BEMLocation = inherit(events.Emitter, /** @lends BEMLocation.prototype */{
         var state = this._history.state,
             uri = Querystring.Uri.parse(state.url);
 
-        this._state = objects.extend(state.data, {
+        this._state = objects.extend(state, {
             referer : this._state && this._state.url, // referer - previous url
             url : uri.build(),                        // full page URL –
             // http://yandex.ru/yandsearch?text=ololo&lr=213

@@ -33,7 +33,7 @@ provide(inherit(Base, /** @lends history.prototype */{
 
         // Remove silent param to fix back-forward buttons work
         // after location silent=true flag usage
-        this.state.data && delete this.state.data.silent;
+        delete this.state.silent;
 
         this.emit('statechange', { state : state, nativeApi : true });
     },
