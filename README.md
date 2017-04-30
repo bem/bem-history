@@ -16,7 +16,7 @@ BEM wrap for History API:
 
 ## Scheme of library work
 
-![bem-history workflow](bem-history_from-browser.svg)
+![bem-history workflow](https://cdn.rawgit.com/bem/bem-history/v4/bem-history_from-browser.svg)
 
 ## Usage
 

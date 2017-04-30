@@ -16,7 +16,7 @@ bem-history
 
 ## Схема работы
 
-![bem-history workflow](bem-history_from-browser.svg)
+![bem-history workflow](https://cdn.rawgit.com/bem/bem-history/v4/bem-history_from-browser.svg)
 
 ## Использование
 
